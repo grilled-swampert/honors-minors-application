@@ -1,0 +1,97 @@
+// actions/terms.js
+import { 
+    FETCH_TERMS, CREATE_TERM, UPDATE_TERM, DELETE_TERM, 
+    FETCH_TERM, FETCH_STUD_TERM, FETCH_STUD_DETAILS, FETCH_STUDENTS
+} from '../constants/actonsTypes.js';
+import * as api from '../api/index.js';
+  
+// Term Actions
+export const getTerms = () => async (dispatch) => {
+  try {
+      console.log('Sending request to fetch terms');
+      const { data } = await api.fetchTerms();
+      console.log('Received data:', data);
+      dispatch({ type: FETCH_TERMS, payload: data });
+  } catch (error) {
+      console.error('Error fetching terms:', error.message);
+      console.error(error);
+  }
+}
+
+export const getTerm = (termId) => async (dispatch) => {
+  try {
+    const response = await fetch(`/admin/${termId}/edit`);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const term = await response.json();
+    dispatch({
+      type: 'GET_TERM_SUCCESS',
+      payload: term,
+    });
+  } catch (error) {
+    dispatch({
+      type: 'GET_TERM_FAILURE',
+      payload: error.message,
+    });
+  }
+};
+
+  
+export const createTerm = (term) => async (dispatch) => {
+    try {
+      const { data } = await api.createTerm(term);
+      dispatch({ type: CREATE_TERM, payload: data });
+    } catch (error) {
+      console.log(error.message);
+    }
+};
+  
+export const updateTerm = (id, term) => async (dispatch) => {
+    try {
+      const { data } = await api.updateTerm(id, term);
+      dispatch({ type: UPDATE_TERM, payload: data });
+    } catch (error) {
+      console.log(error.message);
+    }
+};
+  
+export const deleteTerm = (id) => async (dispatch) => {
+    try {
+      await api.deleteTerm(id);
+      dispatch({ type: DELETE_TERM, payload: id });
+    } catch (error) {
+      console.log(error.message);
+    }
+};
+
+// Student Actions
+export const getTermDetails = (studentId) => async (dispatch) => {
+    try {
+      const { data } = await api.getTermDetails(studentId);
+      dispatch({ type: FETCH_STUD_TERM, payload: data });
+    } catch (error) {
+      console.log(error.message);
+    }
+};
+
+export const getStudentDetails = (studentId) => async (dispatch) => {
+    try {
+      const { data } = await api.getStudentDetails(studentId);
+      dispatch({ type: FETCH_STUD_DETAILS, payload: data });
+    } catch (error) {
+      console.log(error.message);
+    }
+};
+
+export const getStudents = (termId, semesterId) => async (dispatch) => {
+  console.log('Fetching students for Term ID:', termId); // Debug log for termId
+
+  try {
+      const { data } = await api.fetchStudents(termId);
+      console.log('Fetched Data:', data); // Debug log for fetched data
+      dispatch({ type: FETCH_STUDENTS, payload: data });
+  } catch (error) {
+      console.error('Error fetching students:', error.message); // Debug log for errors
+  }
+}

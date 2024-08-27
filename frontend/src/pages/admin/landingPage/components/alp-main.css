@@ -1,0 +1,62 @@
+.alp-main{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1%;
+    background-color:#fef6e4; ;
+}
+
+.land-content{
+    display: flex;
+    justify-content: center;
+    gap: 2%;
+    margin-top: 50px;
+}
+ 
+.left-panel{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 8rem;
+    background-color: #f3d2c1;
+    width: 70vw;
+    margin-top: auto;
+    padding: 20px;
+    border-radius: 1rem;
+}
+
+.right-panel{
+    height: 35rem;
+    width: 73%;
+    background-color: #f3d2c1;
+    border-radius: 16px;
+    margin-top: 2%;
+    overflow-y: auto;
+    
+}
+table {
+  table-layout: fixed;
+  width: 100%;
+  overflow-x: auto;
+  height: fit-content;
+  border-collapse: collapse;
+}
+thead tr{
+  height: 8vh;
+  width: 15%;
+  font-size: 24px;
+  position:sticky;
+}
+
+th{
+    background-color: #bc414e;
+    position: sticky;
+    top: 0;
+    color: white;
+}
+
+th, td{
+    padding: 8px;
+    text-align: center;
+}

@@ -1,0 +1,188 @@
+.firaSansThin {
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 100;
+  font-style: normal;
+}
+
+.firaSansExtralight {
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 200;
+  font-style: normal;
+}
+
+.firaSansLight {
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.firaSansRegular {
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.firaSansMedium {
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.firaSansSemibold {
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.firaSansBold {
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.firaSansExtrabold {
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 800;
+  font-style: normal;
+}
+
+.firaSansBlack {
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.firaSansThinItalic {
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 100;
+  font-style: italic;
+}
+
+.firaSansExtralightItalic {
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 200;
+  font-style: italic;
+}
+
+.firaSansLightItalic {
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.firaSansRegularItalic {
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.firaSansMediumItalic {
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.firaSansSemiboldItalic {
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 600;
+  font-style: italic;
+}
+
+.firaSansBoldItalic {
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.firaSansExtraboldItalic {
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 800;
+  font-style: italic;
+}
+
+.firaSansBlackItalic {
+  font-family: "Fira Sans", sans-serif;
+  font-weight: 900;
+  font-style: italic;
+}
+
+body {
+  background-color: #fef6e4;
+  font-family: 'Fira Sans', sans-serif;
+  color: #001858;
+  font-size: 125%;
+}
+
+button {
+  font-family: 'Fira Sans', sans-serif;
+  font-size: 24px;
+}
+
+.navbar {
+  height: 120px;
+  box-shadow: 1px 1px 5px 1px #888888;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  background-color: white;
+}
+
+.logoutBtn {
+  background-color: white;
+  color: black;
+  border: 5px solid #ed1c24;
+  border-radius: 15px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 1px 1px 5px 1px #888888;
+  margin-right: 50px;
+}
+
+.somaiyaLogoMain {
+  margin-left: 50px;
+  height: 80px;
+}
+
+.heroSection {
+  margin: 20px;
+  display: flex;
+  height: calc(100vh - 180px); /* Adjusted to account for navbar and margins */
+}
+
+.coursesSelectorList, .coursesAdded {
+  display: flex;
+  flex-direction: column;
+}
+
+.addBtn, .submitBtn, .downloadBtn {
+  height: 60px;
+  width: 150px;
+  border: 5px solid #001858;
+  border-radius: 15px;
+  background-color: white;
+  font-weight: bolder;
+  cursor: pointer;
+  margin: 10px;
+  color: #001858;
+}
+
+.coursesAdded {
+  width: 35%; /* Adjusted from 30% */
+  margin-left: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+.coursesSelectorList {
+  width: 65%; /* Adjusted from 70% */
+  margin-right: 5px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}

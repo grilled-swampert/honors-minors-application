@@ -1,0 +1,115 @@
+.coursesSection {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .courseTab {
+    width: 18rem;
+    padding: 40px;
+    margin: 30px;
+    border-radius: 20px;
+    box-shadow: 1px 1px 5px 1px #888888;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #001858;
+    color: white;
+  }
+
+  .tabHeading {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    border-radius: 20px;
+    background-color: white;
+    color: #001858;
+    justify-content: center;
+  }
+
+  .courseTab:hover {
+    cursor: pointer;
+  }
+
+  .overlay {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .overlayContent {
+    background-color: #fef6e4;
+    padding: 40px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    overflow-y: auto;
+    max-width: 90vw;
+    width: 100%;
+    overflow-x: hidden;
+  }
+  
+  .overlayContent h2 {
+    font-size: 24px;
+    color: #001858;
+    margin-bottom: 20px;
+  }
+  
+  .courseDetails {
+    margin-bottom: 30px;
+  }
+
+  .courseDetails h3 {
+    font-size: 20px;
+    color: #172c66;
+    margin-bottom: 10px;
+  }
+
+  .courseDetails p, .courseDetails ul {
+    font-size: 16px;
+    color: #172c66;
+  }
+
+  .learnMore {
+    font-family: "Fira Sans", sans-serif;
+    background-color: transparent;
+    color: white;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font-size: 1.25rem;
+    cursor: pointer;
+  }
+  
+  .learnMore:hover {
+    text-decoration: underline;
+  }
+  
+  .learnMoreOverlay {
+    display: none;
+  }
+
+  #close-overlay{
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: "Fira Sans", sans-serif;
+    font-size: 16px;
+    flex: 1;
+    background-color: #001858;
+    color: white;
+  }

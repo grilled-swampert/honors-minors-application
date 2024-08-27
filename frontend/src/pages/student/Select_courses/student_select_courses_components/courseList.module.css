@@ -1,0 +1,110 @@
+.courseList {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: #f3d2c1;
+    border-radius: 20px;
+    overflow: hidden;
+    background-color: #f3d2c1;
+    border-radius: 20px;
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 20px;
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .courseHeader, .courseRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+  }
+
+  .courseHeader {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: #001858;
+    color: white;
+    padding: 15px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .somaiyaCourseName {
+    width: 20%;
+    flex-wrap: wrap;
+  }
+  
+  .facultyName {
+    width: 15%;
+  }
+  
+  .syllabus {
+    width: 15%;
+  }
+  
+  .courseCode {
+    width: 10%;
+  }
+  
+  .select {
+    width: 10%;
+    text-align: center;
+  }
+  
+  .offeringDept {
+    width: 13%;
+  }
+  
+  a{
+    color: blue;
+  }
+  
+  .courseRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    padding: 15px 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    background-color: #fef6e4;
+    transition: transform 0.2s ease-out;
+  }
+  
+  .courseRowsContainer::after {
+    content: '';
+    display: block;
+    height: 10px;
+  }
+  
+  .courseRow:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .courseRowsContainer {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+    margin-top: 5px;
+    max-height: calc(100% - 60px); /* Adjust based on the header height */
+  }
+  
+  .offeringDept, .courseCode, .somaiyaCourseName, .facultyName, .syllabus, .select, .checkmark {
+    text-align: left;
+    padding: 0 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+    flex-direction: column;
+  }

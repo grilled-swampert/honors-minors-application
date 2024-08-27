@@ -1,0 +1,72 @@
+.content{
+    height: 80vh;
+    width: 90%;
+    margin-top: 30px;
+    margin-left: 100px;
+    background-color: #f3d2c1;
+    border-radius: 25px;
+    overflow-y: auto;
+ }
+
+ table {
+    table-layout: fixed;
+    width: 100%;
+    padding: 10px;
+    overflow-x: auto;
+    font-family: "Fira Sans", sans-serif;
+    border-collapse: collapse;
+  }
+ 
+
+thead th{
+  background-color: #bc414e;
+  position: sticky;
+  top: 0;
+  height: 60px;
+  color: #fff7f7;
+  width: 15%;
+  font-size: 1.5rem;
+
+}
+  th, td{
+    text-align: center;
+    /* border: 1px solid #ddd; */
+  }
+
+  tbody td{
+    height: 7vh;
+    font-size: 1.2rem;
+  }
+  .download-btn{
+    background-color: #8bd3dd;
+    border: none;
+    height: 7vh;
+    object-fit: contain;
+    margin: 0px 20px;
+    border-radius: 50%;
+  }
+  
+  tbody img{
+    height: 5vh;
+    width: fit-content;
+    object-fit: contain;
+  }
+ tbody tr:nth-child(odd){
+  background-color: #172c66;
+  color: white;
+ }
+  tbody tr:nth-child(even) {
+    background-color: white;
+  }
+
+   .delete-button {
+    background-color: #f44336;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    border: none;
+    cursor: pointer;
+  }
+
+  

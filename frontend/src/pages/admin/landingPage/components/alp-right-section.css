@@ -1,0 +1,55 @@
+th{
+  background-color: #bc414e;
+  position: sticky;
+  top: 0;
+  color: white;
+}
+th, td{
+  padding: 8px;
+  text-align: center;
+}
+
+tbody td{
+  height: 6vh;
+  font-size: 2rem;
+}
+ .view-button, .edit-button{
+  background-color: #8bd3dd;
+  border: none;
+  height: 7vh;
+  width: fit-content;
+  object-fit: contain;
+  margin: 0px 20px;
+  border-radius: 50%;
+  
+}
+
+tbody img{
+  height: 3vh;
+  object-fit: contain;
+}
+tbody tr:nth-child(odd){
+background-color: #172c66;
+color: white;
+
+
+}
+tbody tr:nth-child(even) {
+  background-color: white;
+}
+  
+.delete-button {
+  height: 7vh;
+  background-color: #f44336;
+  color: white;
+  padding: 8px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  
+}

@@ -1,0 +1,75 @@
+.left-section {
+  background-color: #f3d2c1;
+  height: 67vh;
+  width: 30%;
+  margin: 50px auto;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  font-family: "Fira Sans", sans-serif;
+}
+
+.date-selection, form {
+  margin-top: 5%;
+  margin-bottom: 20%;
+  display: flex;
+  flex-direction: column;
+  font-size: 1.5rem;
+  justify-content: center;
+  align-items: center;
+  width: 90%; 
+
+}
+
+.startDate, .endDate {
+  display: flex;
+  flex-direction: column; /* Stacks the label, date, and time vertically */
+  align-items: flex-start;
+  width: 100%; /* Ensure it takes full width */
+  margin-bottom: 20px;
+}
+
+.date-selection label {
+  margin-bottom: 8px;
+}
+
+.date {
+  height: 40px;
+  width: 100%;
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+#upload-btn, #add-btn {
+  height: 50px; 
+  width: 100%;
+  margin: 20px 0;
+  border-radius: 16px;
+  background-color: #8bd3dd;
+  font-size: 1.2rem;
+  text-align: center;
+  line-height: 50px; 
+  border: none;
+}
+
+#upload-btn input {
+  font-size: 1rem;
+}
+
+.error, .success {
+  margin-top: 20px;
+  font-size: 1rem;
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  width: 90%;
+}
+
+.error {
+  background-color: #e74c3c;
+}
+
+.success {
+  background-color: #2ecc71;
+}

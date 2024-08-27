@@ -1,0 +1,93 @@
+.coursesAddedTable {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: #f3d2c1;
+    border-radius: 20px;
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 20px;
+    margin: 20px 0;
+    flex-direction: column;
+    height: calc(100vh - 300px);
+  }
+
+  .coursesAddedContent {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    max-height: calc(100% - 60px); /* Adjust based on the header height */
+  }
+
+  .coursesAddedContent {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    max-height: calc(100% - 60px); /* Adjust based on the header height */
+  }
+
+  .coursesAddedTable {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .coursesAddedRow {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border-radius: 20px;
+    background-color: #fef6e4;
+    padding: 15px;
+    margin: 10px 0;
+    width: calc(100% - 30px);
+  }
+  
+  .coursesAddedRow .removeCourse {
+    align-self: flex-end;
+    margin-top: 10px;
+  }
+  
+  .coursesAddedRow span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .dragHandle {
+    cursor: move;
+    margin-right: 10px;
+    align-self: flex-start;
+  }
+  
+  .removeCourse {
+    margin-left: auto;
+  }
+  
+  .coursesAddedRow h4,
+  .coursesAddedRow h5,
+  .coursesAddedRow p,
+  .coursesAddedRow button {
+    align-self: flex-start;
+  }
+
+  .coursesAddedRow > * {
+    margin-bottom: 5px;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .submitBtn{
+    height: 60px;
+  width: 150px;
+  border: 5px solid #001858;
+  border-radius: 15px;
+  background-color: white;
+  font-weight: bolder;
+  cursor: pointer;
+  margin: 10px;
+  color: #001858;
+  }
