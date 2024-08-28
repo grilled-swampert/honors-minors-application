@@ -21,7 +21,6 @@ const AddLeftSection = () => {
     formData.append('syllabusFile', syllabusFile);
     formData.append('startDate', startDate);
     formData.append('endDate', endDate);
-    
 
     try {
       const response = await fetch(`/admin/${termId}/edit`, {
@@ -60,7 +59,7 @@ const AddLeftSection = () => {
   return (
     <div className="left-section">
       <div className="date-selection">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className='termForm'>
           <div className="startDate">
             <label className="start-date">Start Date:</label>
             <input

@@ -9,7 +9,7 @@
   font-family: "Fira Sans", sans-serif;
 }
 
-.date-selection, form {
+.date-selection, .termForm {
   margin-top: 5%;
   margin-bottom: 20%;
   display: flex;

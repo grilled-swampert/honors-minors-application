@@ -121,6 +121,7 @@ function FacViewRightprt() {
         activeTab={activeTab}
         handleTabClick={handleTabClick}
       />
+      <div className='rightside'>
       <div className="student-info-grid-container">
         {filteredStudentData.map((student) => (
             <ViewDashboard key={student.rollNumber} student={student} handleViewButtonClick={handleViewButtonClick} />
@@ -207,6 +208,7 @@ function FacViewRightprt() {
             </li>
           </ul>
         )}
+      </div>
       </div>
 
       {overlayVisible && selectedStudent && (
