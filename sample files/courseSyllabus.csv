@@ -1,6 +1,42 @@
 ﻿category,offeringDepartment,programCode,programName,programLink,EXCP,ETRX,COMP,IT,AIDS,MECH,RAI,CCE,VDT,CSBS
-Minors,CS,CS101,App Development,http://example.com/cs,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE
-Honors,EXCP,ECE202,VLSI Design,http://example.com/ece,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE
-Minors,IT,IT303,Cyber Security,http://example.com/it,TRUE,TRUE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,TRUE,TRUE
-Minors,MECH,M404,OpenFOAM,http://example.com/me,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,TRUE
-Honors,IT,IT304,IoT,http://example.com/ai,FALSE,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE
+Minors,COMP,CS102,Cloud Computing,http://example.com/cloud,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE
+Honors,MECH,M405,Robotics,http://example.com/robotics,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,TRUE
+Minors,IT,IT305,Blockchain,http://example.com/blockchain,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE
+Honors,EXCP,ECE203,Embedded Systems,http://example.com/embedded,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,TRUE,TRUE
+Minors,ETRX,E101,Nanoelectronics,http://example.com/nano,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE
+Minors,AIDS,AID101,Machine Learning,http://example.com/ml,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,TRUE
+Honors,CCE,CSE202,Big Data,http://example.com/bigdata,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE
+Minors,CS,CS103,Web Development,http://example.com/webdev,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE
+Honors,MECH,M406,Fluid Mechanics,http://example.com/fluid,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE
+Minors,COMP,CS104,AI and ML,http://example.com/ai_ml,TRUE,FALSE,TRUE,FALSE,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE
+Honors,ETRX,E102,Control Systems,http://example.com/control,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE
+Minors,IT,IT306,Data Analytics,http://example.com/analytics,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,TRUE
+Honors,RAI,RAI202,Renewable Energy,http://example.com/renewable,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE
+Minors,MECH,M407,3D Printing,http://example.com/3dprint,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE
+Honors,COMP,CS105,Cyber-Physical Systems,http://example.com/cps,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,FALSE,TRUE
+Minors,IT,IT307,Software Engineering,http://example.com/se,FALSE,TRUE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE
+Honors,CS,CS106,Parallel Computing,http://example.com/parallel,FALSE,FALSE,TRUE,FALSE,TRUE,TRUE,FALSE,TRUE,TRUE,TRUE
+Minors,MECH,M408,CAD/CAM,http://example.com/cadcam,TRUE,FALSE,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE
+Honors,ETRX,E103,Signal Processing,http://example.com/signal,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,TRUE,FALSE,TRUE
+Minors,AIDS,AID102,Deep Learning,http://example.com/deep,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,TRUE,TRUE
+Honors,CS,CS107,Quantum Computing,http://example.com/quantum,TRUE,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,FALSE,TRUE
+Minors,COMP,CS108,Network Security,http://example.com/network,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE
+Honors,MECH,M409,Thermodynamics,http://example.com/thermo,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE
+Minors,CCE,CSE203,IoT with Python,http://example.com/iotpython,TRUE,FALSE,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE,TRUE
+Honors,CS,CS109,AR/VR Development,http://example.com/arvr,TRUE,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE
+Minors,ETRX,E104,Power Electronics,http://example.com/power,TRUE,FALSE,TRUE,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE
+Honors,AIDS,AID103,Artificial Intelligence,http://example.com/ai,FALSE,TRUE,FALSE,TRUE,TRUE,FALSE,TRUE,TRUE,FALSE,TRUE
+Minors,IT,IT308,Digital Marketing,http://example.com/digitalmkt,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE
+Honors,COMP,CS110,Software Testing,http://example.com/testing,FALSE,TRUE,TRUE,TRUE,FALSE,TRUE,FALSE,TRUE,FALSE,TRUE
+Minors,RAI,RAI203,Smart Grids,http://example.com/smartgrid,TRUE,FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,TRUE,FALSE,FALSE
+Honors,ETRX,E105,Instrumentation,http://example.com/instr,FALSE,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,FALSE,TRUE
+Minors,IT,IT309,DevOps,http://example.com/devops,TRUE,FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE
+Honors,COMP,CS111,Data Mining,http://example.com/datamining,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,TRUE,TRUE,FALSE,TRUE
+Minors,CS,CS112,HCI,http://example.com/hci,TRUE,FALSE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE
+Honors,MECH,M410,Automation,http://example.com/automation,FALSE,TRUE,FALSE,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE
+Minors,AIDS,AID104,Natural Language Processing,http://example.com/nlp,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,FALSE,TRUE,TRUE
+Honors,CS,CS113,High-Performance Computing,http://example.com/hpc,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,TRUE,TRUE,FALSE,FALSE
+Minors,CCE,CSE204,Digital Forensics,http://example.com/forensics,TRUE,FALSE,FALSE,TRUE,FALSE,TRUE,TRUE,FALSE,TRUE,TRUE
+Honors,RAI,RAI204,Sustainable Engineering,http://example.com/sustainable,FALSE,TRUE,TRUE,FALSE,TRUE,TRUE,FALSE,TRUE,FALSE,TRUE
+Minors,IT,IT310,UI/UX Design,http://example.com/uiux,TRUE,FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE,FALSE
+Honors,ETRX,E106,Photonics,http://example.com/photonics,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,TRUE,FALSE

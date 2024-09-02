@@ -28,13 +28,13 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element = {<LoginPage />}/> 
-       <Route path="/admin" element={<AdminLandingPage />} />
+        <Route path="/admin" element={<AdminLandingPage />} />
         <Route path="/admin/:termId/view" element={<AdminViewPage />} />
         <Route path="/admin/:termId/edit/addCourses" element={<AddCoursesPage />} />
         <Route path="/allocation" element={<Allocation />} />
         <Route path="/broadcast" element = {<Broadcast />} />  
 
-         <Route path="/facLandingpage/branch" element={<FacLandingPage />} />
+        <Route path="/facLandingpage/branch" element={<FacLandingPage />} />
         <Route path="/faculty/branch/:termId/edit/facAddStudent" element={<FacAddStudent />} />
         <Route path='/faculty/branch/:termId/facView' element = {<FacView />} />
         <Route path='/faculty/branch/:termId/edit/facDrop' element = {<FacDrop />} />

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './allocation.css';
 import Header from '../../header/header';
 import AdminSideBar from '../admin-sidebar/adminSidebar';
+import downloadIcon from '../../photos-logos/download.png';
 
 const Allocation = () => {
   const [tableData, setTableData] = useState([
@@ -17,7 +18,7 @@ const Allocation = () => {
     {
       department: 'COMPS',
       courseName: 'XYZ',
-      category : 'Minors',
+      category: 'Minors',
       choices: [30, 10, 9, 7],
       maxCount: '',
       notRun: false,
@@ -25,8 +26,6 @@ const Allocation = () => {
     }
   ]);
 
- 
-  // Handle input changes
   const handleInputChange = (index, event) => {
     const { id, value, checked } = event.target;
     const updatedTableData = [...tableData];
@@ -40,30 +39,47 @@ const Allocation = () => {
     setTableData(updatedTableData);
   };
 
-  function applyChanges() {
-    const table = document.getElementById('myTable');
-    const rows = table.getElementsByTagName('tr');
+  const applyChanges = () => {
+    setTableData(prevData => 
+      prevData.map(row => ({
+        ...row,
+        maxCount: row.maxCount.trim() !== '' ? row.maxCount : '',
+      }))
+    );
+  };
+
+  const downloadRowData = (rowData) => {
+    const csvContent = `Department,Course Name,Category,1st Choice,2nd Choice,3rd Choice,4th Choice,Max Count,Not Run,Final Count\n${rowData.department},${rowData.courseName},${rowData.category},${rowData.choices.join(',')},${rowData.maxCount},${rowData.notRun},${rowData.finalCount}`;
+    downloadCSV(csvContent, `${rowData.department}_${rowData.courseName}_data.csv`);
+  };
+
+  const downloadAllData = () => {
+    const headers = "Department,Course Name,Category,1st Choice,2nd Choice,3rd Choice,4th Choice,Max Count,Not Run,Final Count";
+    const csvContent = tableData.map(row => 
+      `${row.department},${row.courseName},${row.category},${row.choices.join(',')},${row.maxCount},${row.notRun},${row.finalCount}`
+    ).join('\n');
     
-    for (let i = 0; i < rows.length; i++) {
-        const cells = rows[i].getElementsByTagName('td');
-        
-        for (let j = 0; j < cells.length; j++) {
-            const cell = cells[j];
-            const input = cell.querySelector('input:not([type="checkbox"])');  
-            
-            if (input && input.value.trim() !== "") {  
-              const text = document.createTextNode(input.value);
-              cell.removeChild(input);
-              cell.appendChild(text);
-          }
-        }
+    downloadCSV(`${headers}\n${csvContent}`, 'allocation_information.csv');
+  };
+
+  const downloadCSV = (content, fileName) => {
+    const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", fileName);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
-}
+  };
 
   return (
     <div className="main">
-     <Header />
-    <AdminSideBar />
+      <Header />
+      <AdminSideBar />
       <div className="ad-content">
         <table id="myTable">
           <thead>
@@ -78,6 +94,7 @@ const Allocation = () => {
               <th>MAX COUNT</th>
               <th>NOT RUN</th>
               <th>FINAL COUNT</th>
+              <th>DOWNLOAD</th>
             </tr>
           </thead>
           <tbody>
@@ -90,33 +107,39 @@ const Allocation = () => {
                   <td key={i}>{choice}</td>
                 ))}
                 <td>
-                  {<input
+                  <input
                     type="number"
                     placeholder="Count"
                     value={row.maxCount}
                     onChange={(e) => handleInputChange(index, e)}
                     id="maxCount"
-                  /> } 
-                   {/* <td><input placeholder="Count" className="max-count" id="input1" /></td> */}
+                  />
                 </td>
                 <td>
-                  { <input
+                  <input
                     type="checkbox"
                     checked={row.notRun}
                     onChange={(e) => handleInputChange(index, e)}
                     id="notRun"
-                  /> }
-                   {/* <td><input type="checkbox"/></td> */}
+                  />
                 </td>
                 <td>{row.finalCount}</td>
+                <td>
+                  <button onClick={() => downloadRowData(row)} className="download-btn">
+                    <img src={downloadIcon} alt="Download" className="download-icon" />
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      <button className="apply-btn" onClick={applyChanges}>APPLY</button>
-      <button className="submit-btn">SUBMIT</button>
+      <div className="action-buttons-container">
+        <button className="apply-btn" onClick={applyChanges}>APPLY</button>
+        <button className="submit-btn">SUBMIT</button>
+        <button className="download-all-btn" onClick={downloadAllData}>DOWNLOAD ALLOCATION INFORMATION</button>
+      </div>
     </div>
   );
 };
