@@ -7,6 +7,7 @@ const {
   createTerm,
   updateTerm,
   deleteTerm,
+  getAllCourses,
 } = require("../../controllers/admin/adminControllers.js");
 const csvController = require("../../controllers/admin/csvController.js");
 
@@ -27,13 +28,18 @@ router.patch("/:termId", updateTerm);
 // DELETE one term
 router.delete("/:termId", deleteTerm);
 
+// GET all courses
+router.get("/:termId/edit/allocation", getAllCourses);
+
 //--------------------------------------------
 
 // POST a semester of a term
-router.patch("/:termId/edit", csvController.uploadFiles, csvController.createSemesterAndProcessCSV);
+router.patch("/:termId/edit/addCourses", csvController.uploadFiles, csvController.createSemesterAndProcessCSV);
 
 // GET a term
 router.get("/:termId/edit", getTerm);
 
 //--------------------------------------------
 module.exports = router;
+
+

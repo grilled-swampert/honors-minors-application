@@ -1,4 +1,5 @@
 const Term = require("../../models/termModel/termModel");
+const Course = require("../../models/courseModel/courseModel");
 
 const asyncHandler = require("express-async-handler");
 
@@ -75,21 +76,30 @@ exports.updateTerm = asyncHandler(async (req, res) => {
 // DOWNLOAD syllabus
 exports.downloadSyllabus = async (req, res) => {
   try {
-      const { id } = req.params;
-      const semester = await Semester.findById(id);
+    const { id } = req.params;
+    const semester = await Semester.findById(id);
 
-      if (!semester || !semester.syllabusFile) {
-          return res.status(404).json({ message: 'Syllabus file not found' });
+    if (!semester || !semester.syllabusFile) {
+      return res.status(404).json({ message: "Syllabus file not found" });
+    }
+
+    const filePath = path.resolve(semester.syllabusFile);
+    res.download(filePath, (err) => {
+      if (err) {
+        res.status(500).json({ message: "Error downloading file", err });
       }
-
-      const filePath = path.resolve(semester.syllabusFile);
-      res.download(filePath, err => {
-          if (err) {
-              res.status(500).json({ message: 'Error downloading file', err });
-          }
-      });
+    });
   } catch (error) {
-      res.status(500).json({ message: 'Error retrieving syllabus file', error });
+    res.status(500).json({ message: "Error retrieving syllabus file", error });
   }
 };
 
+// GET all courses
+exports.getAllCourses = asyncHandler(async (req, res) => {
+  try {
+    const courses = await Course.find();
+    res.json(courses);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});

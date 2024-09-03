@@ -10,6 +10,7 @@ export const createTerm = (newTerm) => axios.post(urlAdmin, newTerm);
 export const updateTerm = (id, updatedTerm) => axios.patch(`${urlAdmin}/${id}`, updatedTerm);
 export const deleteTerm = (id) => axios.delete(`${urlAdmin}/${id}`);
 export const getTerm = (id) => axios.get(`${urlAdmin}/${id}`);
+export const getAllCourses = (termId) => axios.get(`${urlAdmin}/${termId}/edit/allocation`);
 
 // Course API Requests
 // actions/terms.js

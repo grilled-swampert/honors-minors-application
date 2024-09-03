@@ -192,3 +192,68 @@ exports.getStudentDetails = asyncHandler(async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+// PATCH update all preference counts for a specific student
+exports.submitCourses = async (req, res) => {
+  try {
+    const studentId = req.params.studentId;
+    const { courses } = req.body; // Expecting an array of course IDs
+
+    if (!Array.isArray(courses)) {
+      return res.status(400).json({ message: "Courses must be an array" });
+    }
+
+    // Find the course documents using the course IDs
+    const validCourses = await Course.find({ _id: { $in: courses } });
+
+    if (validCourses.length !== courses.length) {
+      return res.status(404).json({ message: "One or more courses not found" });
+    }
+
+    // Update the student's courses field with the valid courses
+    const student = await Student.findByIdAndUpdate(
+      studentId,
+      { courses: validCourses.map((course) => course._id) },
+      { new: true }
+    );
+
+    if (!student) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    console.log(student);
+
+    const term = await Term.findOne({ studentsList: studentId })
+      .populate("studentsList")
+      .exec();
+
+    if (!term) {
+      return res.status(404).json({ message: "Term or student not found" });
+    }
+
+    if (!student || !student.courses || !student.courses.length) {
+      return res.status(404).json({ message: "Student or courses not found" });
+    }
+
+    // Loop through all preferences (1st, 2nd, etc.) for the specific student
+    for (let i = 0; i < student.courses.length; i++) {
+      const courseId = student.courses[i];
+
+      // Find the course in the term and increment the corresponding preference count
+      await Course.findOneAndUpdate(
+        { _id: courseId, _id: { $in: term.courses } }, // Ensure the course is part of the term
+        { $inc: { firstPreference: 1 } }, // Increment the firstPreference attribute by 1
+        { new: true }
+      );
+    }
+    console.log(`All preference counts updated for student ${studentId}`);
+    return res
+      .status(200)
+      .json({
+        message: `All preference counts updated for student ${studentId}`,
+      });
+  } catch (error) {
+    console.error("Error updating preference counts for student:", error);
+    res.status(500).json({ message: error.message });
+  }
+};

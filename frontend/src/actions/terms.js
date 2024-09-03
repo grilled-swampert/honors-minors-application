@@ -1,7 +1,7 @@
 // actions/terms.js
 import { 
     FETCH_TERMS, CREATE_TERM, UPDATE_TERM, DELETE_TERM, 
-    FETCH_TERM, FETCH_STUD_TERM, FETCH_STUD_DETAILS, FETCH_STUDENTS
+    FETCH_STUD_TERM, FETCH_STUD_DETAILS, FETCH_STUDENTS, FETCH_ALL_COURSES
 } from '../constants/actonsTypes.js';
 import * as api from '../api/index.js';
   
@@ -93,5 +93,14 @@ export const getStudents = (termId, semesterId) => async (dispatch) => {
       dispatch({ type: FETCH_STUDENTS, payload: data });
   } catch (error) {
       console.error('Error fetching students:', error.message); // Debug log for errors
+  }
+}
+
+export const getCourses = (termId) => async (dispatch) => {
+  try {
+    const { data } = await api.getAllCourses(termId);
+    dispatch({ type: FETCH_ALL_COURSES, payload: data });
+  } catch (error) {
+    console.error('Error fetching courses:', error.message);
   }
 }

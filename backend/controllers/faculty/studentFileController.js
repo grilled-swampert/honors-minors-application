@@ -61,7 +61,7 @@ const importStudents = async (file, termId) => {
                             const existingStudent = await Student.findOne({
                                 $or: [
                                     { rollNumber: row.rollNumber },
-                                    { email: row.emailId },
+                                    { email: row.email },
                                 ],
                             });
 
@@ -74,7 +74,7 @@ const importStudents = async (file, termId) => {
                             const student = new Student({
                                 name: row.studentName,
                                 rollNumber: row.rollNumber,
-                                email: row.emailId,
+                                email: row.email,
                                 branch: row.branch,
                                 division: row.classDivision,
                                 contactNumber: row.contactNumber,
@@ -91,7 +91,7 @@ const importStudents = async (file, termId) => {
                         resolve(studentIds);
                     } catch (error) {
                         console.error('Error saving students:', error);
-                        reject(new Error('Error saving students'));
+                        reject(new Error(error));
                     }
                 });
         });

@@ -14,7 +14,7 @@ router.get('/:branch/:termId', getTerm);
 // GET all semesters in a term
 
 // Add students to a semester
-router.patch('/:branch/:termId/edit/facAddStudent', studentFileController.uploadFiles, studentFileController.addStudents);
+router.patch('/branch/:termId/edit/facAddStudent', studentFileController.uploadFiles, studentFileController.addStudents);
 
 // GET all students in a term
 router.get('/branch/:termId/edit/approveCertificate', getAllStudentsInTerm);
