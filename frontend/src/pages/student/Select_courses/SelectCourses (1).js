@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './SelectCourses.module.css';
+import Sortable from 'sortablejs';
+import { Link } from 'react-router-dom';
 import Header from '../../header/header';
 import SelectCourseHeader from './student_select_courses_components/selectCourseHeader';
 import CourseList from './student_select_courses_components/courseList';
@@ -13,7 +15,7 @@ function SelectCourses() {
     const checkbox = event.target;
     if (checkbox.checked) {
       if (selectedCourses.length < 4) {
-        setSelectedCourses(prevCourses => [...prevCourses,  { ...course, id: course._id || course.id }]);
+        setSelectedCourses(prevCourses => [...prevCourses, { ...course, id: course._id || course.id }]);
       } else {
         checkbox.checked = false;
         alert('You can only select up to 4 courses.');
@@ -22,12 +24,12 @@ function SelectCourses() {
       setSelectedCourses(prevCourses => prevCourses.filter(c => c.id !== course.id));
     }
   };
-
+  
   const handleRemoveCourse = (courseId) => {
     setSelectedCourses(prevCourses => {
       const newCourses = prevCourses.filter(course => course.id !== courseId);
       return newCourses;
-    });  
+    });
   };
 
   return (

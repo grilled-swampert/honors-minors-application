@@ -20,7 +20,8 @@ const clgSchema = new mongoose.Schema({
    secondPreference: { type: Number, default: 0 },
    thirdPreference: { type: Number, default: 0 },
    fourthPreference: { type: Number, default: 0 },
-   maxCount: { type: Number, default: 0 },
+   fifthPreference: { type: Number, default: 0 },
+   finalCount: { type: Number, default: 0 },
 });
 
 const Course = mongoose.model('Course', clgSchema);

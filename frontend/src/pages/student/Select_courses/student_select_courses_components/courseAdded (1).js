@@ -21,7 +21,6 @@ export default function CourseAdded({ selectedCourses, handleRemoveCourse, setSe
       if (!response.ok) {
         throw new Error('Failed to update courses');
       }
-      console.log('Response is ok');
 
       const result = await response.json();
       console.log('Courses updated successfully:', result);
@@ -60,10 +59,10 @@ export default function CourseAdded({ selectedCourses, handleRemoveCourse, setSe
           {selectedCourses.map((course, index) => (
             <div className={styles.coursesAddedRow} data-course-id={course.id} key={`${course.id}-${index}`}>
               <span className={styles.dragHandle}>☰</span>
-              <span className={styles.courseRank}>{index + 1}</span>
+              <span className={styles.courseRank}>Priority number: {index + 1}</span>
               <span className={styles.somaiyaCourseName}>{course.programName}</span>
               <span className={styles.courseType}>{course.category}</span>
-              <button className={styles.removeCourse} onClick={() => handleRemoveCourse(course.id)}>Remove</button>
+              <button className={styles.removeCourse} onClick={() => {handleRemoveCourse(course.id);}}>Remove</button>
             </div>
           ))}
         </div>
