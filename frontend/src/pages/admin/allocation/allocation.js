@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './allocation.css';
 import Header from '../../header/header';
 import AdminSideBar from '../admin-sidebar/adminSidebar';
 import downloadIcon from '../../photos-logos/download.png';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCourses } from '../../../actions/terms';
+import AllocationRow from './allocationRow';
+import { useParams } from 'react-router-dom';
 
 const Allocation = () => {
+  const { termId } = useParams();
   const [tableData, setTableData] = useState([
     {
       department: 'IT',
@@ -76,6 +81,30 @@ const Allocation = () => {
     }
   };
 
+  console.log("Termid: ", termId);
+
+  const dispatch = useDispatch();
+  const allCourses = useSelector((state) => state.terms);
+  console.log(allCourses);
+
+  useEffect(() => {
+    console.log("Inside useEffect with termId:", termId);
+    
+    // Log before dispatching the action
+    console.log("Dispatching getCourses...");
+    
+    // Dispatch action to fetch courses
+    dispatch(getCourses(termId));
+  
+    // Log after dispatching action to see if `allCourses` is updated right after
+    console.log("After dispatch: ", allCourses);
+  
+  }, [dispatch, termId, allCourses]);
+  
+  // Log the state outside the useEffect to see when it updates
+  console.log("allCourses after render: ", allCourses);
+  
+
   return (
     <div className="main">
       <Header />
@@ -97,43 +126,19 @@ const Allocation = () => {
               <th>DOWNLOAD</th>
             </tr>
           </thead>
-          <tbody>
-            {tableData.map((row, index) => (
-              <tr key={index}>
-                <td>{row.department}</td>
-                <td>{row.courseName}</td>
-                <td>{row.category}</td>
-                {row.choices.map((choice, i) => (
-                  <td key={i}>{choice}</td>
-                ))}
-                <td>
-                  <input
-                    type="number"
-                    placeholder="Count"
-                    value={row.maxCount}
-                    onChange={(e) => handleInputChange(index, e)}
-                    id="maxCount"
-                  />
-                </td>
-                <td>
-                  <input
-                    type="checkbox"
-                    checked={row.notRun}
-                    onChange={(e) => handleInputChange(index, e)}
-                    id="notRun"
-                  />
-                </td>
-                <td>{row.finalCount}</td>
-                <td>
-                  <button onClick={() => downloadRowData(row)} className="download-btn">
-                    <img src={downloadIcon} alt="Download" className="download-icon" />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+          {allCourses && allCourses.map((course, index) => (
+            <AllocationRow
+              course={course}
+              key={course._id}
+              handleInputChange={handleInputChange}
+              downloadRowData={downloadRowData}
+              downloadIcon={downloadIcon}
+            />
+          ))}
         </table>
       </div>
+
+
 
       <div className="action-buttons-container">
         <button className="apply-btn" onClick={applyChanges}>APPLY</button>

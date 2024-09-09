@@ -252,6 +252,7 @@ exports.submitCourses = async (req, res) => {
     for (let i = 0; i < student.courses.length; i++) {
       const courseId = student.courses[i];
       console.log("Course ID:", courseId);
+      console.log("Preference Key:", preferenceKeys[i]);
 
       const preferenceKey = preferenceKeys[i]; // Select the preference key based on index
 

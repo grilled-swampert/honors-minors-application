@@ -30,21 +30,7 @@ export const fetchCourses = (studentId) => async (dispatch) => {
     }
 };
 
-export const submitCourses = (studentId, courses) => async (dispatch) => {
-    dispatch({ type: 'SUBMIT_COURSES_REQUEST' });
-  
-    try {
-      const response = await axios.patch(`/student/${studentId}/courses`, { courses });
-  
-      // Debugging: Log the response data
-      console.log('API Response:', response.data);
-  
-      dispatch({ type: 'SUBMIT_COURSES_SUCCESS', payload: response.data });
-    } catch (error) {
-      console.error('Error submitting courses:', error.message);
-      dispatch({ type: 'SUBMIT_COURSES_FAILURE', payload: error.message });
-    }
-};
+export const submitCourses = (studentId, selectedCourses) => axios.patch(`/student/${studentId}/courses`);
 
 // Student API Requests
 export const getTermDetails = (studentId) => axios.get(`${urlStudent}/${studentId}/dashboard`);

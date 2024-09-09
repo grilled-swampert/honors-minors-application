@@ -96,8 +96,23 @@ exports.downloadSyllabus = async (req, res) => {
 
 // GET all courses
 exports.getAllCourses = asyncHandler(async (req, res) => {
+  const { termId } = req.params;
+
   try {
-    const courses = await Course.find();
+    // Find the term by termId
+    const term = await Term.findById(termId);
+
+    if (!term) {
+      return res.status(404).json({ message: 'Term not found' });
+    }
+
+    // Extract course IDs from the term
+    const courseIds = term.courses;
+
+    // Find the courses using the extracted course IDs
+    const courses = await Course.find({ _id: { $in: courseIds } });
+
+    // Send the full course details
     res.json(courses);
   } catch (error) {
     res.status(500).json({ message: error.message });

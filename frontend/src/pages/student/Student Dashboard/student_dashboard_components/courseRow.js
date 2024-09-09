@@ -73,7 +73,7 @@ export default function CourseRow({ title, id, deadline, courseType, availableCo
                     </div>
                 </div>
                 <div className={styles.completeApplication}>
-                    <Link to='/student/66c7b102968914572e261fca/courses'>
+                    <Link to={`/student/${studentId}/courses`}>
                         <button className={styles.completeApplicationBtn}>COMPLETE APPLICATION</button>
                     </Link>
                     <button className={styles.dropApplicationBtn} onClick={onDrop}>DROP</button>

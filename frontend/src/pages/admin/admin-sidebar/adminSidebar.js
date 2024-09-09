@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './adminSidebar.css'; 
 import { Link } from 'react-router-dom';
 
-const AdminSideBar = ()=>{
+const AdminSideBar = () =>{
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const toggleSidebar = () => {
         setSidebarOpen(!isSidebarOpen);

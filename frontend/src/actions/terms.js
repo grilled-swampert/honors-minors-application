@@ -1,7 +1,8 @@
 // actions/terms.js
 import { 
     FETCH_TERMS, CREATE_TERM, UPDATE_TERM, DELETE_TERM, 
-    FETCH_STUD_TERM, FETCH_STUD_DETAILS, FETCH_STUDENTS, FETCH_ALL_COURSES
+    FETCH_STUD_TERM, FETCH_STUD_DETAILS, FETCH_STUDENTS, FETCH_ALL_COURSES,
+    SUBMIT_COURSES
 } from '../constants/actonsTypes.js';
 import * as api from '../api/index.js';
   
@@ -98,9 +99,37 @@ export const getStudents = (termId, semesterId) => async (dispatch) => {
 
 export const getCourses = (termId) => async (dispatch) => {
   try {
+    console.log("From getCourses, termId: ", termId);
+
+    // Log before the API call
+    console.log("Fetching courses data...");
+
+    // Fetch data from API
     const { data } = await api.getAllCourses(termId);
+
+    // Log after fetching data
+    console.log("Fetched Data:", data);
+
+    // Log before dispatching action
+    console.log("Dispatching FETCH_ALL_COURSES with payload:", data);
+    
+    // Dispatch the action to the reducer
     dispatch({ type: FETCH_ALL_COURSES, payload: data });
+
+    // Log after dispatch (this confirms dispatch call was made)
+    console.log("Dispatch completed.");
   } catch (error) {
-    console.error('Error fetching courses:', error.message);
+    // Log the error if the API call fails
+    console.error("Error fetching courses:", error.message);
+  }
+}
+
+
+export const submitCourses = (studentId, courses) => async (dispatch) => {
+  try {
+    const { data } = await api.submitCourses(studentId, courses);
+    dispatch({ type: SUBMIT_COURSES, payload: data });
+  } catch (error) {
+    console.error('Error submitting courses:', error.message);
   }
 }

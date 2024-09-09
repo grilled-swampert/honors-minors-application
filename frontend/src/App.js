@@ -31,7 +31,7 @@ function App() {
         <Route path="/admin" element={<AdminLandingPage />} />
         <Route path="/admin/:termId/view" element={<AdminViewPage />} />
         <Route path="/admin/:termId/edit/addCourses" element={<AddCoursesPage />} />
-        <Route path="/allocation" element={<Allocation />} />
+        <Route path="/admin/:termId/edit/allocation" element={<Allocation />} />
         <Route path="/broadcast" element = {<Broadcast />} />  
 
         <Route path="/facLandingpage/branch" element={<FacLandingPage />} />
