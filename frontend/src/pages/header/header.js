@@ -11,8 +11,7 @@ const Header = () => {
           <img className="somaiya-logo-main" src={kjscelogo} alt="Somaiya Logo" />
         </Link>
         <button className="logoutBtn">
-          Logout
-          <i className="fa-solid fa-arrow-right-from-bracket"></i>
+          LOGOUT    
         </button>
       </div>
     </header>

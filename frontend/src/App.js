@@ -2,7 +2,7 @@ import './App.css';
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-import LoginPage from './pages/login';
+import LoginPage from './pages/Login';
 
 //Admin
 import AdminLandingPage from './pages/admin/landingPage/adminLandingPage';
@@ -32,9 +32,9 @@ function App() {
         <Route path="/admin/:termId/view" element={<AdminViewPage />} />
         <Route path="/admin/:termId/edit/addCourses" element={<AddCoursesPage />} />
         <Route path="/admin/:termId/edit/allocation" element={<Allocation />} />
-        <Route path="/broadcast" element = {<Broadcast />} />  
+        <Route path="/admin/:termId/edit/broadcast" element = {<Broadcast />} />  
 
-        <Route path="/facLandingpage/branch" element={<FacLandingPage />} />
+        <Route path="/faculty/branch" element={<FacLandingPage />} />
         <Route path="/faculty/branch/:termId/edit/facAddStudent" element={<FacAddStudent />} />
         <Route path='/faculty/branch/:termId/facView' element = {<FacView />} />
         <Route path='/faculty/branch/:termId/edit/facDrop' element = {<FacDrop />} />
