@@ -19,7 +19,8 @@ input[type="text"] {
     border-radius: 16px;
     cursor: pointer;
     margin: 0px 15px;
-    font-size: 56px;
+    font-size: 36px;
+    font-weight: 700;
     font-family: "Fira Sans", sans-serif;;
 }
 

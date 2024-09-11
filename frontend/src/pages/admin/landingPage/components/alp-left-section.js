@@ -46,7 +46,7 @@ const AlpLeftSection = () => {
             value={termYear} 
             onChange={(e) => setTermYear(e.target.value)} 
           />
-          <button id="createButton">Create</button>
+          <button id="createButton">CREATE</button>
         </form>
       
       {error && <div className="error">{error}</div>}

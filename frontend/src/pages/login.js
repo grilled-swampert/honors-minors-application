@@ -1,21 +1,23 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import "./LoginPage.css"; 
+import "./LoginPage.css";
 
 function LoginPage() {
   const [selectedStudent, setSelectedStudent] = useState("");
+  const [selectedFaculty, setSelectedFaculty] = useState("");
 
   const handleStudentChange = (e) => {
     setSelectedStudent(e.target.value);
+  };
+
+  const handleFacultyChange = (e) => {
+    setSelectedFaculty(e.target.value);
   };
 
   return (
     <div className="login-page">
       <Link to="/admin">
         <button className="login-button"> Admin </button>
-      </Link>
-      <Link to="/faculty/branch">
-        <button className="login-button"> Faculty </button>
       </Link>
 
       <div className="dropdown-container">
@@ -36,7 +38,30 @@ function LoginPage() {
 
         {selectedStudent && (
           <Link to={`/student/${selectedStudent}/dashboard`}>
-            <button className="login-button"> Go to Dashboard </button>
+            <button className="login-button"> Go to Student Dashboard </button>
+          </Link>
+        )}
+      </div>
+
+      <div className="dropdown-container">
+        <select
+          className="faculty-dropdown"
+          value={selectedFaculty}
+          onChange={handleFacultyChange}
+        >
+          <option value="" disabled>
+            Select Faculty
+          </option>
+          <option value="aids">AIDS</option>
+          <option value="it">IT</option>
+          <option value="excp">EXCP</option>
+          <option value="comp">COMP</option>
+          <option value="mech">MECH</option>
+        </select>
+
+        {selectedFaculty && (
+          <Link to={`/faculty/${selectedFaculty}/dashboard`}>
+            <button className="login-button"> Go to Faculty Dashboard </button>
           </Link>
         )}
       </div>
