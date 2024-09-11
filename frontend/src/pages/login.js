@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import "./LoginPage.css";
+import "./login.css";
 
 function LoginPage() {
   const [selectedStudent, setSelectedStudent] = useState("");

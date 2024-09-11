@@ -1,38 +1,80 @@
-.login-page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-}
-
-.login-button {
-  margin: 10px;
-  padding: 10px 20px;
-  background-color: #4caf50;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-}
-
-.login-button:hover {
-  background-color: #45a049;
-}
-
-.dropdown-container {
-  margin: 20px 0;
-}
-
-.student-dropdown, .faculty-dropdown {
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  outline: none;
-}
-
-.student-dropdown:focus {
-  border-color: #4caf50;
-}
+/* Styles for the login container */
+.login-main{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f9;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Styling for the h2 heading */
+  h2 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  /* Error message styling */
+  p {
+    color: red;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+  }
+  
+  /* Styling for input fields */
+  input[type="email"],
+  input[type="password"] {
+    width: 300px;
+    padding: 12px 15px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+  /* Button styling */
+  button {
+    width: 320px;
+    padding: 12px 0;
+    margin-top: 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: white;
+    background-color: #4CAF50; /* Green */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  button + button {
+    background-color: #4285F4; /* Google blue */
+    margin-top: 10px;
+  }
+  
+  button + button:hover {
+    background-color: #357ae8;
+  }
+  
+  /* Container for input and button fields */
+  .login-body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  /* Make the form responsive */
+  @media (max-width: 480px) {
+    input[type="email"], input[type="password"], button {
+      width: 90%;
+    }
+  }
+  

@@ -2,7 +2,9 @@ import './App.css';
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-import LoginPage from './pages/Login';
+// import LoginPage from '../src/pages/login';
+import LoginPage from './pages/loginPage';
+
 
 //Admin
 import AdminLandingPage from './pages/admin/landingPage/adminLandingPage';
@@ -34,11 +36,16 @@ function App() {
         <Route path="/admin/:termId/edit/allocation" element={<Allocation />} />
         <Route path="/admin/:termId/edit/broadcast" element = {<Broadcast />} />  
 
-        <Route path="/faculty/:branch/dashboard" element={<FacLandingPage />} />
+        {/* <Route path="/faculty/:branch/dashboard" element={<FacLandingPage />} /> */}
+        <Route path="/facLandingPage" element={<FacLandingPage />} />
+
         <Route path="/faculty/:branch/:termId/edit/facAddStudent" element={<FacAddStudent />} />
         <Route path='/faculty/:branch/:termId/facView' element = {<FacView />} />
         <Route path='/faculty/:branch/:termId/edit/facDrop' element = {<FacDrop />} />
-        <Route path='/student/:studentId/dashboard' element = {<StudentDashboard />} />
+
+        {/* <Route path='/student/:studentId/dashboard' element = {<StudentDashboard />} /> */}
+        <Route path='/stuLandingPage' element = {<StudentDashboard />} />
+
         <Route path='/student/:studentId/courses' element = {<SelectCourses />} />
       </Routes> 
     </BrowserRouter>
