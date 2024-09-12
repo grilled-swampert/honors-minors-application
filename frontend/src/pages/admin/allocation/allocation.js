@@ -11,12 +11,6 @@ import { useParams } from 'react-router-dom';
 
 const Allocation = () => {
   const { termId } = useParams();
-  const dispatch = useDispatch();
-  const allCourses = useSelector((state) => state.terms);
-
-  useEffect(() => {
-    dispatch(getCourses(termId));
-  }, [dispatch, termId]);
 
   const handleInputChange = (courseId, event) => {
     const { id, value, checked } = event.target;
@@ -42,6 +36,29 @@ const Allocation = () => {
     XLSX.utils.book_append_sheet(workbook, worksheet, "All Courses");
     XLSX.writeFile(workbook, "allocation_data.xlsx");
   };
+
+  console.log("Termid: ", termId);
+
+  const dispatch = useDispatch();
+  const allCourses = useSelector((state) => state.terms);
+  console.log(allCourses);
+
+  useEffect(() => {
+    console.log("Inside useEffect with termId:", termId);
+
+    // Log before dispatching the action
+    console.log("Dispatching getCourses...");
+
+    // Dispatch action to fetch courses
+    dispatch(getCourses(termId));
+
+    // Log after dispatching action to see if `allCourses` is updated right after
+    console.log("After dispatch: ", allCourses);
+
+  }, [dispatch, termId, allCourses]);
+
+  // Log the state outside the useEffect to see when it updates
+  console.log("allCourses after render: ", allCourses);
 
   return (
     <div className="main">

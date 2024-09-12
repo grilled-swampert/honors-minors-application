@@ -1,90 +1,44 @@
-import React, { useEffect } from 'react';
-import './allocation.css';
-import * as XLSX from 'xlsx';
-import Header from '../../header/header';
-import AdminSideBar from '../admin-sidebar/adminSidebar';
-import downloadIcon from '../../photos-logos/download.png';
-import { useDispatch, useSelector } from 'react-redux';
-import { getCourses } from '../../../actions/terms';
-import AllocationRow from './allocationRow';
-import { useParams } from 'react-router-dom';
-
-const Allocation = () => {
-  const { termId } = useParams();
-  const dispatch = useDispatch();
-  const allCourses = useSelector((state) => state.terms);
-
-  useEffect(() => {
-    dispatch(getCourses(termId));
-  }, [dispatch, termId]);
-
-  const handleInputChange = (courseId, event) => {
-    const { id, value, checked } = event.target;
-    // Update the course in your state or dispatch an action to update in Redux
-    console.log(`Updating course ${courseId}:`, { [id]: id === 'notRun' ? checked : value });
-  };
-
-  const applyChanges = () => {
-    // Implement the logic to apply changes
-    console.log('Applying changes');
-  };
-
-  const downloadRowData = (rowData) => {
-    const worksheet = XLSX.utils.json_to_sheet([rowData]);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Course Data");
-    XLSX.writeFile(workbook, `${rowData.offeringDepartment}_${rowData.programName}_data.xlsx`);
-  };
-
-  const downloadAllData = () => {
-    const worksheet = XLSX.utils.json_to_sheet(allCourses);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "All Courses");
-    XLSX.writeFile(workbook, "allocation_data.xlsx");
-  };
-
+import "./allocation.css";
+const AllocationRow = ({ course, handleInputChange, downloadRowData, downloadIcon  }) => {
   return (
-    <div className="main">
-      <Header />
-      <AdminSideBar />
-      <div className="ad-content">
-        <table id="myTable">
-          <thead>
-            <tr>
-              <th>OFFERING DEPARTMENT</th>
-              <th>PROGRAM NAME</th>
-              <th>CATEGORY</th>
-              <th>1<sup>st</sup> CHOICE</th>
-              <th>2<sup>nd</sup> CHOICE</th>
-              <th>3<sup>rd</sup> CHOICE</th>
-              <th>4<sup>th</sup> CHOICE</th>
-              <th>MAX COUNT</th>
-              <th>NOT RUN</th>
-              <th>FINAL COUNT</th>
-              <th>DOWNLOAD</th>
-            </tr>
-          </thead>
-          <tbody>
-            {allCourses && allCourses.map((course) => (
-              <AllocationRow
-                key={course._id}
-                course={course}
-                handleInputChange={handleInputChange}
-                downloadRowData={downloadRowData}
-                downloadIcon={downloadIcon}
-              />
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <div className="action-buttons-container">
-        <button className="apply-btn" onClick={applyChanges}>APPLY</button>
-        <button className="submit-btn">SUBMIT</button>
-        <button className="download-all-btn" onClick={downloadAllData}>DOWNLOAD ALLOCATION INFORMATION</button>
-      </div>
-    </div>
+    <tbody>
+      <tr>
+        <td>{course.offeringDepartment}</td>
+        <td>{course.programName}</td>
+        <td>{course.category}</td>
+        <td>{course.firstPreference}</td>
+        <td>{course.secondPreference}</td>
+        <td>{course.thirdPreference}</td>
+        <td>{course.fourthPreference}</td>
+        <td>
+          <input
+            type="number"
+            placeholder="Count"
+            value={course.maxCount}
+            onChange={(e) => handleInputChange(course._id, e)}
+            id="maxCount"
+          />
+        </td>
+        <td>
+          <input
+            type="checkbox"
+            checked={course.notRun}
+            onChange={(e) => handleInputChange(course._id, e)}
+            id="notRun"
+          />
+        </td>
+        <td>{course.finalCount}</td>
+        <td>
+          <button
+            onClick={() => downloadRowData(course)}
+            className="download-btn"
+          >
+            <img src={downloadIcon} alt="Download" className="download-icon" />
+          </button>
+        </td>
+      </tr>
+    </tbody>
   );
 };
 
-export default Allocation;
+export default AllocationRow;
