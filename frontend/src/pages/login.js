@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./login.css";
 
-function LoginPage() {
+function Login() {
   const [selectedStudent, setSelectedStudent] = useState("");
   const [selectedFaculty, setSelectedFaculty] = useState("");
 
@@ -69,4 +69,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default Login;

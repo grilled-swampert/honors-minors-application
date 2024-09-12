@@ -2,9 +2,8 @@ import './App.css';
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-// import LoginPage from '../src/pages/login';
+// import Login from '../src/pages/login';
 import LoginPage from './pages/loginPage';
-
 
 //Admin
 import AdminLandingPage from './pages/admin/landingPage/adminLandingPage';

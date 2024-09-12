@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { auth, googleProvider, signInWithPopup, signInWithEmailAndPassword } from '../firebase/firebase';
 import { useNavigate } from 'react-router-dom';
-import './loginPage.css'
+import './LoginPage.css'
 
-const Login = () => {
+const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -64,4 +64,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginPage;
