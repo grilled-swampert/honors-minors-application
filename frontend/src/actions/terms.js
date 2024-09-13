@@ -85,11 +85,12 @@ export const getStudentDetails = (studentId) => async (dispatch) => {
     }
 };
 
-export const getStudents = (termId, semesterId) => async (dispatch) => {
+export const getStudents = (branch, termId) => async (dispatch) => {
+  console.log('Fetching students for branch:', branch); // Debug log for termId
   console.log('Fetching students for Term ID:', termId); // Debug log for termId
 
   try {
-      const { data } = await api.fetchStudents(termId);
+      const { data } = await api.fetchStudents(branch, termId);
       console.log('Fetched Data:', data); // Debug log for fetched data
       dispatch({ type: FETCH_STUDENTS, payload: data });
   } catch (error) {

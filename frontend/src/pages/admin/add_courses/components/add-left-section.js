@@ -23,7 +23,7 @@ const AddLeftSection = () => {
     formData.append('endDate', endDate);
 
     try {
-      const response = await fetch(`/admin/${termId}/edit`, {
+      const response = await fetch(`/admin/${termId}/edit/addCourses`, {
         method: 'PATCH',
         body: formData,
       });

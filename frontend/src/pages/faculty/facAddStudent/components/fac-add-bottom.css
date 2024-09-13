@@ -1,22 +1,20 @@
 
-  .add-box{
-
-    height: 20vh;
-    width: 23%;
-    background-color: #fef6e4;
-    color: #001858;
-    margin-left: 1%;
-    margin-top: 10px;
-    border-radius: 24px;
-    display: flex;
-    flex-direction: column;
-  }
-  .add-box a{
-    color: #ef4565;
-    text-decoration: none;
-  }
-  .add-box p{
-    padding: 10px;
-    font-size: 1.8rem;
-  }
-  
+.add-box {
+  height: 20vh;
+  width: 50%;
+  background-color: #fef6e4;
+  color: #001858;
+  margin-left: 1%;
+  margin-top: 10px;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+}
+.add-box a {
+  color: #ef4565;
+  text-decoration: none;
+}
+.add-box p {
+  padding: 10px;
+  font-size: 1.8rem;
+}

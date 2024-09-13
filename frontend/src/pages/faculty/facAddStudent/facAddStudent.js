@@ -36,8 +36,7 @@ function FacAddStudent(){
             <FacNavbar />
             <div className='add-right'>
             <FacAddTop />
-            <div className="fac-add-bottom">
-                
+            <div className="fac-add-bottom"> 
                 {
                     termNeeded ? (
                         <FacAddBottom term={termNeeded} key={termNeeded._id}/>

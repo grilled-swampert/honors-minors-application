@@ -3,7 +3,7 @@ import './fac-add-top.css';
 import { useParams } from 'react-router-dom';
 
 function FacAddTop(){
-    const { termId } = useParams();
+    const { branch, termId } = useParams();
     const [studentsList, setStudentsList] = useState(null);
     const [error, setError] = useState(null);
     
@@ -19,7 +19,7 @@ function FacAddTop(){
       formData.append('studentsList', studentsList);
 
       try {
-        const response = await fetch(`/faculty/branch/${termId}/edit/facAddStudent`, {
+        const response = await fetch(`/faculty/${branch}/${termId}/edit/facAddStudent`, {
           method: 'PATCH',
           body: formData,
         });

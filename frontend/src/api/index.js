@@ -2,6 +2,7 @@
 import axios from 'axios';
 
 const urlAdmin = 'http://localhost:3000/admin';
+const urlFaculty = 'http://localhost:3000/faculty';
 const urlStudent = 'http://localhost:3000/student';
 
 // Term API Requests
@@ -37,4 +38,4 @@ export const getTermDetails = (studentId) => axios.get(`${urlStudent}/${studentI
 export const getStudentDetails = (studentId) => axios.get(`${urlStudent}/${studentId}/dashboard`);
 
 // Faculty API Requests
-export const fetchStudents = (termId) => axios.get(`/faculty/branch/${termId}/facView`);
+export const fetchStudents = (branch, termId) => axios.get(`${urlFaculty}/${branch}/${termId}/facView`);

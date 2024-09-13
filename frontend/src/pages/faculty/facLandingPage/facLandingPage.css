@@ -1,35 +1,42 @@
-#intro{
-    font-size: 24px;
-    margin-top: 30px;
-      margin-left: 100px;
-      color: #001858;
-   }
-   .content{
-      height: 75vh;
-      width: 90%;
-      margin-top: 30px;
-      margin-left: 100px;
-      background-color: #f3d2c1;
-      border-radius: 25px;
-      overflow-y: auto;
-      overflow-x: auto;
-   }
-  
-   table {
-      table-layout: fixed;
-      width: 100%;
-      padding: 10px;
-      border-collapse: collapse;
-    }
-    thead tr{
-      background-color: #bc414e;
-      height: 7vh;
-      width: 25%;
-      color: white;
-      font-size: 1.6rem;
-    }
+#intro {
+  font-size: 24px;
+  margin-top: 30px;
+  margin-left: 100px;
+  color: #001858;
+}
+.content {
+  height: 75vh;
+  width: 90%;
+  margin-top: 30px;
+  margin-left: 100px;
+  background-color: #f3d2c1;
+  border-radius: 25px;
+  overflow-y: auto;
+  overflow-x: auto;
+}
 
-    th, td{
-      text-align: center;
-    }
-    
+table {
+  table-layout: fixed;
+  width: 100%;
+  padding: 10px;
+  border-collapse: collapse;
+}
+thead tr {
+  background-color: #bc414e;
+  height: 7vh;
+  width: 25%;
+  color: white;
+  font-size: 1.6rem;
+}
+
+th,
+td {
+  text-align: center;
+}
+
+.highlight-branch {
+  color: rgb(104, 58, 1);
+  font-weight: bold;
+  padding: 0 5px;
+  border-radius: 5px;
+}
