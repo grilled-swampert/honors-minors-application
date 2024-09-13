@@ -1,7 +1,8 @@
 // reducers/terms.js
 import { 
     FETCH_TERMS, CREATE_TERM, UPDATE_TERM, FETCH_TERM, SUBMIT_COURSES,
-    FETCH_STUD_TERM, FETCH_STUD_DETAILS, FETCH_ALL_COURSES
+    FETCH_STUD_TERM, FETCH_STUD_DETAILS, FETCH_ALL_COURSES,
+    DEACTIVATE_COURSE
 } from '../constants/actonsTypes';
   
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -31,6 +32,9 @@ export default (terms = [], action) => {
         case FETCH_ALL_COURSES:
             console.log("Reducer received FETCH_ALL_COURSES with payload:", action.payload);
             return action.payload;
+
+        case DEACTIVATE_COURSE:
+            return terms.map((term) => (term._id === action.payload._id ? action.payload : term));
         
         default:
             return terms;

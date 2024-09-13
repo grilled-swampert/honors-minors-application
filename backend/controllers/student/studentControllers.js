@@ -289,6 +289,8 @@ exports.submitCourses = async (req, res) => {
       }
     }
 
+    console.log("Updated all preferences");
+
     await Course.findByIdAndUpdate(
       { _id: firstPreference },
       { $inc: { finalCount: 1 } },

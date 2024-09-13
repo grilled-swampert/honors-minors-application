@@ -8,6 +8,7 @@ const {
   updateTerm,
   deleteTerm,
   getAllCourses,
+  deactivateCourse,
 } = require("../../controllers/admin/adminControllers.js");
 const csvController = require("../../controllers/admin/csvController.js");
 
@@ -30,6 +31,10 @@ router.delete("/:termId", deleteTerm);
 
 // GET all courses
 router.get("/:termId/edit/allocation", getAllCourses);
+
+// DEACTIVATE a course
+router.patch("/:termId/edit/allocation", deactivateCourse);
+
 
 //--------------------------------------------
 

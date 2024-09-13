@@ -125,12 +125,20 @@ export const getCourses = (termId) => async (dispatch) => {
   }
 }
 
-
 export const submitCourses = (studentId, courses) => async (dispatch) => {
   try {
     const { data } = await api.submitCourses(studentId, courses);
     dispatch({ type: SUBMIT_COURSES, payload: data });
   } catch (error) {
     console.error('Error submitting courses:', error.message);
+  }
+}
+
+export const deactivateCourse = (termId, courseId) => async (dispatch) => {
+  try {
+    const { data } = await api.deactivateCourse(termId, courseId);
+    dispatch({ type: 'DEACTIVATE_COURSE_SUCCESS', payload: data });
+  } catch (error) {
+    dispatch({ type: 'DEACTIVATE_COURSE_FAILURE', payload: error.message });
   }
 }

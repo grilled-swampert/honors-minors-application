@@ -1,5 +1,31 @@
+import { useParams } from "react-router-dom";
 import "./allocation.css";
-const AllocationRow = ({ course, handleInputChange, downloadRowData, downloadIcon  }) => {
+import axios from "axios";
+
+const AllocationRow = ({
+  course,
+  handleInputChange,
+  downloadRowData,
+  downloadIcon,
+}) => {
+  const { termId } = useParams();
+  const handleDeactivation = async (id) => {
+    try {
+      // Call the backend API to deactivate the course
+      const response = await axios.patch(`/admin/${termId}/edit/allocation`, {
+        courseId: id,
+      });
+
+      if (response.status !== 200) {
+        console.error("Error deactivating course:", response.data);
+      } else {
+        console.log("Course deactivated:", response.data);
+      }
+    } catch (error) {
+      console.error("Error deactivating course:", error);
+    }
+  };
+
   return (
     <tbody id="myTable">
       <tr>
@@ -15,15 +41,14 @@ const AllocationRow = ({ course, handleInputChange, downloadRowData, downloadIco
             type="number"
             placeholder="Count"
             value={course.maxCount}
-            onChange={(e) => handleInputChange(course._id, e)}
+            onChange={(e) => handleInputChange(course._id)}
             id="maxCount"
           />
         </td>
         <td>
           <input
             type="checkbox"
-            checked={course.notRun}
-            onChange={(e) => handleInputChange(course._id, e)}
+            onChange={(e) => handleDeactivation(course._id, e)}
             id="notRun"
           />
         </td>
