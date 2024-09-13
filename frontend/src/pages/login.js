@@ -29,11 +29,11 @@ function Login() {
           <option value="" disabled>
             Select Student
           </option>
-          <option value="66d65afee38b183fd00f7c11">AIDS</option>
-          <option value="66d65afee38b183fd00f7c1f">EXCP</option>
-          <option value="66d65afee38b183fd00f7c23">MECH</option>
-          <option value="66d65afee38b183fd00f7c15">IT</option>
-          <option value="66d65afee38b183fd00f7c0f">COMP</option>
+          <option value="66e38f94660584832ff98289">AIDS</option>
+          <option value="66e38f94660584832ff98283">EXCP</option>
+          <option value="66e38f94660584832ff9827b">MECH</option>
+          <option value="66e38f94660584832ff9827f">IT</option>
+          <option value="66e45d0cef05ba3cf766aa27">COMP</option>
         </select>
 
         {selectedStudent && (

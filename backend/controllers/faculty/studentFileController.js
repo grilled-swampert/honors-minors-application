@@ -113,6 +113,7 @@ const importStudents = async (file, termId, branch) => {
                 eligibility: row.onlineEligible,
                 enrollmentStatus: "enrolled",
                 status: "not-submitted",
+                terms: termId,
               });
               console.log("Creating new student:", student);
               await student.save();

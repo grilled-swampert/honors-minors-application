@@ -22,6 +22,7 @@ const clgSchema = new mongoose.Schema({
    fourthPreference: { type: Number, default: 0 },
    fifthPreference: { type: Number, default: 0 },
    finalCount: { type: Number, default: 0 },
+   status: { type: String, enum: ['active', 'inactive'], default: 'active' },
 });
 
 const Course = mongoose.model('Course', clgSchema);

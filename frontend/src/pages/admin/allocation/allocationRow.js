@@ -1,7 +1,7 @@
 import "./allocation.css";
 const AllocationRow = ({ course, handleInputChange, downloadRowData, downloadIcon  }) => {
   return (
-    <tbody>
+    <tbody id="myTable">
       <tr>
         <td>{course.offeringDepartment}</td>
         <td>{course.programName}</td>

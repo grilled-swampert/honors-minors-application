@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import styles from "./courseAdded.module.css";
 import Sortable from "sortablejs";
 
@@ -8,7 +8,8 @@ export default function CourseAdded({
   handleRemoveCourse,
   setSelectedCourses,
 }) {
-  const studentId = "66d65afee38b183fd00f7bf3";
+  const { studentId } = useParams();
+  const navigate = useNavigate();
 
   const handleSubmit = async () => {
     try {
@@ -32,6 +33,7 @@ export default function CourseAdded({
       const result = await response.json();
       console.log("Courses updated successfully:", result);
       alert("Courses submitted successfully!");
+      navigate(`/student/${studentId}/dashboard`);
     } catch (error) {
       console.error("Error updating courses:", error);
       alert("Failed to submit courses.");

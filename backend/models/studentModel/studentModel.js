@@ -11,6 +11,7 @@ const studentSchema = new mongoose.Schema({
     courses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
     enrollmentStatus: { type: String, enum: ['enrolled', 'not enrolled'], default: 'not enrolled' },
     coursesApprovalStatus: { type: String, enum: ['pending', 'approved', 'rejected'] },
+    finalCourse: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
     status: { type: String, default: 'not-submitted' },
     terms: { type: String },
 });

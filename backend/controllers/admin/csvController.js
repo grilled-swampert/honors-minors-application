@@ -95,6 +95,7 @@ const importCourses = async (file, termId) => {
                                 VDT: row.VDT,
                                 CSBS: row.CSBS,
                                 term: termId,
+                                status: 'active',
                             });
 
                             console.log('New course:', newCourse);
