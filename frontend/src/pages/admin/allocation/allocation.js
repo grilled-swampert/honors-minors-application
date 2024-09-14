@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getCourses } from '../../../actions/terms';
 import AllocationRow from './allocationRow';
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 const Allocation = () => {
   const { termId } = useParams();
@@ -23,11 +24,27 @@ const Allocation = () => {
     console.log('Applying changes');
   };
 
-  const downloadRowData = (rowData) => {
-    const worksheet = XLSX.utils.json_to_sheet([rowData]);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Course Data");
-    XLSX.writeFile(workbook, `${rowData.offeringDepartment}_${rowData.programName}_data.xlsx`);
+  const downloadRowData = async (courseId) => {
+    try {
+      const response = await axios.get(`/admin/${termId}/course/${courseId}/students`, {
+        responseType: 'blob', // Important for handling file downloads
+      });
+  
+      // Create a Blob from the response data
+      const blob = new Blob([response.data], { type: 'text/csv' });
+  
+      // Create a link element, set the download attribute, and click it
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = `students_course_${courseId}.csv`;
+      link.click();
+  
+      // Remove the link from the document
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error downloading CSV:", error);
+      // Handle error (e.g., show an error message to the user)
+    }
   };
 
   const downloadAllData = () => {

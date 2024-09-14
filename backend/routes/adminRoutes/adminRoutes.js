@@ -40,8 +40,10 @@ router.patch("/:termId/edit/allocation", deactivateCourse);
 // SET max count
 router.put("/:termId/edit/allocation", setMaxCount);
 
-// New route to get students allocated to a course
-router.get("/:termId/edit/allocation", getStudentsAllocatedToCourse);
+// GET students allocated to a course (for CSV download)
+router.get("/:termId/course/:courseId/students", getStudentsAllocatedToCourse);
+
+
 
 //--------------------------------------------
 

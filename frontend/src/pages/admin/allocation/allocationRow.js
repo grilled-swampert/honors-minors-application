@@ -54,12 +54,12 @@ const AllocationRow = ({
         </td>
         <td>{course.finalCount}</td>
         <td>
-          <button
-            onClick={() => downloadRowData(course)}
-            className="download-btn"
-          >
-            <img src={downloadIcon} alt="Download" className="download-icon" />
-          </button>
+        <button
+          onClick={() => downloadRowData(course._id)}
+          className="download-btn"
+        >
+          <img src={downloadIcon} alt="Download" className="download-icon" />
+        </button>
         </td>
       </tr>
     </tbody>

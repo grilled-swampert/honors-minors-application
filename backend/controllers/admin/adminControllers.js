@@ -409,49 +409,31 @@ exports.setMaxCount = async (req, res) => {
 // DOWNLOAD course allocation
 exports.getStudentsAllocatedToCourse = async (req, res) => {
   try {
-    const { termId } = req.params;
-    const { courseId } = req.body;
-    console.log(
-      `Fetching students for termId: ${termId}, courseId: ${courseId}`
-    );
+    const { termId, courseId } = req.params;
+    console.log(`Fetching students for termId: ${termId}, courseId: ${courseId}`);
 
     const term = await Term.findById(termId);
     if (!term) {
       console.log(`Term not found for termId: ${termId}`);
       return res.status(404).json({ message: "Term not found" });
     }
-    console.log(`Term found: ${term._id}`);
 
     const studentLists = Object.keys(term.toObject()).filter((key) =>
       key.endsWith("_SL")
     );
-    console.log(`Student lists found: ${studentLists.join(", ")}`);
 
     let allocatedStudents = [];
 
     for (const listKey of studentLists) {
       const studentIds = term[listKey];
-      console.log(
-        `Processing ${listKey}, found ${studentIds.length} student IDs`
-      );
-
-      const students = await Student.find({ _id: { $in: studentIds } });
-      console.log(`Found ${students.length} students for ${listKey}`);
-
-      const matchingStudents = students.filter(
-        (student) =>
-          student.finalCourse && student.finalCourse.toString() === courseId
-      );
-      console.log(
-        `${matchingStudents.length} students match the course in ${listKey}`
-      );
-
-      allocatedStudents = allocatedStudents.concat(matchingStudents);
+      const students = await Student.find({ 
+        _id: { $in: studentIds },
+        finalCourse: courseId
+      });
+      allocatedStudents = allocatedStudents.concat(students);
     }
 
-    console.log(`Total allocated students: ${allocatedStudents.length}`);
-
-    // 6. Prepare data for CSV
+    // Prepare data for CSV
     const csvData = allocatedStudents.map((student) => ({
       branch: student.branch,
       rollNumber: student.rollNumber,
@@ -460,33 +442,16 @@ exports.getStudentsAllocatedToCourse = async (req, res) => {
       contactNumber: student.contactNumber,
     }));
 
-    // 7. Generate CSV
+    // Generate CSV
     const fields = ["branch", "rollNumber", "name", "email", "contactNumber"];
     const json2csvParser = new Parser({ fields });
     const csv = json2csvParser.parse(csvData);
 
-    // 8. Save CSV to file
-    const fileName = `students_allocated_to_course_${courseId}.csv`;
-    const filePath = path.join(__dirname, "..", "..", "downloads", fileName);
+    // Set headers for CSV download
+    res.setHeader('Content-disposition', `attachment; filename=students_course_${courseId}.csv`);
+    res.set('Content-Type', 'text/csv');
+    res.status(200).send(csv);
 
-    fs.writeFile(filePath, csv, (err) => {
-      if (err) {
-        console.error("Error writing CSV file:", err);
-        return res
-          .status(500)
-          .json({ message: "Error saving CSV file", error: err.message });
-      }
-
-      console.log(`CSV file saved successfully at ${filePath}`);
-
-      // Send the file as a download
-      res.download(filePath, fileName, (err) => {
-        if (err) {
-          console.error("Error sending file:", err);
-          res.status(500).send("Error downloading file");
-        }
-      });
-    });
   } catch (error) {
     console.error("Error in getStudentsAllocatedToCourse:", error);
     res.status(500).json({ message: "Server error", error: error.message });
