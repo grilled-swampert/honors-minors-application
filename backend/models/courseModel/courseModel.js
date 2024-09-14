@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const clgSchema = new mongoose.Schema({
+const courseSchema = new mongoose.Schema({
    category: { type: String, enum: ['Minors', 'Honors'], required: true },
    offeringDepartment: { type: String, required: true },
    programCode: { type: String, required: true },
@@ -22,8 +22,9 @@ const clgSchema = new mongoose.Schema({
    fourthPreference: { type: Number, default: 0 },
    fifthPreference: { type: Number, default: 0 },
    finalCount: { type: Number, default: 0 },
+   maxCount: { type: Number },
    status: { type: String, enum: ['active', 'inactive'], default: 'active' },
 });
 
-const Course = mongoose.model('Course', clgSchema);
+const Course = mongoose.model('Course', courseSchema);
 module.exports = Course;

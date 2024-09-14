@@ -14,6 +14,7 @@ const studentSchema = new mongoose.Schema({
     finalCourse: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
     status: { type: String, default: 'not-submitted' },
     terms: { type: String },
+    submissionTime: { type: Date },
 });
 
 const Student = mongoose.model('Student', studentSchema);
