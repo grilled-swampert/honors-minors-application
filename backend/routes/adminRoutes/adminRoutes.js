@@ -11,6 +11,7 @@ const {
   deactivateCourse,
   setMaxCount,
   getStudentsAllocatedToCourse,
+  getAllocationInfo,
 } = require("../../controllers/admin/adminControllers.js");
 const csvController = require("../../controllers/admin/csvController.js");
 
@@ -43,7 +44,8 @@ router.put("/:termId/edit/allocation", setMaxCount);
 // GET students allocated to a course (for CSV download)
 router.get("/:termId/course/:courseId/students", getStudentsAllocatedToCourse);
 
-
+// GET allocation information for all courses in a term
+router.get("/:termId/allocation-info", getAllocationInfo);
 
 //--------------------------------------------
 
@@ -55,5 +57,3 @@ router.get("/:termId/edit", getTerm);
 
 //--------------------------------------------
 module.exports = router;
-
-

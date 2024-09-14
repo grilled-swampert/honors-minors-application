@@ -47,11 +47,27 @@ const Allocation = () => {
     }
   };
 
-  const downloadAllData = () => {
-    const worksheet = XLSX.utils.json_to_sheet(allCourses);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "All Courses");
-    XLSX.writeFile(workbook, "allocation_data.xlsx");
+  const downloadAllData = async () => {
+    try {
+      const response = await axios.get(`/admin/${termId}/allocation-info`, {
+        responseType: 'blob',
+      });
+  
+      // Create a Blob from the response data
+      const blob = new Blob([response.data], { type: 'text/csv' });
+  
+      // Create a link element, set the download attribute, and click it
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = `allocation_info_${termId}.csv`;
+      link.click();
+  
+      // Remove the link from the document
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error downloading CSV:", error);
+      // Handle error (e.g., show an error message to the user)
+    }
   };
 
   console.log("Termid: ", termId);
@@ -115,8 +131,7 @@ const Allocation = () => {
       <div className="action-buttons-container">
         <button className="apply-btn" onClick={applyChanges}>APPLY</button>
         <button className="submit-btn">SUBMIT</button>
-        <button className="download-all-btn" onClick={downloadAllData}>DOWNLOAD ALLOCATION INFORMATION</button>
-      </div>
+        <button className="download-all-btn" onClick={downloadAllData}>DOWNLOAD ALLOCATION INFORMATION</button>      </div>
     </div>
   );
 };

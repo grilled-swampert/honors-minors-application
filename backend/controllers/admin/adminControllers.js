@@ -457,3 +457,40 @@ exports.getStudentsAllocatedToCourse = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+exports.getAllocationInfo = async (req, res) => {
+  try {
+    const { termId } = req.params;
+    console.log(`Fetching allocation info for termId: ${termId}`);
+
+    const term = await Term.findById(termId);
+    if (!term) {
+      console.log(`Term not found for termId: ${termId}`);
+      return res.status(404).json({ message: "Term not found" });
+    }
+
+    const courses = await Course.find({ _id: { $in: term.courses } });
+
+    // Prepare data for CSV
+    const csvData = courses.map((course) => ({
+      offeringDepartment: course.offeringDepartment,
+      programName: course.programName,
+      category: course.category, // This should be minors/honors
+      finalCount: course.finalCount,
+    }));
+
+    // Generate CSV
+    const fields = ["offeringDepartment", "programName", "category", "finalCount"];
+    const json2csvParser = new Parser({ fields });
+    const csv = json2csvParser.parse(csvData);
+
+    // Set headers for CSV download
+    res.setHeader('Content-disposition', `attachment; filename=allocation_info_${termId}.csv`);
+    res.set('Content-Type', 'text/csv');
+    res.status(200).send(csv);
+
+  } catch (error) {
+    console.error("Error in getAllocationInfo:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
