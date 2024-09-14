@@ -223,6 +223,7 @@ exports.submitCourses = async (req, res) => {
     const student = await Student.findByIdAndUpdate(
       studentId,
       { courses: validCourses.map((course) => course._id) },
+      { submissionTime: Date.now() },
       { new: true } // This option returns the updated document
     );
 

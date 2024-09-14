@@ -9,6 +9,8 @@ const {
   deleteTerm,
   getAllCourses,
   deactivateCourse,
+  setMaxCount,
+  getStudentsAllocatedToCourse,
 } = require("../../controllers/admin/adminControllers.js");
 const csvController = require("../../controllers/admin/csvController.js");
 
@@ -35,6 +37,11 @@ router.get("/:termId/edit/allocation", getAllCourses);
 // DEACTIVATE a course
 router.patch("/:termId/edit/allocation", deactivateCourse);
 
+// SET max count
+router.put("/:termId/edit/allocation", setMaxCount);
+
+// New route to get students allocated to a course
+router.get("/:termId/edit/allocation", getStudentsAllocatedToCourse);
 
 //--------------------------------------------
 
