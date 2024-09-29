@@ -3,6 +3,12 @@ const Student = require("../../models/studentModel/studentModel");
 
 const asyncHandler = require("express-async-handler");
 
+const emailjs = require("emailjs-com");
+emailjs.init({
+  publicKey: "mAQfMUC0eZbsdo2VB",
+  privateKey: "DsRki0KYlmq7BgmQbEZ8o",
+});
+
 // GET all terms
 exports.getAllTerms = asyncHandler(async (req, res) => {
   try {
@@ -128,30 +134,44 @@ exports.getDropStudents = asyncHandler(async (req, res) => {
 
 // PUT to update dropApproval status for a single student
 exports.updateDropApprovalStatus = asyncHandler(async (req, res) => {
-  const { studentId, dropApproval } = req.body; // New dropApproval status from the request body
+  const { studentId, isApproved, rejectionReason } = req.body;
+  console.log('Received request:', { studentId, isApproved, rejectionReason });
 
   try {
-    console.log("Student ID:", studentId);
-    console.log("New dropApproval status:", dropApproval);
-
-    // Find the student by ID
+    console.log('Searching for student with ID:', studentId);
     const student = await Student.findById(studentId);
+    console.log('Found student:', student);
 
     if (!student) {
+      console.log('Student not found');
       return res.status(404).json({ message: "Student not found" });
     }
 
-    // Update the dropApproval status
-    student.dropApproval = dropApproval;
-
-    // Save the updated student
+    // Update student's course drop status
+    student.dropApproval = isApproved ? 'approved' : 'rejected';
+    console.log('Updating student drop approval status to:', student.dropApproval);
     await student.save();
+    console.log('Updated student:', student);
 
-    res
-      .status(200)
-      .json({ message: "Drop approval status updated successfully", student });
+    // Prepare email content
+    const emailParams = {
+      to_email: student.email,
+      to_name: student.name,
+      message: isApproved 
+        ? "Your course drop request has been approved."
+        : `Your course drop request has been rejected. Reason: ${rejectionReason}`
+    };
+
+    console.log('Email params:', emailParams);
+
+    // Return the email parameters to the frontend
+    res.status(200).json({ 
+      message: "Course drop request processed successfully",
+      emailParams: emailParams
+    });
   } catch (error) {
-    console.error("Error updating drop approval status:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error("Error processing course drop request:", error);
+    console.error("Error stack:", error.stack);
+    res.status(500).json({ error: "Internal Server Error", details: error.message, stack: error.stack });
   }
 });

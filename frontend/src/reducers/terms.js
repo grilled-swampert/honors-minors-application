@@ -2,7 +2,8 @@
 import { 
     FETCH_TERMS, CREATE_TERM, UPDATE_TERM, FETCH_TERM, SUBMIT_COURSES,
     FETCH_STUD_TERM, FETCH_STUD_DETAILS, FETCH_ALL_COURSES,
-    DEACTIVATE_COURSE, SET_MAX_COUNT
+    DEACTIVATE_COURSE, SET_MAX_COUNT,
+    APPLY_FOR_DROP
 } from '../constants/actonsTypes';
   
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -25,6 +26,9 @@ export default (terms = [], action) => {
 
         case FETCH_STUD_TERM:
             return action.payload;
+
+        case APPLY_FOR_DROP:
+            return terms.map((term) => (term._id === action.payload._id ? action.payload : term));
 
         case FETCH_STUD_DETAILS:
             return action.payload;

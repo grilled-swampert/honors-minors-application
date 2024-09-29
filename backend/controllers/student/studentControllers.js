@@ -158,6 +158,8 @@ exports.getFilteredCoursesForStudent = async (req, res) => {
 exports.getTermFromStudent = asyncHandler(async (req, res) => {
   try {
     const studentId = req.params.studentId;
+    
+    // Find the student by ID
     const student = await Student.findById(studentId);
 
     if (!student) {
@@ -166,9 +168,11 @@ exports.getTermFromStudent = asyncHandler(async (req, res) => {
 
     console.log("Student:", student);
 
+    // Retrieve the term ID from the student object
     const termId = student.terms;
     console.log("Term ID:", termId);
 
+    // Find the term by the term ID
     const term = await Term.findById(termId);
 
     if (!term) {
@@ -177,7 +181,11 @@ exports.getTermFromStudent = asyncHandler(async (req, res) => {
 
     console.log("Term:", term);
 
-    res.json(term);
+    // Return both student data and associated term data
+    res.json({
+      student,
+      term
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

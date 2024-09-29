@@ -81,15 +81,6 @@ export const getTermDetails = (studentId) => async (dispatch) => {
   }
 };
 
-export const getStudentDetails = (studentId) => async (dispatch) => {
-  try {
-    const { data } = await api.getStudentDetails(studentId);
-    dispatch({ type: FETCH_STUD_DETAILS, payload: data });
-  } catch (error) {
-    console.log(error.message);
-  }
-};
-
 export const getStudents = (branch, termId) => async (dispatch) => {
   console.log("Fetching students for branch:", branch); // Debug log for termId
   console.log("Fetching students for Term ID:", termId); // Debug log for termId
@@ -176,5 +167,14 @@ export const setMaxCount = (termId, courseId, maxCount) => async (dispatch) => {
     dispatch({ type: "SET_MAX_COUNT_SUCCESS", payload: data });
   } catch (error) {
     dispatch({ type: "SET_MAX_COUNT_FAILURE", payload: error.message });
+  }
+};
+
+export const applyForDrop = (studentId) => async (dispatch) => {
+  try {
+    const { data } = await api.applyForDrop(studentId);
+    dispatch({ type: "APPLY_FOR_DROP_SUCCESS", payload: data });
+  } catch (error) {
+    dispatch({ type: "APPLY_FOR_DROP_FAILURE", payload: error.message });
   }
 };
