@@ -77,6 +77,8 @@ function FacDrop() {
                   <DropStudents
                     student={student}
                     openOverlay={openOverlay}
+                    branch={branch}
+                    termId={termId}
                   />
                 ))}
             </tbody>

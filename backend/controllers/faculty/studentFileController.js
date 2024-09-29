@@ -5,6 +5,8 @@ const mkdirp = require("mkdirp");
 const mongoose = require("mongoose");
 const asyncHandler = require("express-async-handler");
 
+// const { addUserToDatabase } = require("../../../frontend/src/login")
+
 // Import Student, and Term models
 const Student = require("../../models/studentModel/studentModel");
 const Term = require("../../models/termModel/termModel");

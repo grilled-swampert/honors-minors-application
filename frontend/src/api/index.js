@@ -42,3 +42,4 @@ export const getStudentDetails = (studentId) => axios.get(`${urlStudent}/${stude
 // Faculty API Requests
 export const fetchStudents = (branch, termId) => axios.get(`${urlFaculty}/${branch}/${termId}/facView`);
 export const getDropStudents = (branch, termId) => axios.get(`${urlFaculty}/${branch}/${termId}/edit/facDrop`);
+export const putDropApplication = (branch, termId, studentId) => axios.put(`${urlFaculty}/${branch}/${termId}/edit/facDrop`, studentId);

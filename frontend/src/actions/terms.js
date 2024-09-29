@@ -116,6 +116,15 @@ export const getDropStudents = (branch, termId) => async (dispatch) => {
   }
 };
 
+export const putDropApplication = (branch, termId, studentId) => async (dispatch) => {
+  try {
+    const { data } = await api.putDropApplication(branch, termId, studentId);
+    dispatch({ type: "PUT_DROP_APPLICATION", payload: data });
+  } catch (error) {
+    console.error("Error dropping student:", error.message);
+  }
+}
+
 export const getCourses = (termId) => async (dispatch) => {
   try {
     console.log("From getCourses, termId: ", termId);
