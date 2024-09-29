@@ -5,7 +5,7 @@ const mkdirp = require("mkdirp");
 const mongoose = require("mongoose");
 const asyncHandler = require("express-async-handler");
 
-// const { addUserToDatabase } = require("../../../frontend/src/login")
+const { addUserToDatabase } = require("../../../frontend/src/login")
 
 // Import Student, and Term models
 const Student = require("../../models/studentModel/studentModel");
@@ -123,7 +123,7 @@ const importStudents = async (file, termId, branch) => {
               console.log("Creating new student:", student);
               await student.save();
 
-              // addUserToDatabase(row.email, 'password123', 'student', row.branch, student._id);
+              addUserToDatabase(row.email, 'password123', 'student', row.branch, student._id);
               return student._id;
             });
 
