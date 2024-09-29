@@ -5,7 +5,9 @@ import { useParams } from 'react-router-dom';
 const AddLeftSection = () => {
   const { termId } = useParams();
   const [startDate, setStartDate] = useState('');
+  const [startTime, setStartTime] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [endTime, setEndTime] = useState('');
   const [syllabusFile, setSyllabusFile] = useState(null);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -13,14 +15,14 @@ const AddLeftSection = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Combine date and time
+    const startDateTime = new Date(`${startDate}T${startTime}`);
+    const endDateTime = new Date(`${endDate}T${endTime}`);
+
     const formData = new FormData();
-    console.log('Syllabus File:', syllabusFile);
-    console.log('Start Date:', startDate);
-    console.log('End Date:', endDate);
-    
     formData.append('syllabusFile', syllabusFile);
-    formData.append('startDate', startDate);
-    formData.append('endDate', endDate);
+    formData.append('startDate', startDateTime.toISOString());  // Save as ISO string
+    formData.append('endDate', endDateTime.toISOString());
 
     try {
       const response = await fetch(`/admin/${termId}/edit/addCourses`, {
@@ -37,7 +39,9 @@ const AddLeftSection = () => {
         setSuccess('Semester details updated successfully!');
         setSyllabusFile(null);
         setStartDate('');
+        setStartTime('');
         setEndDate('');
+        setEndTime('');
       }
     } catch (err) {
       setError('Failed to submit the form');
@@ -73,7 +77,8 @@ const AddLeftSection = () => {
               type="time"
               id="start-time"
               className="date"
-              onChange={(e) => console.log(e.target.value)}
+              value={startTime}
+              onChange={(e) => setStartTime(e.target.value)}
             />
           </div>
 
@@ -90,7 +95,8 @@ const AddLeftSection = () => {
               type="time"
               id="end-time"
               className="date"
-              onChange={(e) => console.log(e.target.value)}
+              value={endTime}
+              onChange={(e) => setEndTime(e.target.value)}
             />
           </div>
 

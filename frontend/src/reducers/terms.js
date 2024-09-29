@@ -2,7 +2,7 @@
 import { 
     FETCH_TERMS, CREATE_TERM, UPDATE_TERM, FETCH_TERM, SUBMIT_COURSES,
     FETCH_STUD_TERM, FETCH_STUD_DETAILS, FETCH_ALL_COURSES,
-    DEACTIVATE_COURSE
+    DEACTIVATE_COURSE, SET_MAX_COUNT
 } from '../constants/actonsTypes';
   
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -34,6 +34,9 @@ export default (terms = [], action) => {
             return action.payload;
 
         case DEACTIVATE_COURSE:
+            return terms.map((term) => (term._id === action.payload._id ? action.payload : term));
+
+        case SET_MAX_COUNT:
             return terms.map((term) => (term._id === action.payload._id ? action.payload : term));
         
         default:

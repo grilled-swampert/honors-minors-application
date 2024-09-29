@@ -1,6 +1,6 @@
 const express = require('express');
 const { getAllTerms, getTerm } = require('../../controllers/admin/adminControllers');
-const { getAllStudentsInTerm, updateStudentDetails } = require('../../controllers/faculty/facultyControllers');
+const { getAllStudentsInTerm, getDropStudents, updateDropApprovalStatus } = require('../../controllers/faculty/facultyControllers');
 const studentFileController = require('../../controllers/faculty/studentFileController');
 
 const router = express.Router();
@@ -19,10 +19,6 @@ router.patch('/:branch/:termId/edit/facAddStudent', studentFileController.upload
 // GET all students in a term
 router.get('/:branch/:termId/facView', getAllStudentsInTerm);
 
-// UPDATE student details
-router.patch('/:branch/:termId/edit/approveCertificate/:studentId', updateStudentDetails);
-router.patch('/:branch/:termId/edit/approveCourses/:studentId', updateStudentDetails);
-
-//
-
+router.get('/:branch/:termId/edit/facDrop', getDropStudents);
+router.put('/:branch/:termId/edit/facDrop', updateDropApprovalStatus);
 module.exports = router;

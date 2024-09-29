@@ -110,13 +110,18 @@ const importStudents = async (file, termId, branch) => {
                 branch: row.branch,
                 division: row.classDivision,
                 contactNumber: row.contactNumber,
+                courses: row.courses,
+                finalCourses: row.finalCourse,
                 eligibility: row.onlineEligible,
+                coursesApprovalStatus: row.coursesApprovalStatus,
                 enrollmentStatus: "enrolled",
                 status: "not-submitted",
-                terms: termId,
+                terms: row.terms,
               });
               console.log("Creating new student:", student);
               await student.save();
+
+              // addUserToDatabase(row.email, 'password123', 'student', row.branch, student._id);
               return student._id;
             });
 

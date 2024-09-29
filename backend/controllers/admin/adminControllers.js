@@ -2,8 +2,8 @@ const Term = require("../../models/termModel/termModel");
 const Course = require("../../models/courseModel/courseModel");
 const Student = require("../../models/studentModel/studentModel");
 const { Parser } = require("json2csv");
-const path = require('path');
-const fs = require('fs');
+const path = require("path");
+const fs = require("fs");
 
 const asyncHandler = require("express-async-handler");
 
@@ -20,7 +20,7 @@ exports.getAllTerms = asyncHandler(async (req, res) => {
 // GET a single term
 exports.getTerm = asyncHandler(async (req, res) => {
   const { termId } = req.params;
-  console.log(`Received ID: ${termId}`); 
+  console.log(`Received ID: ${termId}`);
   try {
     const term = await Term.findById(termId);
 
@@ -283,16 +283,27 @@ exports.setMaxCount = async (req, res) => {
       console.error("Step 2: Term not found");
       return res.status(404).json({ error: "Term not found" });
     }
+
     console.log("Step 2: Term data fetched:", term);
 
-    // Get all student lists in the term for each branch ending with "_SL"
-    console.log(
-      'Step 3: Extracting student lists for branches ending with "_SL"'
-    );
-    const studentLists = Object.keys(term)
-      .filter((key) => key.endsWith("_SL"))
-      .map((key) => term[key]);
+    // Find the course by courseId and mark it as inactive
+    const courseMax = await Course.findById(courseId);
+    if (!courseMax) {
+      console.log(`Checkpoint 01: Course with ID ${courseId} not found`);
+      return res.status(404).json({ message: "Course not found" });
+    }
+    console.log(`Checkpoint 01: Course found - ${courseId}`);
 
+    // Marking course status as inactive
+    if (courseMax.firstPreference > maxCount) courseMax.firstPreference = maxCount;
+    await courseMax.save();
+    console.log(`Checkpoint 02: Course preferences updated - ${courseId}`);
+
+    // Extract student lists for branches ending with "_SL"
+    console.log('Step 3: Extracting student lists for branches ending with "_SL"');
+    const studentLists = Object.keys(term.toObject()).filter((key) =>
+      key.endsWith("_SL")
+    );
     console.log("Step 3: Student lists identified:", studentLists);
 
     let allStudents = [];
@@ -300,22 +311,20 @@ exports.setMaxCount = async (req, res) => {
     // Retrieve all students from each branch's student list
     for (const list of studentLists) {
       console.log(`Step 4: Fetching students from branch: ${list}`);
+      const studentsAll = term[list];
       const students = await Student.find({
-        _id: { $in: list },
+        _id: { $in: studentsAll },
         finalCourse: courseId,
       });
       allStudents = allStudents.concat(students);
-      console.log(`Step 4: Students fetched from branch: ${students}`);
+      console.log(`Step 4: Students fetched from branch: ${students.length}`);
     }
 
-    console.log(
-      "Step 5: All students with finalCourse as courseId fetched:",
-      allStudents
-    );
+    console.log("Step 5: All students with finalCourse as courseId fetched:", allStudents);
 
     // Save the submittedAt time for all relevant students
     for (const student of allStudents) {
-      student.submittedAt = new Date(); // Assuming it's set to the current time
+      student.submittedAt = new Date(); // Set to the current time
       await student.save();
       console.log(`Step 6: SubmittedAt saved for student ${student._id}`);
     }
@@ -323,14 +332,14 @@ exports.setMaxCount = async (req, res) => {
     // Sort students by submittedAt in ascending order
     console.log("Step 7: Sorting students by submittedAt");
     allStudents.sort((a, b) => a.submittedAt - b.submittedAt);
-    console.log("Step 7: Students sorted:", allStudents);
+    console.log("Step 7: Students sorted:", allStudents.length);
 
     // Get students up to maxCount and leave the rest
-    const selectedStudents = allStudents.slice(0, maxCount);
-    const excessStudents = allStudents.slice(maxCount);
+    const selectedStudents = allStudents.slice(maxCount);
+    const excessStudents = allStudents.slice(0, maxCount);
 
-    console.log("Step 8: Selected students within maxCount:", selectedStudents);
-    console.log("Step 8: Excess students exceeding maxCount:", excessStudents);
+    console.log("Step 8: Selected students within maxCount:", selectedStudents.length);
+    console.log("Step 8: Excess students exceeding maxCount:", excessStudents.length);
 
     // Process excess students (remove course and update preferences)
     for (const student of excessStudents) {
@@ -340,37 +349,31 @@ exports.setMaxCount = async (req, res) => {
       student.courses = student.courses.filter(
         (course) => course.toString() !== courseId
       );
-      console.log(
-        `Step 9: Course removed from student ${student._id} courses array:`,
-        student.courses
-      );
+      console.log(`Step 9: Course removed from student ${student._id} courses array:`);
 
       // Update course preferences for the remaining courses
       for (let i = 0; i < student.courses.length; i++) {
         const course = await Course.findById(student.courses[i]);
-        console.log(
-          `Step 10: Processing course ${course._id} for student ${student._id}`
-        );
+        if (!course) {
+          console.log(`Course not found for ID: ${student.courses[i]}`);
+          continue;
+        }
+
+        console.log(`Step 10: Processing course ${course._id} for student ${student._id}`);
 
         if (i === 0) {
-          // First course, update first and second preferences
-          course.firstPreference++;
-          course.secondPreference--;
-          console.log(
-            `Step 10: Updated firstPreference and secondPreference for course ${course._id}`
-          );
+          course.firstPreference = Math.max(0, course.firstPreference + 1);
+          course.secondPreference = Math.max(0, course.secondPreference - 1);
+          course.finalCount++;
+          console.log(`Step 10: Updated firstPreference and secondPreference for course ${course._id}`);
         } else if (i === 1) {
-          course.secondPreference++;
-          course.thirdPreference--;
-          console.log(
-            `Step 10: Updated secondPreference and thirdPreference for course ${course._id}`
-          );
+          course.secondPreference = Math.max(0, course.secondPreference + 1);
+          course.thirdPreference = Math.max(0, course.thirdPreference - 1);
+          console.log(`Step 10: Updated secondPreference and thirdPreference for course ${course._id}`);
         } else if (i === 2) {
-          course.thirdPreference++;
-          course.fourthPreference--;
-          console.log(
-            `Step 10: Updated thirdPreference and fourthPreference for course ${course._id}`
-          );
+          course.thirdPreference = Math.max(0, course.thirdPreference + 1);
+          course.fourthPreference = Math.max(0, course.fourthPreference - 1);
+          console.log(`Step 10: Updated thirdPreference and fourthPreference for course ${course._id}`);
         }
 
         // Save the course preference updates
@@ -380,10 +383,7 @@ exports.setMaxCount = async (req, res) => {
 
       // Update student's final course to the first course in their array
       student.finalCourse = student.courses[0] || null;
-      console.log(
-        `Step 11: Updated finalCourse for student ${student._id}:`,
-        student.finalCourse
-      );
+      console.log(`Step 11: Updated finalCourse for student ${student._id}: ${student.finalCourse}`);
 
       // Save the student updates
       await student.save();

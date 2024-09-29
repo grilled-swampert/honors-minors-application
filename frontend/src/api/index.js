@@ -13,6 +13,7 @@ export const deleteTerm = (id) => axios.delete(`${urlAdmin}/${id}`);
 export const getTerm = (id) => axios.get(`${urlAdmin}/${id}`);
 export const getAllCourses = (termId) => axios.get(`${urlAdmin}/${termId}/edit/allocation`);
 export const deactivateCourse = (termId, courseId) => axios.patch(`${urlAdmin}/${termId}/edit/allocation`, courseId);
+export const setMaxCount = (termId, courseId, maxCount) => axios.put(`${urlAdmin}/${termId}/edit/allocation`, { courseId, maxCount });
 
 // Course API Requests
 // actions/terms.js
@@ -40,4 +41,4 @@ export const getStudentDetails = (studentId) => axios.get(`${urlStudent}/${stude
 
 // Faculty API Requests
 export const fetchStudents = (branch, termId) => axios.get(`${urlFaculty}/${branch}/${termId}/facView`);
-
+export const getDropStudents = (branch, termId) => axios.get(`${urlFaculty}/${branch}/${termId}/edit/facDrop`);

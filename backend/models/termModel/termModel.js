@@ -5,7 +5,7 @@ const termSchema = new mongoose.Schema({
     syllabusFile: { type: String },
     courses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
     startDate: { type: Date },
-    startTime: { type: String  },
+    startTime: { type: String },
     endDate: { type: Date },
     endTime: { type: String },
     broadcastMessage: { type: String },

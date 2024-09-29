@@ -10,11 +10,13 @@ const studentSchema = new mongoose.Schema({
     eligibility: { type: String, required: true },
     courses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
     enrollmentStatus: { type: String, enum: ['enrolled', 'not enrolled'], default: 'not enrolled' },
-    coursesApprovalStatus: { type: String, enum: ['pending', 'approved', 'rejected'] },
     finalCourse: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
     status: { type: String, default: 'not-submitted' },
     terms: { type: String },
     submissionTime: { type: Date },
+    dropReason: {type: String},
+    dropFile : {type: String},
+    dropApproval: {type : String , enum: ['pending', 'approved', 'rejected', 'none'], default: 'none' },
 });
 
 const Student = mongoose.model('Student', studentSchema);

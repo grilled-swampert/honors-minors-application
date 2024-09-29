@@ -6,6 +6,12 @@ import approveicon from "../../../photos-logos/approve.png";
 import rejecticon from '../../../photos-logos/reject.jpeg';
 
 const AddRightSection = ({ term, setTerms }) => {
+  // Function to format the date and time for human-readable display
+  const formatDateTime = (isoString) => {
+    const date = new Date(isoString);
+    return `${date.toLocaleDateString()} ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+  };
+
   const handleEdit = (id) => {
     setTerms((prevTerms) =>
       prevTerms.map((item) =>
@@ -47,10 +53,10 @@ const AddRightSection = ({ term, setTerms }) => {
           <input
             type="datetime-local"
             id={`start-date-${term._id}`}
-            defaultValue={term.startDate.replace(' ', 'T')}
+            defaultValue={term.startDate.replace(' ', 'T').slice(0, 16)} // Keep datetime-local format
           />
         ) : (
-          term.startDate
+          formatDateTime(term.startDate) // Format for human readability
         )}
       </td>
       <td className="end-date">
@@ -58,10 +64,10 @@ const AddRightSection = ({ term, setTerms }) => {
           <input
             type="datetime-local"
             id={`end-date-${term._id}`}
-            defaultValue={term.endDate.replace(' ', 'T')}
+            defaultValue={term.endDate.replace(' ', 'T').slice(0, 16)} // Keep datetime-local format
           />
         ) : (
-          term.endDate
+          formatDateTime(term.endDate) // Format for human readability
         )}
       </td>
       <td className="ad-tick-cross">

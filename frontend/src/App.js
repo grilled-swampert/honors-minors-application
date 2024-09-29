@@ -3,6 +3,7 @@ import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import LoginPage from './pages/login';
+import FirebaseLogin from './login';
 
 //Admin
 import AdminLandingPage from './pages/admin/landingPage/adminLandingPage';
@@ -27,6 +28,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/login" element={<FirebaseLogin />} />
         <Route path="/" element = {<LoginPage />}/> 
         <Route path="/admin" element={<AdminLandingPage />} />
         <Route path="/admin/:termId/view" element={<AdminViewPage />} />

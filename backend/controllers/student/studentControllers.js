@@ -2,7 +2,10 @@ const Term = require("../../models/termModel/termModel");
 const Student = require("../../models/studentModel/studentModel");
 const Course = require("../../models/courseModel/courseModel");
 
+const multer = require('multer');
+const path = require('path');
 const asyncHandler = require("express-async-handler");
+const fs = require('fs');
 
 // GET term details
 exports.getAllTerms = asyncHandler(async (req, res) => {
@@ -222,8 +225,11 @@ exports.submitCourses = async (req, res) => {
     // Update the student's courses field with the valid courses
     const student = await Student.findByIdAndUpdate(
       studentId,
-      { courses: validCourses.map((course) => course._id) },
-      { submissionTime: Date.now() },
+      {
+        courses: validCourses.map((course) => course._id),
+        submissionTime: Date.now(), // This will correctly record the current time
+        status: "submitted", // Add the status update here
+      },
       { new: true } // This option returns the updated document
     );
 
@@ -306,5 +312,136 @@ exports.submitCourses = async (req, res) => {
   } catch (error) {
     console.error("Error updating preference counts for student:", error);
     res.status(500).json({ message: error.message });
+  }
+};
+
+// Update student details in a semester in a term
+exports.updateStudentDetails = asyncHandler(async (req, res) => {
+  const { termId, studentId } = req.params;
+  const updateData = req.body; // This will contain the fields to be updated
+
+  try {
+    console.log("Term ID:", termId);
+    console.log("Student ID:", studentId);
+
+    // Find the term and populate its semesters with the studentsList
+    const term = await Term.findById(termId).populate({
+      path: "semesters",
+      populate: {
+        path: "studentsList",
+        model: "Student",
+      },
+    });
+
+    if (!term) {
+      return res.status(404).json({ message: "Term not found" });
+    }
+
+    // Find the student across all semesters within the term
+    let foundStudent = null;
+    for (const semester of term.semesters) {
+      const student = semester.studentsList.find(
+        (student) => student._id.toString() === studentId
+      );
+      if (student) {
+        foundStudent = student;
+        break;
+      }
+    }
+
+    if (!foundStudent) {
+      return res
+        .status(404)
+        .json({ message: "Student not found in the specified term" });
+    }
+
+    // Update the student details
+    Object.assign(foundStudent, updateData);
+    await foundStudent.save();
+
+    console.log("Updated Student:", foundStudent);
+
+    res.status(200).json(foundStudent);
+  } catch (error) {
+    console.error("Error updating student details:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// Set up storage for file uploads
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const uploadDir = path.join(__dirname, "uploads/student");
+
+    // Check if the directory exists, if not create it
+    if (!fs.existsSync(uploadDir)) {
+      console.log("Directory doesn't exist, creating now...");
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+
+    console.log("Setting upload destination:", uploadDir);
+    cb(null, uploadDir);
+  },
+  filename: function (req, file, cb) {
+    const uniqueName = Date.now() + "-" + file.originalname;
+    console.log("Generating unique filename:", uniqueName);
+    cb(null, uniqueName);
+  },
+});
+
+const upload = multer({ storage: storage });
+
+exports.uploadDropFile = upload.single("dropFile");
+
+// Controller function
+exports.updateDropDetails = async (req, res) => {
+  console.log("Received request to update drop details");
+
+  const { studentId } = req.params;
+  const { dropReason } = req.body;
+  const file = req.file;
+  console.log("Extracted parameters");
+  console.log("Student ID:", studentId);
+  console.log("Drop Reason:", dropReason);
+
+  let dropFileUrl;
+
+  // Check if file is uploaded
+  console.log("Checking if file is uploaded...");
+  if (req.file) {
+    dropFileUrl = "/uploads/student/" + req.file.filename; // Store the relative path
+    console.log("File uploaded:", dropFileUrl);
+  } else {
+    console.log("No file uploaded");
+  }
+
+  try {
+    // Find student by ID
+    console.log("Finding student by ID...");
+    const student = await Student.findById(studentId);
+    if (!student) {
+      console.log("Student not found");
+      return res.status(404).json({ error: "Student not found" });
+    }
+    console.log("Student found:", student);
+
+    // Update student's drop reason and file URL
+    console.log("Updating student's drop reason and file URL");
+    student.dropReason = dropReason;
+    if (dropFileUrl) {
+      student.dropFile = dropFileUrl;
+    }
+    student.dropApproval = "pending";
+
+    console.log("Saving updated student data...");
+    await student.save();
+    console.log("Student data updated successfully");
+
+    res
+      .status(200)
+      .json({ message: "Student drop details updated successfully", student });
+  } catch (error) {
+    console.error("Error updating student drop details:", error);
+    res.status(500).json({ error: error.message });
   }
 };

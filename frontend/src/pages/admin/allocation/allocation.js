@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './allocation.css';
 import * as XLSX from 'xlsx';
 import Header from '../../header/header';
@@ -8,19 +8,45 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getCourses } from '../../../actions/terms';
 import AllocationRow from './allocationRow';
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 const Allocation = () => {
   const { termId } = useParams();
+  const dispatch = useDispatch();
+  const allCourses = useSelector((state) => state.terms);
+  const [updatedCourses, setUpdatedCourses] = useState({});
+
+  useEffect(() => {
+    dispatch(getCourses(termId));
+  }, [dispatch, termId]);
 
   const handleInputChange = (courseId, event) => {
     const { id, value, checked } = event.target;
-    // Update the course in your state or dispatch an action to update in Redux
-    console.log(`Updating course ${courseId}:`, { [id]: id === 'notRun' ? checked : value });
+    setUpdatedCourses(prev => ({
+      ...prev,
+      [courseId]: {
+        ...prev[courseId],
+        [id]: id === 'notRun' ? checked : value
+      }
+    }));
   };
 
-  const applyChanges = () => {
-    // Implement the logic to apply changes
-    console.log('Applying changes');
+  const applyChanges = async () => {
+    try {
+      const promises = Object.entries(updatedCourses).map(([courseId, data]) => {
+        if (data.maxCount !== undefined) {
+          return axios.put(`/admin/${termId}/edit/allocation`, { courseId, maxCount: data.maxCount });
+        }
+        return Promise.resolve();
+      });
+
+      await Promise.all(promises);
+      console.log('All changes applied successfully');
+      // Refresh the courses after applying changes
+      dispatch(getCourses(termId));
+    } catch (error) {
+      console.error('Error applying changes:', error);
+    }
   };
 
   const downloadRowData = (rowData) => {
@@ -36,29 +62,6 @@ const Allocation = () => {
     XLSX.utils.book_append_sheet(workbook, worksheet, "All Courses");
     XLSX.writeFile(workbook, "allocation_data.xlsx");
   };
-
-  console.log("Termid: ", termId);
-
-  const dispatch = useDispatch();
-  const allCourses = useSelector((state) => state.terms);
-  console.log(allCourses);
-
-  useEffect(() => {
-    console.log("Inside useEffect with termId:", termId);
-
-    // Log before dispatching the action
-    console.log("Dispatching getCourses...");
-
-    // Dispatch action to fetch courses
-    dispatch(getCourses(termId));
-
-    // Log after dispatching action to see if `allCourses` is updated right after
-    console.log("After dispatch: ", allCourses);
-
-  }, [dispatch, termId, allCourses]);
-
-  // Log the state outside the useEffect to see when it updates
-  console.log("allCourses after render: ", allCourses);
 
   return (
     <div className="main">

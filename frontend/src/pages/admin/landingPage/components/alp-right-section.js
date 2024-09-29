@@ -31,9 +31,6 @@ const AlpRightSection = ({ term }) => {
             <tr>
               <td>{term.termYear}</td>
               <td id="view-box">
-                <Link to={`/admin/${term._id}/view`}><button className="view-button">
-                  <img src={viewicon} alt="view-logo" /> 
-                </button></Link>
                 <Link to={`/admin/${term._id}/edit/addCourses`}><button className="edit-button">
                   <img src={editicon} alt="edit-logo" />
                 </button></Link>
