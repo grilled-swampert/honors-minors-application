@@ -3,13 +3,14 @@ const fs = require("fs");
 const multer = require("multer");
 const mkdirp = require("mkdirp");
 const mongoose = require("mongoose");
+const axios = require("axios");
 const asyncHandler = require("express-async-handler");
-
-// const { addUserToDatabase } = require("../../../frontend/src/login")
 
 // Import Student, and Term models
 const Student = require("../../models/studentModel/studentModel");
 const Term = require("../../models/termModel/termModel");
+
+const backendUrl = 'http://localhost:9000';  
 
 // Ensure the uploads directory exists
 mkdirp.sync("uploads/faculty");
@@ -123,7 +124,14 @@ const importStudents = async (file, termId, branch) => {
               console.log("Creating new student:", student);
               await student.save();
 
-              // addUserToDatabase(row.email, 'password123', 'student', row.branch, student._id);
+              await axios.post(`${backendUrl}/faculty/create-user`, {
+                email: row.email,
+                password: 'defaultPassword123', // You can generate or take from CSV
+                role: 'student', // Assuming role is student
+                branch: row.branch,
+                studentId: student._id,
+              });
+
               return student._id;
             });
 

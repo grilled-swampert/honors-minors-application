@@ -63,7 +63,7 @@ const AddLeftSection = () => {
   return (
     <div className="left-section">
       <div className="date-selection">
-        <form onSubmit={handleSubmit} className='termForm'>z
+        <form onSubmit={handleSubmit} className='termForm'>
           <div className="startDate">
             <label className="start-date">Start Date:</label>
             <input

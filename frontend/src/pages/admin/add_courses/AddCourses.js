@@ -42,7 +42,6 @@ const AddCoursesPage = () => {
           <table id="ad-table">
             <thead>
               <tr>
-                <th>DOWNLOAD</th>
                 <th>Start Date</th>
                 <th>End Date</th>
                 <th>Edit</th>

@@ -43,11 +43,6 @@ const AddRightSection = ({ term, setTerms }) => {
 
   return (
     <tr key={term._id}>
-      <td>
-        <button className="download-btn">
-          <img src={downloadicon} alt="download" />
-        </button>
-      </td>
       <td className="start-date">
         {term.isEditing ? (
           <input
