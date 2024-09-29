@@ -17,6 +17,7 @@ export default function ViewDashboard({ handleViewButtonClick, student }) {
                 </button>
                 </div>
             </div>
+            
         </div>
     );
 }

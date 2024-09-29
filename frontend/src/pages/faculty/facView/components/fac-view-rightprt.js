@@ -26,7 +26,7 @@ function FacViewRightprt() {
     if (Array.isArray(termStudents)) {
       const total = termStudents.length;
       const submitted = termStudents.filter(
-        (student) => student.status?.toLowerCase() === "finished"
+        (student) => student.status?.toLowerCase() === "submitted"
       ).length;
       const notSubmitted = termStudents.filter(
         (student) => student.status?.toLowerCase() === "not-submitted"
@@ -44,8 +44,10 @@ function FacViewRightprt() {
         console.log("Active tab:", activeTab);
         // eslint-disable-next-line default-case
         switch (activeTab) {
+          case "total":
+            return true;
           case "submitted":
-            return status === "finished";
+            return status === "submitted";
           case "not-submitted":
             return status === "not-submitted"; // Ensure this matches the exact status value
         }
@@ -54,8 +56,7 @@ function FacViewRightprt() {
 
   const [tabNumbers, setTabNumbers] = useState({
     total: 0,
-    approved: 0,
-    rejected: 0,
+    submitted: 0,
     notSubmitted: 0,
   });
   const [dropdownVisible, setDropdownVisible] = useState({
@@ -93,9 +94,11 @@ function FacViewRightprt() {
   };
 
   const handleViewButtonClick = (student) => {
+    console.log('Button clicked:', student);
     setSelectedStudent(student);
     setOverlayVisible(true);
   };
+  
 
   const closeOverlay = () => {
     setOverlayVisible(false);
@@ -225,8 +228,15 @@ function FacViewRightprt() {
         </div>
 
         {overlayVisible && selectedStudent && (
-          <div id="student-info-overlay" className="overlay">
-            <div className="overlay-content">
+          <div
+            id="student-info-overlay"
+            className="overlay"
+            onClick={closeOverlay}
+          >
+            <div
+              className="overlay-content"
+              onClick={(e) => e.stopPropagation()}
+            >
               <h2>Student Information</h2>
               <strong>Name of the student:</strong>
               <p className="student-overlay-name">{selectedStudent.name}</p>

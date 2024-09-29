@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import emailjs from "@emailjs/browser";
 import DropStudents from "./dropStudents";
+import { FETCH_ALL_COURSES } from "../../../constants/actonsTypes";
 const { getDropStudents } = require("../../../actions/terms");
 
 function FacDrop() {
@@ -122,26 +123,6 @@ function FacDrop() {
                     termId={termId}
                   />
                 ))}
-
-              {students.map((student) => (
-                <tr key={student._id}>
-                  <td>{student.rollNumber}</td>
-                  <td>{student.name}</td>
-                  <td>{student.email}</td>
-                  <td>{student.dropApproval}</td>
-                  <td>
-                    <button onClick={() => openOverlay("view", student._id)}>
-                      <img src={viewicon} alt="view" />
-                    </button>
-                    <button onClick={() => openOverlay("approve", student._id)}>
-                      <img src={approveIcon} alt="approve" />
-                    </button>
-                    <button onClick={() => openOverlay("reject", student._id)}>
-                      <img src={rejectIcon} alt="reject" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
             </tbody>
           </table>
 
