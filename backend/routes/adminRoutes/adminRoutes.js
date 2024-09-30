@@ -26,7 +26,7 @@ router.get("/:termId", getTerm);
 router.post("/", createTerm);
 
 // UPDATE one term
-router.patch("/:termId", updateTerm);
+router.put("/:termId/edit/addCourses", updateTerm);
 
 // DELETE one term
 router.delete("/:termId", deleteTerm);

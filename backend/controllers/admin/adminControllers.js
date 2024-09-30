@@ -64,16 +64,17 @@ exports.deleteTerm = async (req, res) => {
 };
 
 // UPDATE a term
-exports.updateTerm = asyncHandler(async (req, res) => {
-  const { id } = req.params;
+exports.updateTerm = async (req, res) => {
+  const { termId } = req.params;
+  console.log(termId);
   try {
-    const term = await Term.findByIdAndUpdate(id, req.body, { new: true });
+    const term = await Term.findByIdAndUpdate(termId, req.body, { new: true });
     if (!term) return res.status(404).json({ message: "Term not found" });
     res.status(200).json(term);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-});
+};
 
 // ---------------------------------------------
 // DOWNLOAD syllabus

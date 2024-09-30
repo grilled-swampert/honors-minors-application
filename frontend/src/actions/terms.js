@@ -60,7 +60,7 @@ export const updateTerm = (id, term) => async (dispatch) => {
   } catch (error) {
     console.log(error.message);
   }
-};
+}
 
 export const deleteTerm = (id) => async (dispatch) => {
   try {
