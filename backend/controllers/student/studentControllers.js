@@ -1,6 +1,7 @@
 const Term = require("../../models/termModel/termModel");
 const Student = require("../../models/studentModel/studentModel");
 const Course = require("../../models/courseModel/courseModel");
+const Broadcast = require("../../models/broadcastModel/broadcastMessageModel");
 
 const multer = require('multer');
 const path = require('path');
@@ -154,42 +155,53 @@ exports.getFilteredCoursesForStudent = async (req, res) => {
   }
 };
 
-// GET term from student usinf student ID
 exports.getTermFromStudent = asyncHandler(async (req, res) => {
   try {
     const studentId = req.params.studentId;
     
     // Find the student by ID
     const student = await Student.findById(studentId);
+    console.log("Student:", student);
 
     if (!student) {
       return res.status(404).json({ message: "Student not found" });
     }
 
-    console.log("Student:", student);
-
     // Retrieve the term ID from the student object
     const termId = student.terms;
-    console.log("Term ID:", termId);
 
     // Find the term by the term ID
     const term = await Term.findById(termId);
+    console.log("Term:", term);
 
     if (!term) {
       return res.status(404).json({ message: "Term not found" });
     }
 
-    console.log("Term:", term);
+    // Retrieve finalCourse and courses from the student
+    const finalCourseId = student.finalCourse;
+    const courseIds = student.courses;
 
-    // Return both student data and associated term data
+    console.log("Final Course ID:", finalCourseId);
+    console.log("Course IDs:", courseIds);
+
+    // Find final course and courses by their IDs
+    const finalCourse = finalCourseId ? await Course.findById(finalCourseId) : null;
+    const courses = courseIds && courseIds.length > 0 ? await Course.find({ _id: { $in: courseIds } }) : [];
+
+    // Return student, term, finalCourse (if it exists), and courses (if they exist)
     res.json({
+      term,
       student,
-      term
+      finalCourse: finalCourse || null,
+      courses: courses.length > 0 ? courses : []
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
+
+
 
 exports.getStudentDetails = asyncHandler(async (req, res) => {
   const studentId = req.params.studentId;
@@ -453,3 +465,17 @@ exports.updateDropDetails = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.getActiveBroadcastMessages = asyncHandler(async (req, res) => {
+  try {
+    const messages = await Broadcast.find({ isActive: true }).sort('-createdAt');
+
+    console.log(`Active broadcast messages found: ${messages.length}`);
+    console.log('Messages:', messages);
+
+    res.json(messages);
+  } catch (error) {
+    console.error("Error fetching broadcast messages:", error);
+    res.status(500).json({ error: "Server error. Please try again later." });
+  }
+});

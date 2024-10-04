@@ -13,10 +13,22 @@ const AddRightSection = ({ term, setTerms }) => {
 
   useEffect(() => {
     if (term) {
-      setLocalStartDate(new Date(term.startDate).toISOString().slice(0, 16));
-      setLocalEndDate(new Date(term.endDate).toISOString().slice(0, 16));
+      // Convert term.startDate and term.endDate to local time for input fields
+      const startDate = new Date(term.startDate);
+      const endDate = new Date(term.endDate);
+  
+      const localStartDate = new Date(startDate.getTime() - startDate.getTimezoneOffset() * 60000)
+        .toISOString()
+        .slice(0, 16);
+  
+      const localEndDate = new Date(endDate.getTime() - endDate.getTimezoneOffset() * 60000)
+        .toISOString()
+        .slice(0, 16);
+  
+      setLocalStartDate(localStartDate);
+      setLocalEndDate(localEndDate);
     }
-  }, [term]);
+  }, [term]);  
 
   const handleConfirm = async (e) => {
     e.preventDefault();

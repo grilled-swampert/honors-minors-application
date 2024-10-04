@@ -6,6 +6,7 @@ const {
   updateDropDetails,
   uploadDropFile
 } = require("../../controllers/student/studentControllers");
+const { getActiveBroadcastMessages } = require("../../controllers/student/studentControllers");
 const Student = require("../../models/studentModel/studentModel");
 const mongoose = require("mongoose");
 const Course = require("../../models/courseModel/courseModel");
@@ -17,5 +18,6 @@ router.get("/:studentId/courses", getFilteredCoursesForStudent);
 
 router.patch("/:studentId/courses", submitCourses);
 router.put('/:studentId/dashboard', uploadDropFile , updateDropDetails);
+router.get("/broadcast-messages", getActiveBroadcastMessages);
 
 module.exports = router;

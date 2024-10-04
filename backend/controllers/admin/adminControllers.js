@@ -1,6 +1,7 @@
 const Term = require("../../models/termModel/termModel");
 const Course = require("../../models/courseModel/courseModel");
 const Student = require("../../models/studentModel/studentModel");
+const BroadcastMessage = require("../../models/broadcastModel/broadcastMessageModel");
 const { Parser } = require("json2csv");
 const path = require("path");
 const fs = require("fs");
@@ -116,160 +117,192 @@ exports.getAllCourses = asyncHandler(async (req, res) => {
     // Find the courses using the extracted course IDs
     const courses = await Course.find({ _id: { $in: courseIds } });
 
-    // Send the full course details
+    // Count preferences for all courses in the term
+    const preferenceUpdateResult = await Course.countPreferencesForAllCourses(
+      termId
+    );
+    console.log(
+      `Preference counts updated for term ${termId}:`,
+      preferenceUpdateResult
+    );
+
+    // Send the full course details after updating preferences
     res.json(courses);
   } catch (error) {
+    console.error(`Error fetching courses for term ${termId}:`, error);
     res.status(500).json({ message: error.message });
   }
 });
 
 // ----------------------------------------------------------------
-// deactivating a course and its repurcussions
-exports.deactivateCourse = async (req, res) => {
+exports.toggleCourseActivation = async (req, res) => {
   try {
     const { termId } = req.params;
-    const { courseId } = req.body;
+    const { courseId, status, temporaryStatus } = req.body;
 
-    console.log(
-      `Checkpoint 1: Received termId = ${termId} and courseId = ${courseId}`
-    );
-
-    // 1. Find the term by termId
+    // Find the term by termId
     const term = await Term.findById(termId);
     if (!term) {
-      console.log(`Checkpoint 2: Term with ID ${termId} not found`);
       return res.status(404).json({ message: "Term not found" });
     }
-    console.log(`Checkpoint 2: Term found - ${termId}`);
-    console.log(term);
 
-    // 2. Access all student lists ending with "_SL"
+    // Access all student lists ending with "_SL"
     const branchStudentLists = Object.keys(term.toObject()).filter((key) =>
       key.endsWith("_SL")
     );
-    console.log(
-      `Checkpoint 3: Found branch student lists - ${branchStudentLists}`
-    );
 
-    // 3. Find the course by courseId and mark it as inactive
+    // Find the course by courseId
     const course = await Course.findById(courseId);
     if (!course) {
-      console.log(`Checkpoint 4: Course with ID ${courseId} not found`);
       return res.status(404).json({ message: "Course not found" });
     }
-    console.log(`Checkpoint 4: Course found - ${courseId}`);
 
-    // Marking course status as inactive
-    course.firstPreference = 404;
-    course.secondPreference = 404;
-    course.thirdPreference = 404;
-    course.fourthPreference = 404;
-    course.fifthPreference = 404;
-    course.status = "inactive";
-    await course.save();
-    console.log(
-      `Checkpoint 5: Course status updated to inactive - ${courseId}`
-    );
+    // Permanent Deactivation
+    if (status === "inactive") {
+      course.status = "inactive";
+      await course.save();
 
-    // 4. Loop through each branch's student list
-    for (let branch of branchStudentLists) {
-      console.log(branch);
-      const students = term[branch]; // Accessing each branch's student list
-      console.log(students);
-      console.log(
-        `Checkpoint 6: Processing branch ${branch} with student IDs: ${students}`
-      );
+      // Loop through each branch's student list
+      for (let branch of branchStudentLists) {
+        const students = term[branch]; // Accessing each branch's student list
 
-      // 5. Find all students where `finalCourse` matches `courseId`
-      const studentsToUpdate = await Student.find({
-        _id: { $in: students },
-        finalCourse: courseId,
-      });
-      console.log(
-        `Checkpoint 7: Found students to update for course ${courseId} in branch ${branch} - ${studentsToUpdate.map(
-          (s) => s._id
-        )}`
-      );
+        // Find all students where finalCourse matches courseId
+        const studentsToUpdate = await Student.find({
+          _id: { $in: students },
+          finalCourse: courseId,
+        });
 
-      // 6. For each student, remove `courseId` from `courses` array and update `finalCourse`
-      for (let student of studentsToUpdate) {
-        console.log(`Checkpoint 8: Updating student ${student._id}`);
-
-        // Remove `courseId` from the student's courses array
-        student.courses = student.courses.filter(
-          (course) => course.toString() !== courseId
-        );
-        console.log(
-          `Checkpoint 9: Removed course ${courseId} from student ${student._id}'s courses`
-        );
-
-        // Update `finalCourse` to the first course in the array (if any)
-        student.finalCourse =
-          student.courses.length > 0 ? student.courses[0] : null;
-        console.log(
-          `Checkpoint 10: Updated finalCourse for student ${student._id} to ${student.finalCourse}`
-        );
-
-        // Loop through student's courses and adjust preference counts
-        for (let i = 0; i <= student.courses.length; i++) {
-          const course = await Course.findById(student.courses[i]);
-
-          if (!course) {
-            console.log(
-              `Checkpoint 11: Course with ID ${student.courses[i]} not found for preference update`
-            );
-            continue;
+        // Update student course arrays and finalCount for next course
+        for (let student of studentsToUpdate) {
+          const nextActiveCourse = await getNextActiveCourse(
+            student.courses,
+            courseId
+          );
+          if (nextActiveCourse) {
+            nextActiveCourse.finalCount++;
+            await nextActiveCourse.save();
           }
 
-          if (i === 0) {
-            // First course in the array: Increment firstPreference, decrement secondPreference
-            course.firstPreference++;
-            course.secondPreference--;
-            course.finalCount++;
-            console.log(
-              `Checkpoint 12: Updated preferences for first course in student ${student._id}'s list - ${course._id}`
-            );
-          } else if (i === 1) {
-            // Second course in the array: Increment secondPreference, decrement thirdPreference
-            course.secondPreference++;
-            course.thirdPreference--;
-            console.log(
-              `Checkpoint 13: Updated preferences for second course in student ${student._id}'s list - ${course._id}`
-            );
-          } else if (i === 2) {
-            // Third course in the array: Increment thirdPreference, decrement fourthPreference
-            course.thirdPreference++;
-            course.fourthPreference--;
-            console.log(
-              `Checkpoint 14: Updated preferences for third course in student ${student._id}'s list - ${course._id}`
-            );
-          } else if (i === 3) {
-            // Fourth course in the array: Increment fourthPreference, decrement fifthPreference
-            course.fourthPreference++;
-            course.fifthPreference--;
-            console.log(
-              `Checkpoint 15: Updated preferences for fourth course in student ${student._id}'s list - ${course._id}`
-            );
-          }
-
-          // Save the updated course preferences
+          // Decrease finalCount for the deactivated course
+          course.finalCount--;
           await course.save();
         }
-
-        await student.save();
-        console.log(`Checkpoint 16: Student ${student._id} saved successfully`);
       }
+
+      return res.status(200).json({
+        message: "Course permanently deactivated and final counts updated",
+      });
     }
 
-    console.log("Checkpoint 17: All students and courses updated successfully");
-    res
-      .status(200)
-      .json({ message: "Course and students updated successfully" });
+    // Temporary Deactivation
+    if (temporaryStatus === "inactive") {
+      course.temporaryStatus = "inactive";
+      await course.save();
+
+      // Loop through each branch's student list
+      for (let branch of branchStudentLists) {
+        const students = term[branch];
+
+        // Find students who have this course in their courses array
+        const studentsToUpdate = await Student.find({
+          _id: { $in: students },
+          courses: courseId,
+        });
+
+        for (let student of studentsToUpdate) {
+          // Backup and remove all instances of the course
+          const backupEntries = student.courses
+            .map((course, index) =>
+              course.toString() === courseId
+                ? { courseId, preferenceIndex: index }
+                : null
+            )
+            .filter((entry) => entry);
+
+          if (backupEntries.length > 0) {
+            student.tempBackupCourses.push(...backupEntries);
+            student.courses = student.courses.filter(
+              (c) => c.toString() !== courseId
+            );
+
+            const nextActiveCourse = await getNextActiveCourse(student.courses);
+            if (nextActiveCourse) {
+              nextActiveCourse.finalCount++;
+              await nextActiveCourse.save();
+            }
+
+            await student.save();
+          }
+        }
+      }
+
+      return res.status(200).json({
+        message: "Course temporarily deactivated and students updated",
+      });
+    }
+
+    // Temporary Activation
+    if (temporaryStatus === "active") {
+      course.temporaryStatus = "active";
+      await course.save();
+
+      // Loop through each branch's student list
+      for (let branch of branchStudentLists) {
+        const students = term[branch];
+
+        // Find students who have backed-up data for this course
+        const studentsToUpdate = await Student.find({
+          _id: { $in: students },
+          tempBackupCourses: { $elemMatch: { courseId: courseId } },
+        });
+
+        for (let student of studentsToUpdate) {
+          const backupEntries = student.tempBackupCourses.filter(
+            (backup) => backup.courseId === courseId
+          );
+
+          backupEntries.forEach((backup) => {
+            student.courses.splice(backup.preferenceIndex, 0, courseId);
+          });
+
+          student.tempBackupCourses = student.tempBackupCourses.filter(
+            (backup) => backup.courseId !== courseId
+          );
+
+          const nextActiveCourse = await getNextActiveCourse(student.courses);
+          if (nextActiveCourse) {
+            nextActiveCourse.finalCount--;
+            await nextActiveCourse.save();
+          }
+
+          await student.save();
+        }
+      }
+
+      return res.status(200).json({
+        message: "Course temporarily activated and student data reverted",
+      });
+    }
   } catch (error) {
-    console.error(`Checkpoint Error: ${error.message}`);
+    console.error(`Error: ${error.message}`);
     res.status(500).json({ message: "Server error" });
   }
 };
+
+// Helper function to find the next active course
+async function getNextActiveCourse(courses, deactivatedCourseId) {
+  for (let i = 0; i < courses.length; i++) {
+    const currentCourse = await Course.findById(courses[i]);
+    if (
+      currentCourse &&
+      currentCourse._id.toString() !== deactivatedCourseId &&
+      currentCourse.status === "active"
+    ) {
+      return currentCourse;
+    }
+  }
+  return null;
+}
 
 exports.setMaxCount = async (req, res) => {
   const { termId } = req.params;
@@ -296,12 +329,15 @@ exports.setMaxCount = async (req, res) => {
     console.log(`Checkpoint 01: Course found - ${courseId}`);
 
     // Marking course status as inactive
-    if (courseMax.firstPreference > maxCount) courseMax.firstPreference = maxCount;
+    if (courseMax.firstPreference > maxCount)
+      courseMax.firstPreference = maxCount;
     await courseMax.save();
     console.log(`Checkpoint 02: Course preferences updated - ${courseId}`);
 
     // Extract student lists for branches ending with "_SL"
-    console.log('Step 3: Extracting student lists for branches ending with "_SL"');
+    console.log(
+      'Step 3: Extracting student lists for branches ending with "_SL"'
+    );
     const studentLists = Object.keys(term.toObject()).filter((key) =>
       key.endsWith("_SL")
     );
@@ -321,7 +357,10 @@ exports.setMaxCount = async (req, res) => {
       console.log(`Step 4: Students fetched from branch: ${students.length}`);
     }
 
-    console.log("Step 5: All students with finalCourse as courseId fetched:", allStudents);
+    console.log(
+      "Step 5: All students with finalCourse as courseId fetched:",
+      allStudents
+    );
 
     // Save the submittedAt time for all relevant students
     for (const student of allStudents) {
@@ -339,8 +378,14 @@ exports.setMaxCount = async (req, res) => {
     const selectedStudents = allStudents.slice(maxCount);
     const excessStudents = allStudents.slice(0, maxCount);
 
-    console.log("Step 8: Selected students within maxCount:", selectedStudents.length);
-    console.log("Step 8: Excess students exceeding maxCount:", excessStudents.length);
+    console.log(
+      "Step 8: Selected students within maxCount:",
+      selectedStudents.length
+    );
+    console.log(
+      "Step 8: Excess students exceeding maxCount:",
+      excessStudents.length
+    );
 
     // Process excess students (remove course and update preferences)
     for (const student of excessStudents) {
@@ -350,7 +395,9 @@ exports.setMaxCount = async (req, res) => {
       student.courses = student.courses.filter(
         (course) => course.toString() !== courseId
       );
-      console.log(`Step 9: Course removed from student ${student._id} courses array:`);
+      console.log(
+        `Step 9: Course removed from student ${student._id} courses array:`
+      );
 
       // Update course preferences for the remaining courses
       for (let i = 0; i < student.courses.length; i++) {
@@ -360,21 +407,29 @@ exports.setMaxCount = async (req, res) => {
           continue;
         }
 
-        console.log(`Step 10: Processing course ${course._id} for student ${student._id}`);
+        console.log(
+          `Step 10: Processing course ${course._id} for student ${student._id}`
+        );
 
         if (i === 0) {
           course.firstPreference = Math.max(0, course.firstPreference + 1);
           course.secondPreference = Math.max(0, course.secondPreference - 1);
           course.finalCount++;
-          console.log(`Step 10: Updated firstPreference and secondPreference for course ${course._id}`);
+          console.log(
+            `Step 10: Updated firstPreference and secondPreference for course ${course._id}`
+          );
         } else if (i === 1) {
           course.secondPreference = Math.max(0, course.secondPreference + 1);
           course.thirdPreference = Math.max(0, course.thirdPreference - 1);
-          console.log(`Step 10: Updated secondPreference and thirdPreference for course ${course._id}`);
+          console.log(
+            `Step 10: Updated secondPreference and thirdPreference for course ${course._id}`
+          );
         } else if (i === 2) {
           course.thirdPreference = Math.max(0, course.thirdPreference + 1);
           course.fourthPreference = Math.max(0, course.fourthPreference - 1);
-          console.log(`Step 10: Updated thirdPreference and fourthPreference for course ${course._id}`);
+          console.log(
+            `Step 10: Updated thirdPreference and fourthPreference for course ${course._id}`
+          );
         }
 
         // Save the course preference updates
@@ -384,7 +439,9 @@ exports.setMaxCount = async (req, res) => {
 
       // Update student's final course to the first course in their array
       student.finalCourse = student.courses[0] || null;
-      console.log(`Step 11: Updated finalCourse for student ${student._id}: ${student.finalCourse}`);
+      console.log(
+        `Step 11: Updated finalCourse for student ${student._id}: ${student.finalCourse}`
+      );
 
       // Save the student updates
       await student.save();
@@ -492,4 +549,91 @@ exports.getStudentsAllocatedToCourse = async (req, res) => {
     console.error("Error in getStudentsAllocatedToCourse:", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
+};
+
+exports.getAllocationInfo = async (req, res) => {
+  try {
+    const { termId } = req.params;
+    console.log(`Fetching allocation info for termId: ${termId}`);
+
+    const term = await Term.findById(termId);
+    if (!term) {
+      console.log(`Term not found for termId: ${termId}`);
+      return res.status(404).json({ message: "Term not found" });
+    }
+
+    const courses = await Course.find({ _id: { $in: term.courses } });
+
+    // Prepare data for CSV
+    const csvData = courses.map((course) => ({
+      offeringDepartment: course.offeringDepartment,
+      programName: course.programName,
+      category: course.category, // This should be minors/honors
+      finalCount: course.finalCount,
+    }));
+
+    // Generate CSV
+    const fields = [
+      "offeringDepartment",
+      "programName",
+      "category",
+      "finalCount",
+    ];
+    const json2csvParser = new Parser({ fields });
+    const csv = json2csvParser.parse(csvData);
+
+    // Set headers for CSV download
+    res.setHeader(
+      "Content-disposition",
+      `attachment; filename=allocation_info_${termId}.csv`
+    );
+    res.set("Content-Type", "text/csv");
+    res.status(200).send(csv);
+  } catch (error) {
+    console.error("Error in getAllocationInfo:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+exports.createBroadcastMessage = async (req, res) => {
+  const { text } = req.body;
+  const message = new BroadcastMessage({ text });
+  await message.save();
+  res.status(201).json(message);
+};
+
+exports.getActiveBroadcastMessages = async (req, res) => {
+  try {
+    const messages = await BroadcastMessage.find().sort("-createdAt");
+    res.json(messages);
+  } catch (error) {
+    console.error("Error fetching broadcast messages:", error);
+    res.status(500).json({ error: "Server error. Please try again later." });
+  }
+};
+
+exports.deleteBroadcastMessage = async (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ message: "ID is required" });
+  }
+
+  try {
+    await BroadcastMessage.findByIdAndDelete(id);
+    res.status(200).json({ message: "Broadcast message deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting message", error });
+  }
+};
+
+exports.toggleBroadcastMessage = async (req, res) => {
+  const { id } = req.body;
+  const message = await BroadcastMessage.findById(id);
+  if (!message) {
+    return res.status(404).json({ message: "Broadcast message not found" });
+  }
+  message.isActive = !message.isActive;
+  await message.save();
+  res.status(200).json(message);
 };

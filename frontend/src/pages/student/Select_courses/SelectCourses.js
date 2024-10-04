@@ -13,7 +13,13 @@ function SelectCourses() {
     const checkbox = event.target;
     if (checkbox.checked) {
       if (selectedCourses.length < 4) {
-        setSelectedCourses(prevCourses => [...prevCourses,  { ...course, id: course._id || course.id }]);
+        setSelectedCourses(prevCourses => {
+          // Check if the course is already in the list
+          if (!prevCourses.some(c => c.id === course.id)) {
+            return [...prevCourses, { ...course, id: course._id || course.id }];
+          }
+          return prevCourses;
+        });
       } else {
         checkbox.checked = false;
         alert('You can only select up to 4 courses.');
@@ -24,10 +30,12 @@ function SelectCourses() {
   };
 
   const handleRemoveCourse = (courseId) => {
-    setSelectedCourses(prevCourses => {
-      const newCourses = prevCourses.filter(course => course.id !== courseId);
-      return newCourses;
-    });  
+    setSelectedCourses(prevCourses => prevCourses.filter(course => course.id !== courseId));
+    // Uncheck the corresponding checkbox in the CourseList
+    const checkbox = document.querySelector(`input[type="checkbox"][data-course-id="${courseId}"]`);
+    if (checkbox) {
+      checkbox.checked = false;
+    }
   };
 
   return (
@@ -37,16 +45,16 @@ function SelectCourses() {
         <div className={styles.coursesSelectorList}>
           <SelectCourseHeader />
           <CourseList 
-          selectedCourses={selectedCourses} 
-          handleCourseSelection={handleCourseSelection} 
+            selectedCourses={selectedCourses} 
+            handleCourseSelection={handleCourseSelection} 
           />
         </div>
         <div className={styles.coursesAdded}>
           <CourseAddedHeading />
           <CourseAdded
-          selectedCourses={selectedCourses}
-          handleRemoveCourse={handleRemoveCourse}
-          setSelectedCourses={setSelectedCourses}
+            selectedCourses={selectedCourses}
+            handleRemoveCourse={handleRemoveCourse}
+            setSelectedCourses={setSelectedCourses}
           />
         </div>
       </div>

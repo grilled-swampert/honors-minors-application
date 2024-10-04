@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import './allocation.css';
-import * as XLSX from 'xlsx';
-import Header from '../../header/header';
-import AdminSideBar from '../admin-sidebar/adminSidebar';
-import downloadIcon from '../../photos-logos/download.png';
+import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCourses } from '../../../actions/terms';
 import AllocationRow from './allocationRow';
+import Header from '../../header/header';
+import AdminSideBar from '../admin-sidebar/adminSidebar';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import downloadIcon from '../../photos-logos/download.png';
 
 const Allocation = () => {
   const { termId } = useParams();
@@ -16,26 +15,34 @@ const Allocation = () => {
   const allCourses = useSelector((state) => state.terms);
   const [updatedCourses, setUpdatedCourses] = useState({});
 
+  // Fetch the courses when the component is mounted or termId changes
   useEffect(() => {
     dispatch(getCourses(termId));
   }, [dispatch, termId]);
 
+  // Handle input changes for maxCount and notRun
   const handleInputChange = (courseId, event) => {
     const { id, value, checked } = event.target;
-    setUpdatedCourses(prev => ({
+    setUpdatedCourses((prev) => ({
       ...prev,
       [courseId]: {
         ...prev[courseId],
-        [id]: id === 'notRun' ? checked : value
-      }
+        [id]: id === 'notRun' ? checked : value,
+      },
     }));
   };
 
+  // Apply changes for all updated courses
   const applyChanges = async () => {
     try {
       const promises = Object.entries(updatedCourses).map(([courseId, data]) => {
-        if (data.maxCount !== undefined) {
-          return axios.put(`/admin/${termId}/edit/allocation`, { courseId, maxCount: data.maxCount });
+        // Send only the changed fields (e.g., maxCount or notRun status)
+        if (data.maxCount !== undefined || data.notRun !== undefined) {
+          return axios.put(`/admin/${termId}/edit/allocation`, {
+            courseId,
+            maxCount: data.maxCount,
+            notRun: data.notRun,
+          });
         }
         return Promise.resolve();
       });
@@ -44,23 +51,56 @@ const Allocation = () => {
       console.log('All changes applied successfully');
       // Refresh the courses after applying changes
       dispatch(getCourses(termId));
+      setUpdatedCourses({}); // Reset the changes after applying
     } catch (error) {
       console.error('Error applying changes:', error);
     }
   };
 
-  const downloadRowData = (rowData) => {
-    const worksheet = XLSX.utils.json_to_sheet([rowData]);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Course Data");
-    XLSX.writeFile(workbook, `${rowData.offeringDepartment}_${rowData.programName}_data.xlsx`);
+  // Download a single course's student list
+  const downloadRowData = async (courseId) => {
+    try {
+      const response = await axios.get(`/admin/${termId}/course/${courseId}/students`, {
+        responseType: 'blob', // Important for handling file downloads
+      });
+
+      // Create a Blob from the response data
+      const blob = new Blob([response.data], { type: 'text/csv' });
+
+      // Create a link element and trigger the download
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = `students_course_${courseId}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Error downloading CSV:', error);
+      // Handle error (e.g., show an error message to the user)
+    }
   };
 
-  const downloadAllData = () => {
-    const worksheet = XLSX.utils.json_to_sheet(allCourses);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "All Courses");
-    XLSX.writeFile(workbook, "allocation_data.xlsx");
+  // Download all courses' allocation information
+  const downloadAllData = async () => {
+    try {
+      const response = await axios.get(`/admin/${termId}/edit/allocation`, {
+        responseType: 'blob',
+      });
+
+      // Create a Blob from the response data
+      const blob = new Blob([response.data], { type: 'text/csv' });
+
+      // Create a link element and trigger the download
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = `allocation_info_${termId}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Error downloading CSV:', error);
+      // Handle error (e.g., show an error message to the user)
+    }
   };
 
   return (
@@ -90,7 +130,7 @@ const Allocation = () => {
                 key={course._id}
                 course={course}
                 handleInputChange={handleInputChange}
-                downloadRowData={downloadRowData}
+                downloadRowData={() => downloadRowData(course._id)} // Pass function with courseId
                 downloadIcon={downloadIcon}
               />
             ))}

@@ -5,7 +5,6 @@ import {
   UPDATE_TERM,
   DELETE_TERM,
   FETCH_STUD_TERM,
-  FETCH_STUD_DETAILS,
   FETCH_STUDENTS,
   FETCH_ALL_COURSES,
   SUBMIT_COURSES,
@@ -151,6 +150,15 @@ export const submitCourses = (studentId, courses) => async (dispatch) => {
     console.error("Error submitting courses:", error.message);
   }
 };
+
+export const toggleCourse = (termId, courseId) => async (dispatch) => {
+  try {
+    const { data } = await api.toggleCourseActivation(termId, courseId);
+    dispatch({ type: "TOGGLE_COURSE_SUCCESS", payload: data });
+  } catch (error) {
+    dispatch({ type: "TOGGLE_COURSE_FAILURE", payload: error.message });
+  }
+}
 
 export const deactivateCourse = (termId, courseId) => async (dispatch) => {
   try {

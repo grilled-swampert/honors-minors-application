@@ -1,105 +1,107 @@
 .coursesRow {
-    margin: 30px;
-    background-color: #fef6e4;
-    border-radius: 20px;
-    box-shadow: 1px 1px 5px 1px #888888;
-  }
+  margin: 30px;
+  background-color: #fef6e4;
+  border-radius: 20px;
+  box-shadow: 1px 1px 5px 1px #888888;
+}
 
-  .coursesRow.collapsed .collapsibleContent {
-    max-height: 0;
-  }
+.coursesRow.collapsed .collapsibleContent {
+  max-height: 0;
+}
 
-  .coursesRow.collapsed .tabCollapse .faAngleDown {
-    transform: rotate(180deg);
-  }
+.coursesRow.collapsed .tabCollapse .faAngleDown {
+  transform: rotate(180deg);
+}
 
-  .rowHeading {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 30px;
-  }
+.rowHeading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px;
+}
 
-  .iconContainer {
-    display: flex;
-    gap: 20px;
-    margin-right: 20px;
-    width: 100%;
-  }
+.iconContainer {
+  display: flex;
+  gap: 20px;
+  margin-right: 20px;
+  width: 100%;
+}
 
-  .iconSpacing {
-    display: flex;
-    justify-content: space-between;
-    width: 50%;
-    margin-right: 20px; 
-  }
+.iconSpacing {
+  display: flex;
+  justify-content: space-between;
+  width: 50%;
+  margin-right: 20px;
+}
 
-  .iconWrapper, .semesterWrapper, .deadlineWrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  
-  .deadlineWrapper {
-    color: red;
-  }
+.iconWrapper,
+.semesterWrapper,
+.deadlineWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
 
-  
+.deadlineWrapper {
+  color: red;
+}
+
 .tabCollapse {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    margin-right: 10px;
-  }
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-right: 10px;
+}
 
-  .collapsibleContent {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 20px;
-  }
-  
-  .collapsibleContentButtons {
-    flex: 0 0 auto;
-    margin-right: 20px;
-  }
-  
-  .collapsibleContentInfo {
-    flex: 1;
-    margin-right: 20px;
-  }
-  
-  .courseInfo {
-    padding: 30px;
-  }
-  
-  .completeApplication {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-  }
-  
-  .completeApplicationBtn, .dropApplicationBtn {
-    align-self: flex-end;
-    margin-top: auto; 
-    background-color: #fef6e4;
-    height: 70px;
-    color: #001858;
-    border: 5px solid #001858;
-    border-radius: 20px;
-    padding: 5px 15px;
-    cursor: pointer;
-    font-size: 1.25rem;
-    box-shadow: 1px 1px 5px 1px #888888;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+.collapsibleContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px;
+}
 
-  .courseSelectionStatus,
+.collapsibleContentButtons {
+  flex: 0 0 auto;
+  margin-right: 20px;
+}
+
+.collapsibleContentInfo {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.courseInfo {
+  padding: 30px;
+}
+
+.completeApplication {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.completeApplicationBtn,
+.dropApplicationBtn {
+  align-self: flex-end;
+  margin-top: auto;
+  background-color: #fef6e4;
+  height: 70px;
+  color: #001858;
+  border: 5px solid #001858;
+  border-radius: 20px;
+  padding: 5px 15px;
+  cursor: pointer;
+  font-size: 1.25rem;
+  box-shadow: 1px 1px 5px 1px #888888;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.courseSelectionStatus,
 .certificationStatus {
   font-size: 1.2rem;
 }
@@ -121,16 +123,23 @@
 }
 
 .academicYear {
-    margin-top: 10px;
-  }
-  
-  .iconWrapper i {
-    font-size: 150%;
-    margin: 10px;
-  }
-  
-  .iconWrapper span, .semesterWrapper span {
-    font-size: 1.5rem;
-  }
+  margin-top: 10px;
+}
 
-  
+.iconWrapper i {
+  font-size: 150%;
+  margin: 10px;
+}
+
+.iconWrapper span,
+.semesterWrapper span {
+  font-size: 1.5rem;
+}
+
+.disabledButton {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #cccccc;
+  color: #666666;
+  border-color: #999999;
+}

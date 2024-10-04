@@ -26,8 +26,6 @@ export default function CourseRow({
     })}`;
   };
 
-  
-
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
   };
@@ -43,7 +41,9 @@ export default function CourseRow({
   const dispatch = useDispatch();
 
   // Adding a fallback for useSelector
-  const { term, student } = useSelector((state) => state.terms || {});
+  const { term, student, finalCourse, courses } = useSelector(
+    (state) => state.terms || {}
+  );
 
   console.log("Term Data:", term);
   console.log("Student Data:", student);
@@ -52,6 +52,24 @@ export default function CourseRow({
     // Dispatch the action to fetch both term and student details
     dispatch(getTermDetails(studentId));
   }, [dispatch, studentId]);
+
+  const isApplicationDisabled = () => {
+    const currentTime = Date.now();
+
+    // Safely check if term and endDate exist
+    if (term && term.endDate) {
+      const deadlineTime = new Date(term.endDate).getTime();
+      const isPastDeadline = currentTime > deadlineTime;
+
+      // Safely check if student exists and has a status
+      const isSubmitted = student && student.status === "submitted";
+
+      return isPastDeadline || isSubmitted;
+    }
+
+    // If term or endDate is undefined, disable by default
+    return true;
+  };
 
   return (
     <div
@@ -91,16 +109,19 @@ export default function CourseRow({
           <div className={styles.courseInfo}>
             <strong className={styles.courseType}>FINAL ALLOTMENT: </strong>
             <p className={styles.selectedCourseType}>
-              {student && student.finalCourse
-                ? student.finalCourse
+              {student &&
+              student.finalCourse &&
+              finalCourse &&
+              finalCourse.programName
+                ? finalCourse.programName
                 : "No final course"}
             </p>
             <br />
             <strong className={styles.courseChosen}>COURSE CHOICES: </strong>
             <ul className={styles.selectedCourseName}>
               {student && student.courses && student.courses.length > 0 ? (
-                student.courses.map((course, index) => (
-                  <li key={index}>{course}</li>
+                courses.map((course, index) => (
+                  <li key={index}>{course.programName}</li>
                 ))
               ) : (
                 <li>No courses chosen</li>
@@ -110,7 +131,12 @@ export default function CourseRow({
         </div>
         <div className={styles.completeApplication}>
           <Link to={`/student/${studentId}/courses`}>
-            <button className={styles.completeApplicationBtn}>
+            <button
+              className={`${styles.completeApplicationBtn} ${
+                isApplicationDisabled() ? styles.disabledButton : ""
+              }`}
+              disabled={isApplicationDisabled()}
+            >
               COMPLETE APPLICATION
             </button>
           </Link>

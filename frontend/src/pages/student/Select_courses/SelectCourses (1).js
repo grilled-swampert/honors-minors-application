@@ -14,11 +14,11 @@ function SelectCourses() {
   const handleCourseSelection = (event, course) => {
     const checkbox = event.target;
     if (checkbox.checked) {
-      if (selectedCourses.length < 4) {
+      if (selectedCourses.length == 6) {
         setSelectedCourses(prevCourses => [...prevCourses, { ...course, id: course._id || course.id }]);
       } else {
         checkbox.checked = false;
-        alert('You can only select up to 4 courses.');
+        alert('You can only select up to 6 courses.');
       }
     } else {
       setSelectedCourses(prevCourses => prevCourses.filter(c => c.id !== course.id));

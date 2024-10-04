@@ -5,7 +5,7 @@ export default function CourseAddedHeading() {
     return(
         <div className={styles.coursesAddedHeading}>
             <h1>Courses Added</h1>
-            <h4>Select up to 4 courses</h4>
+            <h4>Select 6 courses</h4>
           </div>
     )
 }

@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import styles from "./courseAdded.module.css";
 import Sortable from "sortablejs";
-
 export default function CourseAdded({
   selectedCourses,
   handleRemoveCourse,
@@ -12,6 +11,11 @@ export default function CourseAdded({
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
+    if (selectedCourses.length !== 6) {
+      alert("Please select exactly 6 courses before submitting.");
+      return;
+    }
+
     try {
       console.log("Submitting courses");
       const response = await fetch(`/student/${studentId}/courses`, {

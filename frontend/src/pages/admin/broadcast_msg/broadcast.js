@@ -1,28 +1,64 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './broadcast.css'; 
 import deleteicon from '../../photos-logos/delete.png';
 import Header from '../../header/header';
 import AdminSideBar from '../admin-sidebar/adminSidebar';
+import { useParams } from 'react-router-dom';
+
 const Broadcast = () => {
-
   const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState('');
 
+  const { termId } = useParams();
 
-  const handleAddMessage = () => {
-    const messageInput = document.getElementById('message-input');
-    const messageValue = messageInput.value.trim();
+  useEffect(() => {
+    fetchMessages();
+  }, []);
 
-    if (messageValue) {
-      setMessages(prevMessages => [
-        ...prevMessages,
-        { id: prevMessages.length + 1, text: messageValue }
-      ]);
-      messageInput.value = '';
+  const fetchMessages = async () => {
+    try {
+      console.log('Fetching messages...');
+      const response = await axios.get(`/admin/${termId}/edit/broadcast`);
+      console.log('Response:', response);
+      console.log('Fetched messages:', response.data);
+      setMessages(response.data);
+    } catch (error) {
+      console.error('Error fetching messages:', error.response ? error.response.data : error.message);
     }
   };
 
-  const handleDeleteMessage = (id) => {
-    setMessages(prevMessages => prevMessages.filter(message => message.id !== id));
+  const handleAddMessage = async () => {
+    if (newMessage.trim()) {
+      try {
+        const response = await axios.post(`/admin/${termId}/edit/broadcast`, { text: newMessage });
+        console.log('Message added:', response.data);
+        setNewMessage('');
+        fetchMessages();
+      } catch (error) {
+        console.error('Error adding message:', error);
+      }
+    }
+  };
+
+  const handleDeleteMessage = async (id) => {
+    try {
+      await axios.delete(`/admin/${termId}/edit/broadcast/${id}`);
+      console.log('Message deleted:', id);
+      fetchMessages();
+    } catch (error) {
+      console.error('Error deleting message:', error);
+    }
+  };
+
+  const handleToggleMessage = async (id) => {
+    try {
+      const response = await axios.patch(`/admin/${termId}/edit/broadcast`, { id });
+      console.log('Message toggled:', response.data);
+      fetchMessages();
+    } catch (error) {
+      console.error('Error toggling message:', error);
+    }
   };
 
   return (
@@ -32,7 +68,11 @@ const Broadcast = () => {
       <div className="br-content">
         <div className="br-top">
           <h3>Broadcast Message:</h3>
-          <input placeholder="Enter Message" id="message-input" />
+          <input 
+            placeholder="Enter Message" 
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+          />
           <button onClick={handleAddMessage} className="enter-button">Enter</button>
         </div>
 
@@ -46,17 +86,24 @@ const Broadcast = () => {
               </tr>
             </thead>
             <tbody id="table-body">
-              {messages.map(message => (
-                <tr key={message.id}>
-                  <td>{message.id}</td>
+              {messages.map((message, index) => (
+                <tr key={message._id}>
+                  <td>{index + 1}</td>
                   <td>{message.text}</td>
                   <td className='br-btn'>
-                    <label htmlFor={`toggle-${message.id}`} className="toggle-label">
-                      <input className="circle" id={`toggle-${message.id}`} name="toggle" type="checkbox" />
+                    <label htmlFor={`toggle-${message._id}`} className="toggle-label">
+                      <input 
+                        className="circle" 
+                        id={`toggle-${message._id}`} 
+                        name="toggle" 
+                        type="checkbox"
+                        checked={message.isActive}
+                        onChange={() => handleToggleMessage(message._id)}
+                      />
                     </label>
                     <button
                       className="delete-btn"
-                      onClick={() => handleDeleteMessage(message.id)}
+                      onClick={() => handleDeleteMessage(message._id)}
                     >
                       <img src={deleteicon} alt="delete" />
                     </button>

@@ -11,19 +11,24 @@ const AllocationRow = ({
 }) => {
   const { termId } = useParams();
 
-  const handleDeactivation = async (id) => {
+  const handleToggleDeactivation = async (e, id) => {
+    const isChecked = e.target.checked; // Get checkbox status (checked or unchecked)
     try {
       const response = await axios.patch(`/admin/${termId}/edit/allocation`, {
         courseId: id,
+        status: isChecked ? 'inactive' : 'active', // Toggle based on checkbox state
       });
 
       if (response.status !== 200) {
-        console.error("Error deactivating course:", response.data);
+        console.error("Error toggling course status:", response.data);
       } else {
-        console.log("Course deactivated:", response.data);
+        console.log(
+          `Course ${isChecked ? 'deactivated' : 'activated'}:`,
+          response.data
+        );
       }
     } catch (error) {
-      console.error("Error deactivating course:", error);
+      console.error("Error toggling course status:", error);
     }
   };
 
@@ -48,7 +53,7 @@ const AllocationRow = ({
       <td>
         <input
           type="checkbox"
-          onChange={(e) => handleDeactivation(course._id)}
+          onChange={(e) => handleToggleDeactivation(e, course._id)}
           id="notRun"
         />
       </td>

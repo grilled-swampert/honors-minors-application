@@ -11,6 +11,12 @@ const {
   deactivateCourse,
   setMaxCount,
   getStudentsAllocatedToCourse,
+  getAllocationInfo,
+  createBroadcastMessage,
+  getActiveBroadcastMessages,
+  deleteBroadcastMessage,
+  toggleBroadcastMessage,
+  toggleCourseActivation,
 } = require("../../controllers/admin/adminControllers.js");
 const csvController = require("../../controllers/admin/csvController.js");
 
@@ -35,7 +41,10 @@ router.delete("/:termId", deleteTerm);
 router.get("/:termId/edit/allocation", getAllCourses);
 
 // DEACTIVATE a course
-router.patch("/:termId/edit/allocation", deactivateCourse);
+// router.patch("/:termId/edit/allocation", deactivateCourse);
+
+// TOGGLE a course
+router.put("/:termId/edit/allocation", toggleCourseActivation);
 
 // SET max count
 router.put("/:termId/edit/allocation", setMaxCount);
@@ -43,15 +52,26 @@ router.put("/:termId/edit/allocation", setMaxCount);
 // New route to get students allocated to a course
 router.get("/:termId/courses/:courseId/students", getStudentsAllocatedToCourse);
 
+// GET allocation information for all courses in a term
+router.get("/:termId/allocation-info", getAllocationInfo);
+
 //--------------------------------------------
 
-// POST a semester of a term
-router.patch("/:termId/edit/addCourses", csvController.uploadFiles, csvController.createSemesterAndProcessCSV);
+// PATCH courses of a term
+router.patch(
+  "/:termId/edit/addCourses",
+  csvController.uploadFiles,
+  csvController.createSemesterAndProcessCSV
+);
 
 // GET a term
 router.get("/:termId/edit", getTerm);
 
+// Broadcast Message Routes
+router.post("/:termId/edit/broadcast", createBroadcastMessage);
+router.get("/:termId/edit/broadcast", getActiveBroadcastMessages);
+router.delete("/:termId/edit/broadcast/:id", deleteBroadcastMessage);
+router.patch("/:termId/edit/broadcast", toggleBroadcastMessage);
+
 //--------------------------------------------
 module.exports = router;
-
-
