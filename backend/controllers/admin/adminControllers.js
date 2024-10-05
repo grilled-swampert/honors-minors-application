@@ -159,38 +159,55 @@ exports.toggleCourseActivation = async (req, res) => {
 
     // Permanent Deactivation
     if (status === "inactive") {
-      course.status = "inactive";
-      await course.save();
+      for (let courseId of courseIds) {
+        // Find the course by courseId
+        const course = await Course.findById(courseId);
+        if (!course) {
+          continue; // Skip this course if not found
+        }
 
-      // Loop through each branch's student list
-      for (let branch of branchStudentLists) {
-        const students = term[branch]; // Accessing each branch's student list
+        course.status = "inactive";
+        await course.save();
 
-        // Find all students where finalCourse matches courseId
-        const studentsToUpdate = await Student.find({
-          _id: { $in: students },
-          finalCourse: courseId,
-        });
+        // Loop through each branch's student list
+        for (let branch of branchStudentLists) {
+          const students = term[branch]; // Accessing each branch's student list
 
-        // Update student course arrays and finalCount for next course
-        for (let student of studentsToUpdate) {
-          const nextActiveCourse = await getNextActiveCourse(
-            student.courses,
-            courseId
-          );
-          if (nextActiveCourse) {
-            nextActiveCourse.finalCount++;
-            await nextActiveCourse.save();
+          // Find all students where finalCourse matches courseId
+          const studentsToUpdate = await Student.find({
+            _id: { $in: students },
+            finalCourse: courseId,
+          });
+
+          // Update student finalCourse and finalCount for the next active course
+          for (let student of studentsToUpdate) {
+            // Find the next active course for this student
+            const nextActiveCourse = await getNextActiveCourse(
+              student.courses,
+              courseId
+            );
+
+            if (nextActiveCourse) {
+              // Increment the final count for the next active course
+              nextActiveCourse.finalCount++;
+              await nextActiveCourse.save();
+
+              // Update the student's finalCourse to the next active course
+              student.finalCourse = [nextActiveCourse._id];
+            }
+
+            // Decrease the final count for the deactivated course
+            course.finalCount--;
+            await course.save();
+
+            // Save the updated student record without modifying original course preferences
+            await student.save();
           }
-
-          // Decrease finalCount for the deactivated course
-          course.finalCount--;
-          await course.save();
         }
       }
 
       return res.status(200).json({
-        message: "Course permanently deactivated and final counts updated",
+        message: "Courses permanently deactivated and final counts updated",
       });
     }
 
@@ -206,31 +223,48 @@ exports.toggleCourseActivation = async (req, res) => {
         // Find students who have this course in their courses array
         const studentsToUpdate = await Student.find({
           _id: { $in: students },
-          courses: courseId,
+          courses: { $in: [courseId] },
         });
 
         for (let student of studentsToUpdate) {
-          // Backup and remove all instances of the course
-          const backupEntries = student.courses
-            .map((course, index) =>
-              course.toString() === courseId
-                ? { courseId, preferenceIndex: index }
-                : null
-            )
-            .filter((entry) => entry);
+          let foundCourse = false; // Flag to stop searching once the first match is found
 
-          if (backupEntries.length > 0) {
-            student.tempBackupCourses.push(...backupEntries);
-            student.courses = student.courses.filter(
-              (c) => c.toString() !== courseId
-            );
+          // Iterate over the student's courses array
+          for (let index = 0; index < student.courses.length; index++) {
+            const studentCourseId = student.courses[index].toString();
 
-            const nextActiveCourse = await getNextActiveCourse(student.courses);
-            if (nextActiveCourse) {
-              nextActiveCourse.finalCount++;
-              await nextActiveCourse.save();
+            if (studentCourseId === courseId) {
+              // Backup the current course and remove it
+              student.tempBackupCourses.push({
+                courseId: courseId,
+                preferenceIndex: index,
+              });
+              student.courses.splice(index, 1); // Remove the course at this index
+
+              // Decrement the final count for the deactivated course
+              course.finalCount--;
+              await course.save();
+
+              // Find the next active course (if exists)
+              const nextActiveCourseId = student.courses[index]; // Check the course in the next position
+              if (nextActiveCourseId) {
+                const nextActiveCourse = await Course.findById(
+                  nextActiveCourseId
+                );
+                if (nextActiveCourse) {
+                  nextActiveCourse.finalCount++;
+                  await nextActiveCourse.save();
+                }
+              }
+
+              // Set flag to stop further searching in this student's courses array
+              foundCourse = true;
+              break; // Stop further processing for this student
             }
+          }
 
+          // Save student changes only if a course was found and updated
+          if (foundCourse) {
             await student.save();
           }
         }
@@ -257,24 +291,44 @@ exports.toggleCourseActivation = async (req, res) => {
         });
 
         for (let student of studentsToUpdate) {
+          // Find the backup entries for the reactivated course
           const backupEntries = student.tempBackupCourses.filter(
             (backup) => backup.courseId === courseId
           );
 
+          // Restore the course to the correct positions in the courses array
           backupEntries.forEach((backup) => {
+            // Remove course if it already exists (just in case)
+            student.courses = student.courses.filter(
+              (c) => c.toString() !== courseId
+            );
+
+            // Insert the course back into the correct position
             student.courses.splice(backup.preferenceIndex, 0, courseId);
+
+            // Increment the final count for the restored course
+            course.finalCount++;
           });
 
+          // Clear the backup entries for this course
           student.tempBackupCourses = student.tempBackupCourses.filter(
             (backup) => backup.courseId !== courseId
           );
 
-          const nextActiveCourse = await getNextActiveCourse(student.courses);
-          if (nextActiveCourse) {
-            nextActiveCourse.finalCount--;
-            await nextActiveCourse.save();
+          // Adjust the final counts for other courses, if necessary
+          // Check if there was a course that previously took the place of the reactivated course
+          const nextActiveCourseId =
+            student.courses[backupEntries[0].preferenceIndex + 1];
+          if (nextActiveCourseId) {
+            const nextActiveCourse = await Course.findById(nextActiveCourseId);
+            if (nextActiveCourse) {
+              // Decrement final count of the next course if it was promoted due to deactivation
+              nextActiveCourse.finalCount--;
+              await nextActiveCourse.save();
+            }
           }
 
+          // Save the updated student record
           await student.save();
         }
       }

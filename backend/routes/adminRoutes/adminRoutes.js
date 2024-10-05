@@ -47,7 +47,7 @@ router.get("/:termId/edit/allocation", getAllCourses);
 router.put("/:termId/edit/allocation", toggleCourseActivation);
 
 // SET max count
-router.put("/:termId/edit/allocation", setMaxCount);
+router.patch("/:termId/edit/allocation", setMaxCount);
 
 // New route to get students allocated to a course
 router.get("/:termId/courses/:courseId/students", getStudentsAllocatedToCourse);

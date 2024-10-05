@@ -1,37 +1,14 @@
 import React from 'react';
-import { useParams } from "react-router-dom";
-import "./allocation.css";
-import axios from "axios";
 
 const AllocationRow = ({
   course,
   handleInputChange,
+  handleTemporaryStatusChange,
+  handleDeactivationSelection,
   downloadRowData,
   downloadIcon,
+  isSelectedForDeactivation
 }) => {
-  const { termId } = useParams();
-
-  const handleToggleDeactivation = async (e, id) => {
-    const isChecked = e.target.checked; // Get checkbox status (checked or unchecked)
-    try {
-      const response = await axios.patch(`/admin/${termId}/edit/allocation`, {
-        courseId: id,
-        status: isChecked ? 'inactive' : 'active', // Toggle based on checkbox state
-      });
-
-      if (response.status !== 200) {
-        console.error("Error toggling course status:", response.data);
-      } else {
-        console.log(
-          `Course ${isChecked ? 'deactivated' : 'activated'}:`,
-          response.data
-        );
-      }
-    } catch (error) {
-      console.error("Error toggling course status:", error);
-    }
-  };
-
   return (
     <tr>
       <td>{course.offeringDepartment}</td>
@@ -53,16 +30,20 @@ const AllocationRow = ({
       <td>
         <input
           type="checkbox"
-          onChange={(e) => handleToggleDeactivation(e, course._id)}
-          id="notRun"
+          checked={course.temporaryStatus === 'inactive'}
+          onChange={(e) => handleTemporaryStatusChange(e.target.checked)}
+        />
+      </td>
+      <td>
+        <input
+          type="checkbox"
+          checked={isSelectedForDeactivation}
+          onChange={(e) => handleDeactivationSelection(e.target.checked)}
         />
       </td>
       <td>{course.finalCount}</td>
       <td>
-        <button
-          onClick={() => downloadRowData(course)}
-          className="download-btn"
-        >
+        <button onClick={downloadRowData} className="download-btn">
           <img src={downloadIcon} alt="Download" className="download-icon" />
         </button>
       </td>

@@ -8,6 +8,9 @@ import {
   FETCH_STUDENTS,
   FETCH_ALL_COURSES,
   SUBMIT_COURSES,
+  TOGGLE_COURSE_ACTIVATION_REQUEST,
+  TOGGLE_COURSE_ACTIVATION_SUCCESS,
+  TOGGLE_COURSE_ACTIVATION_FAILURE,
 } from "../constants/actonsTypes.js";
 import * as api from "../api/index.js";
 
@@ -151,21 +154,17 @@ export const submitCourses = (studentId, courses) => async (dispatch) => {
   }
 };
 
-export const toggleCourse = (termId, courseId) => async (dispatch) => {
+// Action creator for toggling course activation
+export const toggleCourseActivation = (termId, courseId) => async (dispatch) => {
   try {
-    const { data } = await api.toggleCourseActivation(termId, courseId);
-    dispatch({ type: "TOGGLE_COURSE_SUCCESS", payload: data });
+    dispatch({ type: TOGGLE_COURSE_ACTIVATION_REQUEST }); // Dispatch request state
+    const { data } = await api.toggleCourseActivation(termId, courseId); // API call
+    dispatch({ type: TOGGLE_COURSE_ACTIVATION_SUCCESS, payload: data }); // Success
   } catch (error) {
-    dispatch({ type: "TOGGLE_COURSE_FAILURE", payload: error.message });
-  }
-}
-
-export const deactivateCourse = (termId, courseId) => async (dispatch) => {
-  try {
-    const { data } = await api.deactivateCourse(termId, courseId);
-    dispatch({ type: "DEACTIVATE_COURSE_SUCCESS", payload: data });
-  } catch (error) {
-    dispatch({ type: "DEACTIVATE_COURSE_FAILURE", payload: error.message });
+    dispatch({
+      type: TOGGLE_COURSE_ACTIVATION_FAILURE,
+      payload: error.response?.data?.message || error.message, // Error handling
+    });
   }
 };
 

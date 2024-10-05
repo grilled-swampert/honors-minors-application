@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styles from './courseList.module.css';
 import CoursesBack from "./CoursesBack";
 import { useParams } from "react-router-dom";
@@ -9,6 +9,7 @@ export default function CourseList({ selectedCourses, handleCourseSelection }) {
     const { studentId } = useParams();
     const dispatch = useDispatch();
     const { filteredCourses, loading, error } = useSelector((state) => state.filteredCoursesState);
+    const [allCourses, setAllCourses] = useState([]);
 
     useEffect(() => {
         if (studentId) {
@@ -16,9 +17,15 @@ export default function CourseList({ selectedCourses, handleCourseSelection }) {
         }
     }, [dispatch, studentId]);
 
+    useEffect(() => {
+        if (filteredCourses && filteredCourses.length > 0) {
+            setAllCourses(filteredCourses);
+        }
+    }, [filteredCourses]);
+
     if (loading) return <p>Loading courses...</p>;
     if (error) return <p>Error loading courses: {error}</p>;
-    if (!filteredCourses || filteredCourses.length === 0) return <p>No courses found</p>;
+    if (!allCourses || allCourses.length === 0) return <p>No courses found</p>;
 
     return (
         <div className={styles.courseList}>
@@ -30,16 +37,14 @@ export default function CourseList({ selectedCourses, handleCourseSelection }) {
                 <div className={styles.select}>Select</div>
             </div>
             <div className={styles.courseRowsContainer}>
-                {
-                    filteredCourses.map((course) => (
-                        <CoursesBack
-                            course={course}
-                            key={course._id}
-                            selectedCourses={selectedCourses}
-                            handleCourseSelection={handleCourseSelection}
-                        />
-                    ))
-                }
+                {allCourses.map((course) => (
+                    <CoursesBack
+                        course={course}
+                        key={course._id || course.id}
+                        selectedCourses={selectedCourses}
+                        handleCourseSelection={handleCourseSelection}
+                    />
+                ))}
             </div>
         </div>
     );
