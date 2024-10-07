@@ -24,7 +24,7 @@ input[type="text"] {
     font-family: "Fira Sans", sans-serif;;
 }
 
-form {
+#add-courses {
     display: flex;
     justify-content: center;
     align-items: center;

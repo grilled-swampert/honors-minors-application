@@ -1,54 +1,54 @@
 .side-tab {
-padding: 10px;
-border-radius: 0 20px 20px 0;
-margin: 10px 50px 10px 0;
-box-shadow: 1px 1px 5px 0 #888888;
-cursor: pointer;
-transition: width 0.3s ease-out;
-width: 170px;
-overflow: hidden;
-height: 100px;
-}
-
-#total{
-margin-top: 50px;
-}
-
-.student-info-heading{
-font-size: 24px;
-}
-
-.side-tab h2 {
-margin: 0;
-white-space: nowrap;
-}
-
-.side-tab .number {
-margin: 5px 0 0;
-opacity: 0;
-transition: opacity 0.3s ease-out;
-}
-
-.side-tab.expanded {
-width: 200px;
-}
-
-.side-tab.expanded .number {
-opacity: 1;
-}
-
-#total{
-  background-color: #d9d9d9;
-}
-
-#approved{
-  background-color: #c4ff96;
-}
-
-#rejected{
-  background-color: #ff0000;
-}
-
-#not-submitted{
-  background-color: #ffe9b1;
-}
+  padding: 10px;
+  border-radius: 0 20px 20px 0;
+  margin: 10px 50px 10px 0;
+  box-shadow: 1px 1px 5px 0 #888888;
+  cursor: pointer;
+  transition: width 0.3s ease-out;
+  width: 170px;
+  overflow: hidden;
+  height: 100px;
+  }
+  
+  #total{
+  margin-top: 50px;
+  }
+  
+  .student-info-heading{
+  font-size: 24px;
+  }
+  
+  .side-tab h2 {
+  margin: 0;
+  white-space: nowrap;
+  }
+  
+  .side-tab .number {
+  margin: 5px 0 0;
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+  }
+  
+  .side-tab.expanded {
+  width: 200px;
+  }
+  
+  .side-tab.expanded .number {
+  opacity: 1;
+  }
+  
+  #total{
+    background-color: #d9d9d9;
+  }
+  
+  #approved{
+    background-color: #c4ff96;
+  }
+  
+  #rejected{
+    background-color: #ff0000;
+  }
+  
+  #not-submitted{
+    background-color: #ffe9b1;
+  }

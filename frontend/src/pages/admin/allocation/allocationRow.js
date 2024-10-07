@@ -1,14 +1,39 @@
-import React from 'react';
+import React, { useState } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const AllocationRow = ({
   course,
   handleInputChange,
-  handleTemporaryStatusChange,
   handleDeactivationSelection,
   downloadRowData,
   downloadIcon,
-  isSelectedForDeactivation
 }) => {
+  const { termId } = useParams();
+  const [temporaryStatus, setTemporaryStatus] = useState(
+    course.temporaryStatus
+  );
+
+  // Function to handle temporary status checkbox changes
+  const handleTemporaryStatusChange = async (courseId, isChecked) => {
+    const newStatus = isChecked ? "inactive" : "active";
+
+    console.log(`Course ID: ${courseId}`);
+    console.log(`Temporary Status: ${newStatus}`);
+
+    try {
+      const response = await axios.put(`/admin/${termId}/edit/allocation`, {
+        courseId,
+        temporaryStatus: newStatus,
+      });
+
+      console.log("Status update response:", response.data);
+      setTemporaryStatus(newStatus);
+    } catch (error) {
+      console.error("Error updating temporary status:", error);
+    }
+  };
+
   return (
     <tr>
       <td>{course.offeringDepartment}</td>
@@ -21,8 +46,7 @@ const AllocationRow = ({
       <td>
         <input
           type="number"
-          placeholder="Count"
-          defaultValue={course.maxCount}
+          value={course.maxCount}
           onChange={(e) => handleInputChange(course._id, e)}
           id="maxCount"
         />
@@ -30,21 +54,25 @@ const AllocationRow = ({
       <td>
         <input
           type="checkbox"
-          checked={course.temporaryStatus === 'inactive'}
-          onChange={(e) => handleTemporaryStatusChange(e.target.checked)}
+          checked={temporaryStatus === "inactive"}
+          onChange={(e) =>
+            handleTemporaryStatusChange(course._id, e.target.checked)
+          }
         />
       </td>
       <td>
         <input
           type="checkbox"
-          checked={isSelectedForDeactivation}
-          onChange={(e) => handleDeactivationSelection(e.target.checked)}
+          checked={course.isSelectedForDeactivation}
+          onChange={(e) =>
+            handleDeactivationSelection(course._id, e.target.checked)
+          }
         />
       </td>
       <td>{course.finalCount}</td>
       <td>
-        <button onClick={downloadRowData} className="download-btn">
-          <img src={downloadIcon} alt="Download" className="download-icon" />
+        <button onClick={() => downloadRowData(course._id)}>
+          <img src={downloadIcon} alt="Download" />
         </button>
       </td>
     </tr>

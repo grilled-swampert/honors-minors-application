@@ -38,7 +38,7 @@ const AlpLeftSection = () => {
 
   return (
     <div>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} id='add-courses'>
           <input 
             type="text" 
             placeholder="Academic Year" 

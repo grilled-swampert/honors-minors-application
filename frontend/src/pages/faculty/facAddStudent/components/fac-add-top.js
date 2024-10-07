@@ -45,7 +45,7 @@ function FacAddTop(){
 
     return(
         <div className="fac-add-top">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} id='course-submit'>
             <div className="add-top">
               <div id="add-upload-btn">
                 <input type="file" name="UPLOAD" accept=".csv" onChange={handleFileUpload} />

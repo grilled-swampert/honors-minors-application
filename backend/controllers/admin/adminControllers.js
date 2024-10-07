@@ -138,7 +138,7 @@ exports.getAllCourses = asyncHandler(async (req, res) => {
 exports.toggleCourseActivation = async (req, res) => {
   try {
     const { termId } = req.params;
-    const { courseId, status, temporaryStatus } = req.body;
+    const { courseId, courseIds, status, temporaryStatus } = req.body;
 
     // Find the term by termId
     const term = await Term.findById(termId);
@@ -146,31 +146,48 @@ exports.toggleCourseActivation = async (req, res) => {
       return res.status(404).json({ message: "Term not found" });
     }
 
+    console.log(`Course ID: ${courseId}`);
+    console.log(`Course IDs: ${courseIds}`);
+    console.log(`Status: ${status}`);
+    console.log(`Temporary Status: ${temporaryStatus}`);
+    console.log(`Term: ${termId}`);
+
     // Access all student lists ending with "_SL"
     const branchStudentLists = Object.keys(term.toObject()).filter((key) =>
       key.endsWith("_SL")
     );
 
+    console.log(`Branch student lists: ${branchStudentLists.join(", ")}`);
+
     // Find the course by courseId
-    const course = await Course.findById(courseId);
-    if (!course) {
-      return res.status(404).json({ message: "Course not found" });
+    if (courseId) {
+      const course = await Course.findById(courseId);
+      if (!course) {
+        return res.status(404).json({ message: "Course not found" });
+      }
     }
+
+    console.log(`Course found: ${courseId}`);
 
     // Permanent Deactivation
     if (status === "inactive") {
-      for (let courseId of courseIds) {
+        console.log(`Deactivating course ${courseId}`);
         // Find the course by courseId
         const course = await Course.findById(courseId);
-        if (!course) {
-          continue; // Skip this course if not found
-        }
+
+        console.log(`Making status inactive`);
 
         course.status = "inactive";
+
+        // Decrease the final count for the deactivated course
+        course.finalCount = course.finalCount ? course.finalCount - 1 : 0;
+
+        console.log(`Final count updated`);
+
         await course.save();
 
-        // Loop through each branch's student list
-        for (let branch of branchStudentLists) {
+        // Collect promises for branch-related updates
+        const branchPromises = branchStudentLists.map(async (branch) => {
           const students = term[branch]; // Accessing each branch's student list
 
           // Find all students where finalCourse matches courseId
@@ -179,32 +196,44 @@ exports.toggleCourseActivation = async (req, res) => {
             finalCourse: courseId,
           });
 
-          // Update student finalCourse and finalCount for the next active course
-          for (let student of studentsToUpdate) {
+          // Collect student update promises
+          const studentPromises = studentsToUpdate.map(async (student) => {
             // Find the next active course for this student
             const nextActiveCourse = await getNextActiveCourse(
               student.courses,
               courseId
             );
-
+            console.log(
+              `Next active course for student ${student._id}:`,
+              nextActiveCourse
+            );
             if (nextActiveCourse) {
               // Increment the final count for the next active course
-              nextActiveCourse.finalCount++;
+              nextActiveCourse.finalCount = nextActiveCourse.finalCount
+                ? nextActiveCourse.finalCount + 1
+                : 1;
               await nextActiveCourse.save();
+
+              console.log(
+                `Final count updated for next active course ${nextActiveCourse._id}`
+              );
 
               // Update the student's finalCourse to the next active course
               student.finalCourse = [nextActiveCourse._id];
             }
 
-            // Decrease the final count for the deactivated course
-            course.finalCount--;
-            await course.save();
+            console.log(`Final course updated for student ${student._id}`);
 
             // Save the updated student record without modifying original course preferences
-            await student.save();
-          }
-        }
-      }
+            return student.save();
+          });
+
+          // Execute all student updates concurrently
+          return Promise.all(studentPromises);
+        });
+
+        // Wait for all branch-related updates to complete
+        await Promise.all(branchPromises);
 
       return res.status(200).json({
         message: "Courses permanently deactivated and final counts updated",
@@ -442,8 +471,24 @@ exports.setMaxCount = async (req, res) => {
     );
 
     // Process excess students (remove course and update preferences)
+    // Process excess students (remove course and update preferences)
     for (const student of excessStudents) {
       console.log(`Step 9: Processing excess student ${student._id}`);
+
+      // Decrement the finalCount for the current finalCourse
+      const currentFinalCourse = await Course.findById(student.finalCourse);
+      if (currentFinalCourse) {
+        currentFinalCourse.finalCount = Math.max(
+          0,
+          currentFinalCourse.finalCount - 1
+        );
+        await currentFinalCourse.save();
+        console.log(
+          `Step 9: Decremented finalCount for current finalCourse ${currentFinalCourse._id}`
+        );
+      } else {
+        console.log(`Current finalCourse not found for student ${student._id}`);
+      }
 
       // Remove the course from their courses array
       student.courses = student.courses.filter(
@@ -453,49 +498,23 @@ exports.setMaxCount = async (req, res) => {
         `Step 9: Course removed from student ${student._id} courses array:`
       );
 
-      // Update course preferences for the remaining courses
-      for (let i = 0; i < student.courses.length; i++) {
-        const course = await Course.findById(student.courses[i]);
-        if (!course) {
-          console.log(`Course not found for ID: ${student.courses[i]}`);
-          continue;
-        }
-
-        console.log(
-          `Step 10: Processing course ${course._id} for student ${student._id}`
-        );
-
-        if (i === 0) {
-          course.firstPreference = Math.max(0, course.firstPreference + 1);
-          course.secondPreference = Math.max(0, course.secondPreference - 1);
-          course.finalCount++;
-          console.log(
-            `Step 10: Updated firstPreference and secondPreference for course ${course._id}`
-          );
-        } else if (i === 1) {
-          course.secondPreference = Math.max(0, course.secondPreference + 1);
-          course.thirdPreference = Math.max(0, course.thirdPreference - 1);
-          console.log(
-            `Step 10: Updated secondPreference and thirdPreference for course ${course._id}`
-          );
-        } else if (i === 2) {
-          course.thirdPreference = Math.max(0, course.thirdPreference + 1);
-          course.fourthPreference = Math.max(0, course.fourthPreference - 1);
-          console.log(
-            `Step 10: Updated thirdPreference and fourthPreference for course ${course._id}`
-          );
-        }
-
-        // Save the course preference updates
-        await course.save();
-        console.log(`Step 10: Course ${course._id} preferences saved`);
-      }
-
-      // Update student's final course to the first course in their array
-      student.finalCourse = student.courses[0] || null;
-      console.log(
-        `Step 11: Updated finalCourse for student ${student._id}: ${student.finalCourse}`
+      // Get the next active course
+      const nextActiveCourse = await getNextActiveCourse(
+        student.courses,
+        courseId
       );
+      student.finalCourse = nextActiveCourse ? nextActiveCourse._id : null;
+
+      if (nextActiveCourse) {
+        // Increment finalCount for the new finalCourse
+        nextActiveCourse.finalCount++;
+        await nextActiveCourse.save();
+        console.log(
+          `Step 10: Incremented finalCount for new finalCourse ${nextActiveCourse._id}`
+        );
+      } else {
+        console.log(`No active course found for student ${student._id}`);
+      }
 
       // Save the student updates
       await student.save();

@@ -8,9 +8,6 @@ import {
   FETCH_STUDENTS,
   FETCH_ALL_COURSES,
   SUBMIT_COURSES,
-  TOGGLE_COURSE_ACTIVATION_REQUEST,
-  TOGGLE_COURSE_ACTIVATION_SUCCESS,
-  TOGGLE_COURSE_ACTIVATION_FAILURE,
 } from "../constants/actonsTypes.js";
 import * as api from "../api/index.js";
 
@@ -151,20 +148,6 @@ export const submitCourses = (studentId, courses) => async (dispatch) => {
     dispatch({ type: SUBMIT_COURSES, payload: data });
   } catch (error) {
     console.error("Error submitting courses:", error.message);
-  }
-};
-
-// Action creator for toggling course activation
-export const toggleCourseActivation = (termId, courseId) => async (dispatch) => {
-  try {
-    dispatch({ type: TOGGLE_COURSE_ACTIVATION_REQUEST }); // Dispatch request state
-    const { data } = await api.toggleCourseActivation(termId, courseId); // API call
-    dispatch({ type: TOGGLE_COURSE_ACTIVATION_SUCCESS, payload: data }); // Success
-  } catch (error) {
-    dispatch({
-      type: TOGGLE_COURSE_ACTIVATION_FAILURE,
-      payload: error.response?.data?.message || error.message, // Error handling
-    });
   }
 };
 

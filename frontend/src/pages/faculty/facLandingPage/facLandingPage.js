@@ -22,7 +22,8 @@ const FacLandingPage = () => {
     <div className="main">
       <Header />
       <p id="intro">
-        WELCOME <span className="highlight-branch">{`${branch.toUpperCase()}`}</span>'s
+        WELCOME{" "}
+        <span className="highlight-branch">{`${branch.toUpperCase()}`}</span>'s
         Faculty Coordinator
       </p>
       <div className="content">

@@ -1,0 +1,11 @@
+studentName,rollNumber,branch,classDivision,email,contactNumber,onlineEligible
+Ravi Shetty,16014017001,AIDS,B,ravi.aids@example.com,9600000001,YES
+Ritika Gupta,16014017002,AIDS,C,ritika.aids@example.com,9600000002,NO
+Radhika Patel,16014017003,AIDS,A,radhika.aids@example.com,9600000003,YES
+Yash Trivedi,16014017004,AIDS,C,yash.aids@example.com,9600000004,NO
+Harshita Rao,16014017005,AIDS,B,harshita.aids@example.com,9600000005,NO
+Karthik Nayak,16014017006,AIDS,B,karthik.aids@example.com,9600000006,NO
+Anjali Deshmukh,16014017007,AIDS,C,anjali.aids@example.com,9600000007,YES
+Amit Mehta,16014017008,AIDS,A,amit.aids@example.com,9600000008,YES
+Neha Reddy,16014017009,AIDS,B,neha.aids@example.com,9600000009,YES
+Manish Sharma,16014017010,AIDS,C,manish.aids@example.com,9600000010,NO

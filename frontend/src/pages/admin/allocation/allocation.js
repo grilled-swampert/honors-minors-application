@@ -25,43 +25,16 @@ const Allocation = () => {
   }, [allCourses]);
 
   const handleInputChange = (courseId, event) => {
-    const { id, value, checked } = event.target;
+    const { id, value } = event.target;
     setUpdatedCourses((prev) => ({
       ...prev,
       [courseId]: {
         ...prev[courseId],
-        [id]: id === "notRun" ? checked : value,
+        [id]: value,
       },
     }));
   };
-
-  const handleTemporaryStatusChange = async (courseId, isChecked) => {
-    try {
-      const response = await axios.patch(`/admin/${termId}/edit/allocation`, {
-        courseId,
-        temporaryStatus: isChecked ? "inactive" : "active",
-      });
-
-      if (response.status === 200) {
-        console.log(`Course temporary status changed:`, response.data);
-        setLocalCourses((prevCourses) =>
-          prevCourses.map((course) =>
-            course._id === courseId
-              ? {
-                  ...course,
-                  temporaryStatus: isChecked ? "inactive" : "active",
-                }
-              : course
-          )
-        );
-      } else {
-        console.error("Error toggling temporary course status:", response.data);
-      }
-    } catch (error) {
-      console.error("Error toggling temporary course status:", error);
-    }
-  };
-
+  
   const handleDeactivationSelection = (courseId, isSelected) => {
     setLocalCourses((prevCourses) =>
       prevCourses.map((course) =>
@@ -70,23 +43,20 @@ const Allocation = () => {
           : course
       )
     );
-  };
+  };  
 
   const applyChanges = async () => {
     try {
-      const promises = Object.entries(updatedCourses).map(
-        ([courseId, data]) => {
-          if (data.maxCount !== undefined || data.notRun !== undefined) {
-            return axios.put(`/admin/${termId}/edit/allocation`, {
-              courseId,
-              maxCount: data.maxCount,
-              notRun: data.notRun,
-            });
-          }
-          return Promise.resolve();
+      const promises = Object.entries(updatedCourses).map(([courseId, data]) => {
+        if (data.maxCount !== undefined) {
+          return axios.patch(`/admin/${termId}/edit/allocation`, {
+            courseId,
+            maxCount: data.maxCount,
+          });
         }
-      );
-
+        return Promise.resolve();
+      });
+  
       await Promise.all(promises);
       console.log("All changes applied successfully");
       dispatch(getCourses(termId));
@@ -95,83 +65,33 @@ const Allocation = () => {
       console.error("Error applying changes:", error);
     }
   };
-
-  const submitDeactivations = async (courseId, isChecked) => {
-    console.log("Function called: submitDeactivations");
-    console.log("Course ID:", courseId);
-    
-    // Create an array to hold the courses to deactivate
-    const coursesToDeactivate = localCourses
-      .filter(course => course.isSelectedForDeactivation)
-      .map(course => course._id);
   
-    console.log("Initial courses to deactivate:", coursesToDeactivate);
-  
-    // If the courseId is not in the array and isChecked is true, add it
-    if (isChecked && !coursesToDeactivate.includes(courseId)) {
-      coursesToDeactivate.push(courseId);
-      console.log(`Added courseId ${courseId} for deactivation`);
-    }
-  
-    // If isChecked is false, remove the courseId if it exists
-    if (!isChecked) {
-      const index = coursesToDeactivate.indexOf(courseId);
-      if (index > -1) {
-        coursesToDeactivate.splice(index, 1);
-        console.log(`Removed courseId ${courseId} from deactivation list`);
-      } else {
-        console.log(`courseId ${courseId} was not found in the deactivation list`);
-      }
-    }
-  
-    // Proceed only if there are courses to deactivate
-    if (coursesToDeactivate.length === 0) {
-      console.log("No courses selected for deactivation.");
-      return;
-    }
-  
-    console.log("Final courses to deactivate:", coursesToDeactivate);
-  
+  const submitDeactivations = async () => {
     try {
-      console.log("Sending request to backend...");
-      const response = await axios.put(`/admin/${termId}/edit/allocation`, {
-        courseIds: coursesToDeactivate, // Pass the array of course IDs
-        status: isChecked ? 'inactive' : 'active', // Use isChecked to determine status
-        temporaryStatus: isChecked ? 'inactive' : 'active' // Set temporary status based on isChecked
-      });
-  
-      console.log("Response received from backend:", response);
-  
-      if (response.status === 200) {
-        console.log("Courses deactivated successfully:", response.data);
-        dispatch(getCourses(termId));
-        setLocalCourses(prevCourses => 
-          prevCourses.map(course => ({ ...course, isSelectedForDeactivation: false }))
+      const deactivationPromises = localCourses
+        .filter(course => course.isSelectedForDeactivation)
+        .map(course => 
+          axios.put(`/admin/${termId}/edit/allocation`, {
+            courseId: course._id,
+            status: 'inactive'
+          })
         );
-      } else {
-        console.error("Error deactivating courses:", response.data);
-      }
+
+      console.log(deactivationPromises);
+
+      await Promise.all(deactivationPromises);
+      console.log("All deactivations submitted successfully");
     } catch (error) {
-      console.error("Error in batch deactivation:", error);
-      // Additional error debugging
-      if (error.response) {
-        console.error("Error response data:", error.response.data);
-        console.error("Error response status:", error.response.status);
-      } else {
-        console.error("Error message:", error.message);
-      }
+      console.error("Error submitting deactivations:", error);
     }
   };
-  
+
   const downloadRowData = async (courseId) => {
     try {
       const response = await axios.get(
-        `/admin/${termId}/course/${courseId}/students`,
-        {
-          responseType: "blob",
-        }
+        `/admin/${termId}/edit/allocation`,
+        { responseType: "blob" }
       );
-
       const blob = new Blob([response.data], { type: "text/csv" });
       const link = document.createElement("a");
       link.href = window.URL.createObjectURL(blob);
@@ -183,7 +103,7 @@ const Allocation = () => {
       console.error("Error downloading CSV:", error);
     }
   };
-
+  
   const downloadAllData = async () => {
     try {
       const response = await axios.get(`/admin/${termId}/edit/allocation`, {
@@ -201,6 +121,7 @@ const Allocation = () => {
       console.error("Error downloading CSV:", error);
     }
   };
+
   return (
     <div className="main">
       <Header />
@@ -212,18 +133,10 @@ const Allocation = () => {
               <th>OFFERING DEPARTMENT</th>
               <th>PROGRAM NAME</th>
               <th>CATEGORY</th>
-              <th>
-                1<sup>st</sup> CHOICE
-              </th>
-              <th>
-                2<sup>nd</sup> CHOICE
-              </th>
-              <th>
-                3<sup>rd</sup> CHOICE
-              </th>
-              <th>
-                4<sup>th</sup> CHOICE
-              </th>
+              <th>1<sup>st</sup> CHOICE</th>
+              <th>2<sup>nd</sup> CHOICE</th>
+              <th>3<sup>rd</sup> CHOICE</th>
+              <th>4<sup>th</sup> CHOICE</th>
               <th>MAX COUNT</th>
               <th>TEMPORARY STATUS</th>
               <th>SELECT FOR DEACTIVATION</th>
@@ -237,13 +150,8 @@ const Allocation = () => {
                 key={course._id}
                 course={course}
                 handleInputChange={handleInputChange}
-                handleTemporaryStatusChange={(isChecked) =>
-                  handleTemporaryStatusChange(course._id, isChecked)
-                }
-                handleDeactivationSelection={(isSelected) =>
-                  handleDeactivationSelection(course._id, isSelected)
-                }
-                downloadRowData={() => downloadRowData(course._id)}
+                handleDeactivationSelection={handleDeactivationSelection}
+                downloadRowData={downloadRowData}
                 downloadIcon={downloadIcon}
               />
             ))}
