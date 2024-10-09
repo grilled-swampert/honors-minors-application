@@ -1,60 +1,90 @@
-import React, { useState }  from 'react';
+import React, { useState } from 'react';
 import './fac-add-top.css';
 import { useParams } from 'react-router-dom';
 
-function FacAddTop(){
-    const { branch, termId } = useParams();
-    const [studentsList, setStudentsList] = useState(null);
-    const [error, setError] = useState(null);
-    
-    const handleSubmit = async (e) => {
-      e.preventDefault();
+function FacAddTop() {
+  const { branch, termId } = useParams();
+  const [studentsList, setStudentsList] = useState(null);
+  const [error, setError] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [isUploading, setIsUploading] = useState(false);
 
-      if (!studentsList) {
-        setError('Please upload a file');
-        return;
-      }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-      const formData = new FormData();
-      formData.append('studentsList', studentsList);
+    if (!studentsList) {
+      setError('Please upload a file');
+      return;
+    }
 
-      try {
-        const response = await fetch(`/faculty/${branch}/${termId}/edit/facAddStudent`, {
-          method: 'PATCH',
-          body: formData,
-        });
+    const formData = new FormData();
+    formData.append('studentsList', studentsList);
 
-        const data = await response.json();
+    const xhr = new XMLHttpRequest();
 
-        if (!response.ok) {
-          setError(data.error || 'Something went wrong!');
-        } else {
-          setError(null);
-          setStudentsList(null);
-          console.log('Semester created', data);
-        }
-      } catch (err) {
-        setError('Failed to submit the form');
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable) {
+        const percentComplete = Math.round((event.loaded / event.total) * 100);
+        setUploadProgress(percentComplete);
       }
     };
 
-    const handleFileUpload = (event) => {
-      setStudentsList(event.target.files[0]);
-      console.log('File selected:', event.target.files[0]);
+    xhr.onload = () => {
+      if (xhr.status === 200) {
+        setError(null);
+        setStudentsList(null);
+        setUploadProgress(0);
+        setIsUploading(false);
+        console.log('Semester updated successfully', JSON.parse(xhr.response));
+        
+        // Force refresh the page to get updated data
+        window.location.reload();
+      } else {
+        const response = JSON.parse(xhr.response);
+        setError(response.error || 'Something went wrong!');
+        setIsUploading(false);
+      }
     };
 
-    return(
-        <div className="fac-add-top">
-          <form onSubmit={handleSubmit} id='course-submit'>
-            <div className="add-top">
-              <div id="add-upload-btn">
-                <input type="file" name="UPLOAD" accept=".csv" onChange={handleFileUpload} />
-              </div>
-              <button id="submit">SUBMIT</button>
-              {error && <div className="error">{error}</div>}
+    xhr.onerror = () => {
+      setError('Failed to submit the form');
+      setIsUploading(false);
+    };
+
+    xhr.open('PATCH', `/faculty/${branch}/${termId}/edit/facAddStudent`, true);
+    xhr.send(formData);
+    setIsUploading(true);
+  };
+
+  const handleFileUpload = (event) => {
+    setStudentsList(event.target.files[0]);
+    console.log('File selected:', event.target.files[0]);
+  };
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        <label>
+          Upload CSV File:
+          <input type="file" onChange={handleFileUpload} />
+        </label>
+
+        <button type="submit" disabled={isUploading}>
+          {isUploading ? 'Uploading...' : 'Submit'}
+        </button>
+
+        {isUploading && (
+          <div className="progress-bar">
+            <div className="progress" style={{ width: `${uploadProgress}%` }}>
+              {uploadProgress}%
             </div>
-          </form>
-        </div>
-    );
+          </div>
+        )}
+
+        {error && <p className="error-message">{error}</p>}
+      </form>
+    </div>
+  );
 }
+
 export default FacAddTop;

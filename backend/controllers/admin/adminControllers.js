@@ -159,9 +159,10 @@ exports.toggleCourseActivation = async (req, res) => {
 
     console.log(`Branch student lists: ${branchStudentLists.join(", ")}`);
 
-    // Find the course by courseId
+    // Find the course by courseId (required for all operations)
+    let course;
     if (courseId) {
-      const course = await Course.findById(courseId);
+      course = await Course.findById(courseId);
       if (!course) {
         return res.status(404).json({ message: "Course not found" });
       }
