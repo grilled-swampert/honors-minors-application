@@ -3,6 +3,7 @@ const Course = require("../../models/courseModel/courseModel");
 const Student = require("../../models/studentModel/studentModel");
 const BroadcastMessage = require("../../models/broadcastModel/broadcastMessageModel");
 const { Parser } = require("json2csv");
+const { ObjectId } = require("mongoose");
 const path = require("path");
 const fs = require("fs");
 
@@ -138,7 +139,7 @@ exports.getAllCourses = asyncHandler(async (req, res) => {
 exports.toggleCourseActivation = async (req, res) => {
   try {
     const { termId } = req.params;
-    const { courseId, courseIds, status, temporaryStatus } = req.body;
+    const { courseId, status, temporaryStatus } = req.body;
 
     // Find the term by termId
     const term = await Term.findById(termId);
@@ -147,7 +148,6 @@ exports.toggleCourseActivation = async (req, res) => {
     }
 
     console.log(`Course ID: ${courseId}`);
-    console.log(`Course IDs: ${courseIds}`);
     console.log(`Status: ${status}`);
     console.log(`Temporary Status: ${temporaryStatus}`);
     console.log(`Term: ${termId}`);
@@ -160,218 +160,168 @@ exports.toggleCourseActivation = async (req, res) => {
     console.log(`Branch student lists: ${branchStudentLists.join(", ")}`);
 
     // Find the course by courseId (required for all operations)
-    let course;
-    if (courseId) {
-      course = await Course.findById(courseId);
-      if (!course) {
-        return res.status(404).json({ message: "Course not found" });
-      }
+    let course = await Course.findById(courseId);
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
     }
 
-    console.log(`Course found: ${courseId}`);
+    console.log(`Course found: ${courseId}, course finalCount: ${course.finalCount}`);
 
-    // Permanent Deactivation
-    if (status === "inactive") {
-        console.log(`Deactivating course ${courseId}`);
-        // Find the course by courseId
-        const course = await Course.findById(courseId);
+    // Deactivation (both permanent and temporary)
+    if (status === "inactive" || temporaryStatus === "inactive") {
+      console.log(`Deactivating course ${courseId}`);
 
-        console.log(`Making status inactive`);
+      // Collect promises for branch-related updates
+      const branchPromises = branchStudentLists.map(async (branch) => {
+        const students = term[branch]; // Accessing each branch's student list
+        console.log(`Processing students for branch: ${branch}, total students: ${students.length}`);
 
-        course.status = "inactive";
-
-        // Decrease the final count for the deactivated course
-        course.finalCount = course.finalCount ? course.finalCount - 1 : 0;
-
-        console.log(`Final count updated`);
-
-        await course.save();
-
-        // Collect promises for branch-related updates
-        const branchPromises = branchStudentLists.map(async (branch) => {
-          const students = term[branch]; // Accessing each branch's student list
-
-          // Find all students where finalCourse matches courseId
-          const studentsToUpdate = await Student.find({
-            _id: { $in: students },
-            finalCourse: courseId,
-          });
-
-          // Collect student update promises
-          const studentPromises = studentsToUpdate.map(async (student) => {
-            // Find the next active course for this student
-            const nextActiveCourse = await getNextActiveCourse(
-              student.courses,
-              courseId
-            );
-            console.log(
-              `Next active course for student ${student._id}:`,
-              nextActiveCourse
-            );
-            if (nextActiveCourse) {
-              // Increment the final count for the next active course
-              nextActiveCourse.finalCount = nextActiveCourse.finalCount
-                ? nextActiveCourse.finalCount + 1
-                : 1;
-              await nextActiveCourse.save();
-
-              console.log(
-                `Final count updated for next active course ${nextActiveCourse._id}`
-              );
-
-              // Update the student's finalCourse to the next active course
-              student.finalCourse = [nextActiveCourse._id];
-            }
-
-            console.log(`Final course updated for student ${student._id}`);
-
-            // Save the updated student record without modifying original course preferences
-            return student.save();
-          });
-
-          // Execute all student updates concurrently
-          return Promise.all(studentPromises);
-        });
-
-        // Wait for all branch-related updates to complete
-        await Promise.all(branchPromises);
-
-      return res.status(200).json({
-        message: "Courses permanently deactivated and final counts updated",
-      });
-    }
-
-    // Temporary Deactivation
-    if (temporaryStatus === "inactive") {
-      course.temporaryStatus = "inactive";
-      await course.save();
-
-      // Loop through each branch's student list
-      for (let branch of branchStudentLists) {
-        const students = term[branch];
-
-        // Find students who have this course in their courses array
+        // Find all students where finalCourse matches courseId
         const studentsToUpdate = await Student.find({
           _id: { $in: students },
-          courses: { $in: [courseId] },
+          finalCourse: courseId,
+        });
+        console.log(`Students to update in branch ${branch}: ${studentsToUpdate.length}`);
+
+        // Collect student update promises
+        const studentPromises = studentsToUpdate.map(async (student) => {
+          // Decrement the final count for the current course
+          course.finalCount = course.finalCount ? course.finalCount - 1 : 0;
+
+          const nextActiveCourse = await getNextActiveCourse(
+            student.courses,
+            courseId
+          );
+          console.log(
+            `Next active course for student ${student._id}:`,
+            nextActiveCourse
+          );
+          if (nextActiveCourse) {
+            // Increment the final count for the next active course
+            nextActiveCourse.finalCount = nextActiveCourse.finalCount
+              ? nextActiveCourse.finalCount + 1
+              : 1;
+            await nextActiveCourse.save();
+            console.log(
+              `Final count updated for next active course ${nextActiveCourse._id}`
+            );
+
+            // Update the student's finalCourse to the next active course
+            student.finalCourse = [nextActiveCourse._id];
+          }
+
+          console.log(`Final course updated for student ${student._id}`);
+
+          // Save the updated student record
+          return student.save();
         });
 
-        for (let student of studentsToUpdate) {
-          let foundCourse = false; // Flag to stop searching once the first match is found
+        // Execute all student updates concurrently
+        return Promise.all(studentPromises);
+      });
 
-          // Iterate over the student's courses array
-          for (let index = 0; index < student.courses.length; index++) {
-            const studentCourseId = student.courses[index].toString();
+      // Wait for all branch-related updates to complete
+      await Promise.all(branchPromises);
 
-            if (studentCourseId === courseId) {
-              // Backup the current course and remove it
-              student.tempBackupCourses.push({
-                courseId: courseId,
-                preferenceIndex: index,
-              });
-              student.courses.splice(index, 1); // Remove the course at this index
-
-              // Decrement the final count for the deactivated course
-              course.finalCount--;
-              await course.save();
-
-              // Find the next active course (if exists)
-              const nextActiveCourseId = student.courses[index]; // Check the course in the next position
-              if (nextActiveCourseId) {
-                const nextActiveCourse = await Course.findById(
-                  nextActiveCourseId
-                );
-                if (nextActiveCourse) {
-                  nextActiveCourse.finalCount++;
-                  await nextActiveCourse.save();
-                }
-              }
-
-              // Set flag to stop further searching in this student's courses array
-              foundCourse = true;
-              break; // Stop further processing for this student
-            }
-          }
-
-          // Save student changes only if a course was found and updated
-          if (foundCourse) {
-            await student.save();
-          }
-        }
-      }
+      // Only save the course after processing all students
+      course.status = status || course.status;
+      course.temporaryStatus = temporaryStatus || course.temporaryStatus;
+      await course.save();
 
       return res.status(200).json({
-        message: "Course temporarily deactivated and students updated",
+        message:
+          "Course deactivated (permanent or temporary) and final counts updated",
       });
     }
 
     // Temporary Activation
     if (temporaryStatus === "active") {
-      course.temporaryStatus = "active";
-      await course.save();
-
-      // Loop through each branch's student list
+      console.log("Course is being temporarily activated");
+    
       for (let branch of branchStudentLists) {
+        console.log(`Processing branch: ${branch}`);
+        
+        // Fetch students associated with the current branch
         const students = term[branch];
-
-        // Find students who have backed-up data for this course
-        const studentsToUpdate = await Student.find({
-          _id: { $in: students },
-          tempBackupCourses: { $elemMatch: { courseId: courseId } },
-        });
-
+        if (!students || students.length === 0) {
+          console.log(`No students found for branch: ${branch}`);
+          continue;
+        }
+        console.log(`Total students for branch ${branch}: ${students.length}`);
+    
+        // Loop through each student using their student ID
+        const studentsToUpdate = await Student.find({ _id: { $in: students } });
+        if (!studentsToUpdate || studentsToUpdate.length === 0) {
+          console.log(`No students found in database for branch: ${branch}`);
+          continue;
+        }
+    
         for (let student of studentsToUpdate) {
-          // Find the backup entries for the reactivated course
-          const backupEntries = student.tempBackupCourses.filter(
-            (backup) => backup.courseId === courseId
-          );
-
-          // Restore the course to the correct positions in the courses array
-          backupEntries.forEach((backup) => {
-            // Remove course if it already exists (just in case)
-            student.courses = student.courses.filter(
-              (c) => c.toString() !== courseId
-            );
-
-            // Insert the course back into the correct position
-            student.courses.splice(backup.preferenceIndex, 0, courseId);
-
-            // Increment the final count for the restored course
-            course.finalCount++;
-          });
-
-          // Clear the backup entries for this course
-          student.tempBackupCourses = student.tempBackupCourses.filter(
-            (backup) => backup.courseId !== courseId
-          );
-
-          // Adjust the final counts for other courses, if necessary
-          // Check if there was a course that previously took the place of the reactivated course
-          const nextActiveCourseId =
-            student.courses[backupEntries[0].preferenceIndex + 1];
-          if (nextActiveCourseId) {
-            const nextActiveCourse = await Course.findById(nextActiveCourseId);
-            if (nextActiveCourse) {
-              // Decrement final count of the next course if it was promoted due to deactivation
-              nextActiveCourse.finalCount--;
-              await nextActiveCourse.save();
+          console.log(`Processing student with ID: ${student._id}`);
+    
+          // Ensure the finalCourse array exists and has at least one element
+          if (student.finalCourse && student.finalCourse.length > 0) {
+            const finalCourseId = student.finalCourse[0].toHexString();
+            console.log(`Student ${student._id} has a finalCourse: ${finalCourseId}`);
+            console.log(`Checking against courseId: ${courseId}`);
+    
+            const courseIndex = student.courses.findIndex((c) => c.toString() === courseId);
+            const finalCourseIndex = student.courses.findIndex((c) => c.toString() === finalCourseId);
+    
+            console.log(`Course index in student courses: ${courseIndex}`);
+            console.log(`Final course index in student courses: ${finalCourseIndex}`);
+    
+            if (courseIndex !== -1 && courseIndex < finalCourseIndex) {
+              console.log(`Updating final course for student ${student._id}`);
+    
+              const finalCourse = await Course.findById(finalCourseId);
+              if (finalCourse) {
+                console.log(`Decreasing final count for previous course: ${finalCourseId}`);
+                console.log(`Previous final count: ${finalCourse.finalCount}`);
+                finalCourse.finalCount--;
+                console.log(`New final count: ${finalCourse.finalCount}`);
+                await finalCourse.save();
+              } else {
+                console.log(`No course found for finalCourseId: ${finalCourseId}`);
+              }
+              
+              console.log(`Increasing final count for new course: ${courseId}`);
+              console.log(`Previous final count: ${course.finalCount}`);
+              course.finalCount++;
+              console.log(`New final count: ${course.finalCount}`);
+    
+              student.finalCourse = [courseId];
+              await student.save();
+    
+              console.log(`Final course updated for student ${student._id}: ${courseId}`);
+            } else {
+              console.log(`No updates made for student ${student._id}`);
             }
+          } else {
+            console.log(`No finalCourse for student ${student._id}`);
           }
-
-          // Save the updated student record
-          await student.save();
         }
       }
-
+    
+      console.log("Setting course status to active");
+      course.status = "active";
+      await course.save();
+    
+      console.log("Course activated, final counts updated");
       return res.status(200).json({
-        message: "Course temporarily activated and student data reverted",
+        message:
+          "Course temporarily activated, final counts updated, and student data updated",
       });
+    } else {
+      console.log("Temporary status is not 'active', skipping update");
     }
   } catch (error) {
-    console.error(`Error: ${error.message}`);
+    console.error(`Error in toggleCourseActivation: ${error.message}`);
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
 
 // Helper function to find the next active course
 async function getNextActiveCourse(courses, deactivatedCourseId) {
@@ -380,7 +330,8 @@ async function getNextActiveCourse(courses, deactivatedCourseId) {
     if (
       currentCourse &&
       currentCourse._id.toString() !== deactivatedCourseId &&
-      currentCourse.status === "active"
+      currentCourse.status === "active" &&
+      currentCourse.temporaryStatus === "active"
     ) {
       return currentCourse;
     }
@@ -413,9 +364,9 @@ exports.setMaxCount = async (req, res) => {
     console.log(`Checkpoint 01: Course found - ${courseId}`);
 
     // Marking course status as inactive
-    if (courseMax.firstPreference > maxCount)
-      courseMax.firstPreference = maxCount;
-    await courseMax.save();
+    // if (courseMax.finalCount > maxCount)
+    //   courseMax.finalCount = maxCount;
+    // await courseMax.save();
     console.log(`Checkpoint 02: Course preferences updated - ${courseId}`);
 
     // Extract student lists for branches ending with "_SL"
@@ -490,14 +441,6 @@ exports.setMaxCount = async (req, res) => {
       } else {
         console.log(`Current finalCourse not found for student ${student._id}`);
       }
-
-      // Remove the course from their courses array
-      student.courses = student.courses.filter(
-        (course) => course.toString() !== courseId
-      );
-      console.log(
-        `Step 9: Course removed from student ${student._id} courses array:`
-      );
 
       // Get the next active course
       const nextActiveCourse = await getNextActiveCourse(

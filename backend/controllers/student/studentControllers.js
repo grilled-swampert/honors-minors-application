@@ -318,6 +318,9 @@ exports.submitCourses = async (req, res) => {
 
     console.log("Updated all preferences");
 
+    student.submissionTime = Date.now();
+    student.save();
+
     await Course.findByIdAndUpdate(
       { _id: firstPreference },
       { $inc: { finalCount: 1 } },

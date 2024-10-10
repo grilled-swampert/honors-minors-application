@@ -25,12 +25,6 @@ const studentSchema = new mongoose.Schema({
     enum: ["pending", "approved", "rejected", "none"],
     default: "none",
   },
-  tempBackupCourses: [
-    {
-      courseId: String, // ID of the temporarily deactivated course
-      preferenceIndex: Number, // The original preference index of the course
-    },
-  ],
 });
 
 const Student = mongoose.model("Student", studentSchema);

@@ -136,7 +136,6 @@ courseSchema.statics.countPreferencesForAllCourses = async function (termId) {
          thirdPreference: counts.thirdPreference,
          fourthPreference: counts.fourthPreference,
          fifthPreference: counts.fifthPreference,
-         finalCount: counts.firstPreference, // Assuming finalCount is based on first preference
       });
       console.log(`Updated counts for courseId: ${courseId}`);
    }

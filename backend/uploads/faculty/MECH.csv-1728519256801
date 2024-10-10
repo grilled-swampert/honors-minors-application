@@ -1,0 +1,11 @@
+studentName,rollNumber,branch,classDivision,email,contactNumber,onlineEligible
+Sneha Khan,16014014001,MECH,C,sneha.mech@example.com,9300000001,YES
+Karan Patil,16014014002,MECH,B,karan.mech@example.com,9300000002,NO
+Deepika Rao,16014014003,MECH,A,deepika.mech@example.com,9300000003,YES
+Sonali Mehta,16014014004,MECH,B,sonali.mech@example.com,9300000004,YES
+Shivani Kapoor,16014014005,MECH,B,shivani.mech@example.com,9300000005,YES
+Rajesh Deshmukh,16014014006,MECH,C,rajesh.mech@example.com,9300000006,YES
+Nikita Sharma,16014014007,MECH,A,nikita.mech@example.com,9300000007,NO
+Rohit Bhat,16014014008,MECH,B,rohit.mech@example.com,9300000008,YES
+Siddharth Menon,16014014009,MECH,C,siddharth.mech@example.com,9300000009,NO
+Amar Nath,16014014010,MECH,A,amar.mech@example.com,9300000010,YES

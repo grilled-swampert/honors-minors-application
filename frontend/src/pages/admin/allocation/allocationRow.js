@@ -10,9 +10,8 @@ const AllocationRow = ({
   downloadIcon,
 }) => {
   const { termId } = useParams();
-  const [temporaryStatus, setTemporaryStatus] = useState(
-    course.temporaryStatus
-  );
+  const [temporaryStatus, setTemporaryStatus] = useState(course.temporaryStatus);
+  const { status } = useState(course.status);
 
   // Function to handle temporary status checkbox changes
   const handleTemporaryStatusChange = async (courseId, isChecked) => {
@@ -34,8 +33,10 @@ const AllocationRow = ({
     }
   };
 
+  const isDisabled = status === "inactive";
+
   return (
-    <tr>
+    <tr className={isDisabled ? "row-disabled" : ""}>
       <td>{course.offeringDepartment}</td>
       <td>{course.programName}</td>
       <td>{course.category}</td>
@@ -49,6 +50,7 @@ const AllocationRow = ({
           value={course.maxCount}
           onChange={(e) => handleInputChange(course._id, e)}
           id="maxCount"
+          disabled={isDisabled}
         />
       </td>
       <td>
@@ -58,6 +60,7 @@ const AllocationRow = ({
           onChange={(e) =>
             handleTemporaryStatusChange(course._id, e.target.checked)
           }
+          disabled={isDisabled}
         />
       </td>
       <td>
@@ -67,11 +70,12 @@ const AllocationRow = ({
           onChange={(e) =>
             handleDeactivationSelection(course._id, e.target.checked)
           }
+          disabled={isDisabled}
         />
       </td>
       <td>{course.finalCount}</td>
       <td>
-        <button onClick={() => downloadRowData(course._id)}>
+        <button onClick={() => downloadRowData(course._id)} disabled={isDisabled}>
           <img src={downloadIcon} alt="Download" />
         </button>
       </td>

@@ -21,8 +21,15 @@ app.use('/admin', adminRoutes);
 app.use('/faculty', facultyRoutes);
 app.use('/student', studentRoutes);
 
+const options = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  tls: true,
+  tlsAllowInvalidCertificates: true,  // For testing only
+};
+
 // CONNECT TO MONGODB
-mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGO_URL, options)
     .then(() => {
         console.log('Connected to MongoDB');
         app.listen(process.env.PORT, () => {

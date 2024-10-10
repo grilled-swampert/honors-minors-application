@@ -124,13 +124,13 @@ const importStudents = async (file, termId, branch) => {
               console.log("Creating new student:", student);
               await student.save();
 
-              await axios.post(`${backendUrl}/faculty/create-user`, {
-                email: row.email,
-                password: 'defaultPassword123', // You can generate or take from CSV
-                role: 'student', // Assuming role is student
-                branch: row.branch,
-                studentId: student._id,
-              });
+              // await axios.post(`${backendUrl}/faculty/create-user`, {
+              //   email: row.email,
+              //   password: 'defaultPassword123', // You can generate or take from CSV
+              //   role: 'student', // Assuming role is student
+              //   branch: row.branch,
+              //   studentId: student._id,
+              // });
 
               return student._id;
             });
