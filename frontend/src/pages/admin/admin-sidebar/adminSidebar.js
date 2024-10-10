@@ -4,14 +4,11 @@ import { Link, useParams } from "react-router-dom";
 
 const AdminSideBar = () => {
   const { termId } = useParams();
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const toggleSidebar = () => {
-    setSidebarOpen(!isSidebarOpen);
-  };
+
   return (
-    <div className="adminSidebar">
-      <div id="sidebar" style={{ width: isSidebarOpen ? "250px" : "0" }}>
-        <Link to={`/admin/${termId}/edit/addCoursesPage`}>
+    <div className="adminSidebar-body">
+      <div id="adminSidebar">
+        <Link to={`/admin/${termId}/edit/addCourses`}>
           <button className="nav-btn">Add Syllabus</button>
         </Link>
         <Link to={`/admin/${termId}/edit/allocation`}>
@@ -20,10 +17,6 @@ const AdminSideBar = () => {
         <Link to={`/admin/${termId}/edit/broadcast`}>
           <button className="nav-btn">Broadcast Message</button>
         </Link>
-      </div>
-
-      <div id="side-nav">
-        <span onClick={toggleSidebar}>&#9776;</span>
       </div>
     </div>
   );

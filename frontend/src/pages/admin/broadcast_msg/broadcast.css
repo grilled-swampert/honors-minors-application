@@ -143,7 +143,9 @@ font-family: 'Fira Sans', sans-serif;
   margin-left: 50px;
   height: 80px;
 }
-
+.container{
+  display: flex;
+}
 #side-nav {
   position: fixed;
   width: 1.5%;
@@ -189,7 +191,9 @@ font-family: 'Fira Sans', sans-serif;
 a{
   text-decoration: none;
 }
-
+.br-content{
+  width: 80%;
+}
 .br-top{
   display: flex;
  align-items: center;
@@ -255,12 +259,12 @@ thead :nth-child(3){
 }
 th, td{
   /* border-radius: 16px; */
-  padding: 8px;
+  padding: 16px;
   text-align: center;
   /* border: 1px solid #ddd; */
 }
 tbody td{
-  height: 6vh;
+  height: 8vh;
   font-size: 1.3rem;
 }
 tbody tr:nth-child(odd){
@@ -272,82 +276,63 @@ tbody tr:nth-child(odd){
   tbody tr:nth-child(even) {
     background-color: white;
   }
-  .toggle-label {
-    width: 80px;
-    height: 50px;
-    cursor: pointer;
-    display: inline-block;
-    padding: 5px;
-    background: #272727;
-    border-radius: 40px;
-    box-shadow: 0px 0px 16px -8px #fefefe;
-    user-select: none;
-  }
-  
-  .toggle-label .circle {
-    appearance: none;
-    position: relative;
-    width: fit-content;
-    height:40px;
-    background: #5e5e5e;
-    border-radius: 50%;
-    transition: all 0.5s cubic-bezier(1, 0, 0, 1);
-    right: 20%;
-  }
-  
-  .toggle-label .circle:checked {
-    background: #f43f5e;
-    left: calc(100% - 80px);
-  }
-  
-  .toggle-label .circle::before,
-  .toggle-label .circle::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: inline-block;
-    width: 0;
-    height: 0;
-    border: 10px solid transparent;
-    margin-left: 10px;
-    border-left-color: #fefefe;
-    z-index: 3;
-    transition: 200ms;
-  }
-  
-  .toggle-label:has(.circle:checked)::before {
-    left: 100%;
-    transform: translate(0, -50%);
-  }
-  .toggle-label:has(.circle:checked)::after {
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-  .toggle-label .circle::after {
-    border: none;
-    margin-left: -5px;
-    height: 18px;
-    width: 3px;
-    background-color: #fefefe;
-    transition-delay: 150ms;
-  }
-  
-  .toggle-label .circle::before {
-    transition-delay: 50ms;
-  }
-  
-  .toggle-label .circle:checked::before {
-    opacity: 0;
-  }
-  
-  .toggle-label .circle:checked::after {
-    width: 20px;
-    height: 20px;
-    margin-left: 0px;
-    border-radius: 5px;
-  }
+  /* From Uiverse.io by MuhammadHasann */ 
+.toggle-cont {
+  width: 100px;
+  height: 50px;
+  border-radius: 9999px;
+}
+
+.toggle-cont .toggle-input {
+  display: none;
+}
+
+.toggle-cont .toggle-label {
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  padding: 6px;
+  width: 100%;
+  height: 100%;
+  background: #272727;
+  border-radius: 9999px;
+  box-sizing: content-box;
+  box-shadow: 0px 0px 16px -8px #fefefe;
+}
+
+.toggle-cont .toggle-label .cont-label-play {
+  position: relative;
+  width: 50px;
+  aspect-ratio: 1 / 1;
+  background: #5e5e5e;
+  border-radius: 9999px;
+  transition: all 0.5s cubic-bezier(1, 0, 0, 1);
+}
+
+.toggle-cont .toggle-input:checked + .toggle-label .cont-label-play {
+  background: #f43f5e;
+  transform: translateX(50px);
+}
+
+.toggle-cont .toggle-label .label-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-block;
+  width: 24px;
+  aspect-ratio: 1 / 1;
+  background: #fefefe;
+  border-radius: 4px;
+  clip-path: polygon(25% 0, 75% 50%, 25% 100%, 25% 51%);
+  transition: all 0.5s cubic-bezier(1, 0, 0, 1);
+}
+
+.toggle-cont .toggle-input:checked + .toggle-label .label-play {
+  width: 20px;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
   .delete-btn {
     background-color: #f44336;
     color: white;
@@ -370,4 +355,7 @@ tbody tr:nth-child(odd){
     display: flex;
     align-items:center;
     justify-content: center;
+  }
+  #table-body td{
+    padding: 30px;
   }

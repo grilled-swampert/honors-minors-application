@@ -40,7 +40,7 @@ const AlpMain = () => {
       <div className="right-panel"> 
         <table>
           <thead>
-            <tr>
+            <tr className = 'alp-tr'>
               <th scope="col">ACADEMIC YEAR</th>
               <th scope="col">VIEW / EDIT</th>
             </tr>

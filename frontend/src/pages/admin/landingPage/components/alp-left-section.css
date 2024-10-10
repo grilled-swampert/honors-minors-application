@@ -1,37 +1,77 @@
+
+form {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 2%;
+    align-items: center;
+    width: 100%;
+    margin: 0 auto;
+}
+
 input[type="text"] {
-    width: 80%;
-    height: 3rem;
-    margin: 60px 20px 60px;
-    border: 3px solid #000000;
+    width: 70vw;
+    height: 4rem;
+    margin: 20px 0;
+    border: 3px solid #106EBE;
     border-radius: 16px;
     font-family: "Fira Sans", sans-serif;
-    font-size: 2rem;
+    font-size: 1.5rem;
     padding: 10px;
     background-color: white;
-    color: #001858;
+    color: #106EBE;
+    box-sizing: border-box;
 }
 
-#createButton{
-    width: 20%;
-    height: 75px;
-    background-color: #8bd3dd;
-    color: #001858;
+#createButton {
+    width: 100%;
+    max-width: 200px;
+    height: 4rem;
+    background-color: #0FFCBE;
+    color: #106EBE;
+    border: none;
     border-radius: 16px;
     cursor: pointer;
-    margin: 0px 15px;
-    font-size: 36px;
+    margin: 10px 0;
+    font-size: 1.2rem;
     font-weight: 700;
-    font-family: "Fira Sans", sans-serif;;
+    font-family: "Fira Sans", sans-serif;
+    transition: background-color 0.3s, transform 0.1s;
 }
 
-#add-courses {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 8rem;
-    background-color: #f3d2c1;
-    width: 70vw;
-    margin-top: auto;
-    padding: 20px;
-    border-radius: 1rem;
+#createButton:hover {
+    background-color: #0ce0a8;
+}
+
+#createButton:active {
+    transform: scale(0.98);
+}
+
+
+
+@media (max-width: 768px) {
+
+    input[type="text"] {
+        font-size: 1rem;
+        height: 2.5rem;
+    }
+
+    #createButton {
+        font-size: 1rem;
+        height: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    input[type="text"] {
+        font-size: 0.9rem;
+        height: 2.3rem;
+        padding: 8px;
+    }
+
+    #createButton {
+        font-size: 0.9rem;
+        height: 36px;
+    }
 }

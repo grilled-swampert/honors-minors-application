@@ -1,75 +1,210 @@
-.left-section {
-  background-color: #f3d2c1;
-  height: 67vh;
-  width: 30%;
-  margin: 50px auto;
-  border-radius: 30px;
-  display: flex;
-  align-items: center;
-  font-family: "Fira Sans", sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+:root {
+  --primary-color: #8bd3dd;
+  --secondary-color: #f0b7a1;
+  --text-color: #4a4a4a;
+  --border-color: #e0e0e0;
+  --button-hover-color: #6ac5d1;
+  --error-color: #ff6b6b;
+  --success-color: #51cf66;
 }
 
-.date-selection, .termForm {
-  margin-top: 5%;
-  margin-bottom: 20%;
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.left-section {
+  background: linear-gradient(135deg, #f6d5c1 0%, var(--secondary-color) 100%);
+  min-height: 25vh;
+  width: calc(100% - 40px);
+  margin: 10px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid black;
+  padding: 20px;
+}
+
+.date-selection {
+  width: 100%;
+  max-width: 1200px;
+}
+
+.form-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.termForm {
   display: flex;
   flex-direction: column;
-  font-size: 1.5rem;
-  justify-content: center;
-  align-items: center;
-  width: 90%; 
-
+  gap: 20px;
 }
 
 .startDate, .endDate {
   display: flex;
-  flex-direction: column; /* Stacks the label, date, and time vertically */
-  align-items: flex-start;
-  width: 100%; /* Ensure it takes full width */
-  margin-bottom: 20px;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
 }
 
-.date-selection label {
-  margin-bottom: 8px;
+.start-date, .end-date {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--text-color);
+  white-space: nowrap;
 }
 
 .date {
-  height: 40px;
-  width: 100%;
+  height: 45px;
   font-size: 1rem;
-  margin-bottom: 10px;
+  padding: 0 15px;
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  background-color: rgba(255, 255, 255, 0.8);
+  flex-grow: 1;
+}
+
+.date:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(139, 211, 221, 0.3);
+}
+
+.add-upload-sec {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
 }
 
 #upload-btn, #add-btn {
-  height: 50px; 
+  position: relative;
+  height: 45px;
   width: 100%;
-  margin: 20px 0;
-  border-radius: 16px;
-  background-color: #8bd3dd;
-  font-size: 1.2rem;
-  text-align: center;
-  line-height: 50px; 
+  max-width: 500px;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #fff;
+}
+
+#upload-btn {
+  background-color: var(--primary-color);
+}
+
+#add-btn {
+  background-color: var(--button-hover-color);
   border: none;
 }
 
-#upload-btn input {
-  font-size: 1rem;
+#upload-btn:hover, #add-btn:hover {
+  background-color: var(--button-hover-color);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+#upload-btn:active, #add-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#upload-btn input[type="file"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+
+#upload-btn::after {
+  content: 'Upload CSV File';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .error, .success {
   margin-top: 20px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: white;
-  padding: 10px;
-  border-radius: 8px;
+  padding: 12px 20px;
+  border-radius: 10px;
   text-align: center;
-  width: 90%;
+  width: 100%;
+  font-weight: 500;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .error {
-  background-color: #e74c3c;
+  background-color: var(--error-color);
 }
 
 .success {
-  background-color: #2ecc71;
+  background-color: var(--success-color);
+}
+
+@media (max-width: 768px) {
+  .left-section {
+    padding: 15px;
+  }
+
+  .form-group {
+    flex-direction: column;
+  }
+
+  .startDate, .endDate {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .start-date, .end-date {
+    margin-bottom: 5px;
+  }
+
+  .date, #upload-btn, #add-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .left-section {
+    padding: 10px;
+  }
+
+  .start-date, .end-date {
+    font-size: 1rem;
+  }
+
+  .date, #upload-btn, #add-btn {
+    height: 40px;
+    font-size: 0.9rem;
+  }
 }

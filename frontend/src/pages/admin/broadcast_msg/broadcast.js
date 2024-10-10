@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './broadcast.css'; 
+import './broadcast.css';
 import deleteicon from '../../photos-logos/delete.png';
 import Header from '../../header/header';
 import AdminSideBar from '../admin-sidebar/adminSidebar';
@@ -64,54 +64,54 @@ const Broadcast = () => {
   return (
     <div className="main">
       <Header />
-      <AdminSideBar/>
-      <div className="br-content">
-        <div className="br-top">
-          <h3>Broadcast Message:</h3>
-          <input 
-            placeholder="Enter Message" 
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-          />
-          <button onClick={handleAddMessage} className="enter-button">Enter</button>
-        </div>
+      <div className="container">
+        <AdminSideBar />
+        <div className="br-content">
+          <div className="br-top">
+            <h3>Broadcast Message:</h3>
+            <input
+              placeholder="Enter Message"
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+            />
+            <button onClick={handleAddMessage} className="enter-button">Enter</button>
+          </div>
 
-        <div className="br-bottom">
-          <table id="message-table">
-            <thead>
-              <tr>
-                <th>Sr.No</th>
-                <th>Message</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="table-body">
-              {messages.map((message, index) => (
-                <tr key={message._id}>
-                  <td>{index + 1}</td>
-                  <td>{message.text}</td>
-                  <td className='br-btn'>
-                    <label htmlFor={`toggle-${message._id}`} className="toggle-label">
-                      <input 
-                        className="circle" 
-                        id={`toggle-${message._id}`} 
-                        name="toggle" 
-                        type="checkbox"
-                        checked={message.isActive}
-                        onChange={() => handleToggleMessage(message._id)}
-                      />
-                    </label>
-                    <button
-                      className="delete-btn"
-                      onClick={() => handleDeleteMessage(message._id)}
-                    >
-                      <img src={deleteicon} alt="delete" />
-                    </button>
-                  </td>
+          <div className="br-bottom">
+            <table id="message-table">
+              <thead>
+                <tr>
+                  <th>Sr.No</th>
+                  <th>Message</th>
+                  <th>Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody id="table-body">
+                {messages.map((message, index) => (
+                  <tr key={message._id}>
+                    <td>{index + 1}</td>
+                    <td>{message.text}</td>
+                    <td className='br-btn'>
+                      <div class="toggle-cont">
+                        <input class="toggle-input" id="toggle" name="toggle" type="checkbox" />
+                        <label class="toggle-label" for="toggle">
+                          <div class="cont-label-play">
+                            <span class="label-play"></span>
+                          </div>
+                        </label>
+                      </div>
+                      <button
+                        className="delete-btn"
+                        onClick={() => handleDeleteMessage(message._id)}
+                      >
+                        <img src={deleteicon} alt="delete" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

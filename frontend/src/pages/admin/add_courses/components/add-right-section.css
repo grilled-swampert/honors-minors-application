@@ -1,130 +1,189 @@
-.ad-right-section{
-    background-color: #f3d2c1;
-    height: 67vh;
-    width: 65.2%;
-    border-radius: 30px;
-    overflow-y: auto;
-    font-family: "Fira Sans", sans-serif;
-   }
-   #ad-table{
-    table-layout: fixed;
+:root {
+  --primary-bg: linear-gradient(135deg, #f6d5c1 0%, #f0b7a1 100%);
+  --border-color: #ced4da;
+  --text-color: #333;
+  --button-bg: #007bff;
+  --button-hover: #0056b3;
+  --table-header-bg: rgba(240, 183, 161, 0.9);
+}
+
+.ad-right-section {
+  background: var(--primary-bg);
+  height: 100%;
+  max-height: 80vh;
+  width: 98%;
+  border-radius: 15px;
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
+  font-family: "Fira Sans", sans-serif;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid black;
+  margin: 10px 5px;
+  padding: 15px;
+}
+
+.cer-dead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.cer-dead label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+#certificate-deadline {
+  width: 50%;
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+#ad-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+#ad-table th {
+  position: sticky;
+  top: 0;
+  padding: 15px 10px;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background-color: #bc414e;
+  color: white;
+  text-align: center;
+}
+
+#ad-table td {
+  padding: 12px 10px;
+  font-size: 0.9rem;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--border-color);
+}
+
+#table-body img {
+  height: 20px;
+  width: auto;
+  object-fit: contain;
+}
+
+tbody button {
+  height: 30px;
+  width: 30px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: var(--button-bg);
+  color: white;
+}
+
+tbody button:hover {
+  background-color: var(--button-hover);
+  transform: scale(1.1);
+}
+
+tbody input {
+  font-size: 0.9rem;
+  padding: 8px;
+  width: 90%;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+}
+
+.edit-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.confirm-button, .cancel-button {
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  padding: 6px 12px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  background-color: var(--button-bg);
+  color: white;
+}
+
+.confirm-button:hover, .cancel-button:hover {
+  background-color: var(--button-hover);
+}
+
+.ad-tick-cross {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .ad-right-section {
+    padding: 10px;
+  }
+
+  #ad-table th, #ad-table td {
+    padding: 10px 8px;
+  }
+
+  .cer-dead {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  #certificate-deadline {
     width: 100%;
-    padding: 10px;
-    border-collapse: collapse;
-   }
-   #ad-table thead{
-    width:100%;
-   }
-  
-  
-   #ad-table th{
-    background-color: #bc414e;
-    position: sticky;
-    top: 0;
-    height: 60px;
-    color: #fff7f7;
-    width: 20%;
-    font-size: 1.2rem;
-  
   }
-  
-  tbody td{
-    height: 3vh;
-    font-size: 1.2rem;
-    text-align: center;
-    padding: 10px;
-  
+}
+
+@media (max-width: 768px) {
+  #ad-table {
+    font-size: 0.8rem;
   }
-  .cer-dead{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
+  #ad-table th, #ad-table td {
+    padding: 8px 5px;
   }
-  .cer-dead label{
-    font-size: 1.5rem;
-    width: 60%;
+
+  tbody button {
+    height: 25px;
+    width: 25px;
   }
-  #certificate-deadline{
-    width: 50%;
-  }
-  
-  tbody tr:nth-child(odd){
-    background-color: #172c66;
-    color: white;
-  }
-  tbody tr:nth-child(even){
-    background-color: white;
-  }
-  tbody button{
-    background-color: #8bd3dd;
-    border: none;
-    height: 5vh;
-    width: fit-content;
-    object-fit: contain;
-    border-radius: 50%;
-    
-  }
-  tbody input{
-    font-size: 0.75rem;
-    padding: 5%;
-    width: 80%;
-  }
- #table-body img{
-    height: 3vh;
-    object-fit: contain;
-  }
-  thead :nth-child(1){
-    width: 5%;
-  }
-  thead :nth-child(2){
-    width: 5%;
-  }
-  thead :nth-child(3){
-    width: 10%;
-  }
-  thead :nth-child(4){
-    width: 10%;
-  }
-  thead :nth-child(5){
-    width: 16%;
-  }
-  thead :nth-child(6){
-    width: 16%;
-  }
-  
-  thead :nth-child(7){
-    width: 10%;
-  }
-  thead :nth-child(8){
-    width: 10%;
-  }
-  a{
-    text-decoration: none;
-    color: white;
-  }
-  .edit-buttons {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-  }
-  
+
   .confirm-button, .cancel-button {
-    background:  #8bd3dd;
-    border: none;
-    color: white;
-    cursor: pointer;
-    font-size: 16px;
-    margin: 0 5px;
+    padding: 5px 10px;
   }
-  .ad-tick-cross{
-    display: flex;
-    gap: none;
+}
+
+@media (max-width: 480px) {
+  .ad-right-section {
+    padding: 5px;
   }
-  .ad-tick-cross button{
-    width: fit-content;
-    position: relative;
-    left: 25%;
+
+  #ad-table {
+    font-size: 0.7rem;
   }
-  #table-body input{
-    width: 85%;
+
+  #ad-table th, #ad-table td {
+    padding: 6px 3px;
   }
+
+  tbody button {
+    height: 22px;
+    width: 22px;
+  }
+
+  .confirm-button, .cancel-button {
+    padding: 4px 8px;
+  }
+}

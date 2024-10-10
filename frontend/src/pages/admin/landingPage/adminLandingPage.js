@@ -7,7 +7,7 @@ import AlpMain from './components/alp-main';
 
 function AdminLandingPage() {
     return (
-        <div className='main'>
+        <div className='landMain'>
             <Header />
             <div className='alp-content'>
             <AlpMain />

@@ -6,48 +6,54 @@ const AlpLeftSection = () => {
   const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
-      e.preventDefault();
+    e.preventDefault();
 
-      const term = { termYear };
+    // Check if the input is empty
+    if (!termYear.trim()) {
+      alert("Please enter an Academic Year before creating a term.");
+      return;
+    }
 
-      const response = await fetch('/admin', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(term)
-      });
+    const term = { termYear };
 
-      console.log('Response:', response);
+    const response = await fetch('/admin', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(term)
+    });
 
-      const data = await response.json();
+    console.log('Response:', response);
 
-      console.log('Data:', data);
+    const data = await response.json();
 
-      if (!data.ok) {
-          setError(data.error);
-      }
+    console.log('Data:', data);
 
-      if (data.ok) {
-          setError(null);
-          setTermYear('');
-          console.log('Term created', data);
-      }
-      window.location.reload();
+    if (!data.ok) {
+      setError(data.error);
+    }
+
+    if (data.ok) {
+      setError(null);
+      setTermYear('');
+      console.log('Term created', data);
+    }
+    window.location.reload();
   };
 
   return (
     <div>
-        <form onSubmit={handleSubmit} id='add-courses'>
-          <input 
-            type="text" 
-            placeholder="Academic Year" 
-            id="termInput" 
-            value={termYear} 
-            onChange={(e) => setTermYear(e.target.value)} 
-          />
-          <button id="createButton">CREATE</button>
-        </form>
+      <form onSubmit={handleSubmit}>
+        <input 
+          type="text" 
+          placeholder="Academic Year" 
+          id="termInput" 
+          value={termYear} 
+          onChange={(e) => setTermYear(e.target.value)} 
+        />
+        <button id="createButton">CREATE</button>
+      </form>
       
       {error && <div className="error">{error}</div>}
     </div>

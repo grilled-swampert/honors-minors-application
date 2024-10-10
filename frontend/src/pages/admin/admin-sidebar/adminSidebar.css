@@ -1,40 +1,68 @@
-#side-nav {
-    position: fixed;
-    width: 1.5%;
-    margin-top: 1%;
-    left: 0;
-    padding: 15px;
-    background-color:transparent;
-    color: black;
-    cursor: pointer;
-    font-size: 2rem;
-  }
-  
-  #sidebar {
-    height: 100%;
-    width: 0;
-    position: fixed;
-    margin-top: 1%;
-    left: 0;
-    background-color:  #bc414e;
-    overflow-x: hidden;
-    color: black;
-    transition: 0.5s;
-    padding-top: 60px;
-  }
-  
-  #sidebar button {
-    padding: 10px 15px;
-    text-align: left;
-    border: none;
-    background: none;
-    color: WHITE;
-    font-size: 18px;
-    display: block;
-    width: 100%;
-    cursor: pointer;
-  }
-  
-  #sidebar button:hover {
-    background-color: #575757;
-  }
+.adminSidebar-body {
+  position: relative;
+  height: 85vh;
+  width: 250px;
+  background-color: #bc414e;
+  color: white;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  margin: 0.5% 0 0 0.5%;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.adminSidebar-body:hover {
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.2);
+}
+
+#adminSidebar {
+  padding-top: 20px;
+  flex-grow: 1;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
+}
+
+
+
+#adminSidebar button {
+  background-color: transparent;
+  margin-bottom: 10%;
+  width: 100%;
+  padding: 12px 20px;
+  text-align: left;
+  border: none;
+  color: white;
+  font-size: 20px;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+#adminSidebar button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: all 0.4s ease;
+}
+
+#adminSidebar button:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+  color: #ffd700;
+  transform: translateX(5px);
+}
+
+#adminSidebar button:hover::before {
+  left: 100%;
+}
+
+#adminSidebar button:active {
+  transform: translateX(5px) scale(0.98);
+}

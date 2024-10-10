@@ -5,9 +5,7 @@ import { useParams } from 'react-router-dom';
 const AddLeftSection = () => {
   const { termId } = useParams();
   const [startDate, setStartDate] = useState('');
-  const [startTime, setStartTime] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [endTime, setEndTime] = useState('');
   const [syllabusFile, setSyllabusFile] = useState(null);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -15,14 +13,14 @@ const AddLeftSection = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Combine date and time
-    const startDateTime = new Date(`${startDate}T${startTime}`);
-    const endDateTime = new Date(`${endDate}T${endTime}`);
-
     const formData = new FormData();
+    console.log('Syllabus File:', syllabusFile);
+    console.log('Start Date:', startDate);
+    console.log('End Date:', endDate);
+    
     formData.append('syllabusFile', syllabusFile);
-    formData.append('startDate', startDateTime.toISOString());  // Save as ISO string
-    formData.append('endDate', endDateTime.toISOString());
+    formData.append('startDate', startDate);
+    formData.append('endDate', endDate);
 
     try {
       const response = await fetch(`/admin/${termId}/edit/addCourses`, {
@@ -39,9 +37,10 @@ const AddLeftSection = () => {
         setSuccess('Semester details updated successfully!');
         setSyllabusFile(null);
         setStartDate('');
-        setStartTime('');
         setEndDate('');
-        setEndTime('');
+
+        // Force refresh the page after successful upload
+          window.location.reload();
       }
     } catch (err) {
       setError('Failed to submit the form');
@@ -64,6 +63,7 @@ const AddLeftSection = () => {
     <div className="left-section">
       <div className="date-selection">
         <form onSubmit={handleSubmit} className='termForm'>
+          <div className="form-group">
           <div className="startDate">
             <label className="start-date">Start Date:</label>
             <input
@@ -77,13 +77,12 @@ const AddLeftSection = () => {
               type="time"
               id="start-time"
               className="date"
-              value={startTime}
-              onChange={(e) => setStartTime(e.target.value)}
+              onChange={(e) => console.log(e.target.value)}
             />
           </div>
 
           <div className="endDate">
-            <label className="end-date">End Date:</label>
+            <label className="end-date">End Date &nbsp; :</label>
             <input
               type="date"
               id="end-date"
@@ -95,11 +94,11 @@ const AddLeftSection = () => {
               type="time"
               id="end-time"
               className="date"
-              value={endTime}
-              onChange={(e) => setEndTime(e.target.value)}
+              onChange={(e) => console.log(e.target.value)}
             />
           </div>
-
+          </div>
+        <div className = 'add-upload-sec'>
           <div id="upload-btn">
             <input
               type="file"
@@ -112,6 +111,7 @@ const AddLeftSection = () => {
           <button id="add-btn" type="submit">
             ADD
           </button>
+          </div>
 
           {error && <div className="error">{error}</div>}
           {success && <div className="success">{success}</div>}

@@ -1,55 +1,81 @@
-th{
-  background-color: #bc414e;
-  position: sticky;
-  top: 0;
-  color: white;
-}
-th, td{
-  padding: 8px;
-  text-align: center;
-}
-
-tbody td{
+/* Table Styles */
+.alp-tr td {
   height: 6vh;
-  font-size: 2rem;
+  font-size: 1rem;
+  color: #0FFCBE;
+  padding: 10px;
+  vertical-align: middle;
 }
- .view-button, .edit-button{
-  background-color: #8bd3dd;
+
+/* Button Styles */
+.view-button, .edit-button, .delete-button {
+  height: 50px;
+  width: 55px;
   border: none;
-  height: 7vh;
-  width: fit-content;
-  object-fit: contain;
-  margin: 0px 20px;
   border-radius: 50%;
-  
+  margin: 0 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
 }
 
-tbody img{
-  height: 3vh;
-  object-fit: contain;
+.view-button, .edit-button {
+  background-color: #0FFCBE;
+  color: #333;
 }
-tbody tr:nth-child(odd){
-background-color: #172c66;
-color: white;
 
-
-}
-tbody tr:nth-child(even) {
-  background-color: white;
-}
-  
 .delete-button {
-  height: 7vh;
   background-color: #f44336;
   color: white;
-  padding: 8px 10px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 14px;
-  margin: 4px 2px;
-  border: none;
-  cursor: pointer;
-  border-radius: 50%;
-  
+}
+
+.view-button:hover, .edit-button:hover, .delete-button:hover {
+  transform: scale(1.1);
+}
+
+.view-button:active, .edit-button:active, .delete-button:active {
+  transform: scale(0.95);
+}
+
+/* Image Styles */
+tbody img {
+  height: 10px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .land-content {
+    margin-top: 20px;
+  }
+
+  thead tr {
+    font-size: 0.9rem;
+  }
+
+  tbody td {
+    font-size: 0.85rem;
+  }
+
+  input[type="text"], #createButton {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .alp-tr td {
+    padding: 6px;
+  }
+
+  .view-button, .edit-button, .delete-button {
+    height: 32px;
+    width: 32px;
+  }
+
+  tbody img {
+    height: 16px;
+  }
 }

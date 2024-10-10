@@ -106,23 +106,15 @@
   font-style: italic;
 }
 
-body{
-  font-family: 'Fira Sans', sans-serif;
-  background-color: #fef6e4;
-  font-family: "Fira Sans", sans-serif;;
-}
 
-button {
-font-family: 'Fira Sans', sans-serif;
-}
-
- .content{
+.admin-add-content{
   display: flex;
-  height: 65vh;
-  width: 90%;
- }
-
-
+  justify-content: center;
+}
+.add-right-sec{
+  display: flex;
+  flex-direction: column;
+  width: 91%;
+}
  
  
-

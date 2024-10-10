@@ -1,131 +1,81 @@
-import React, { useState, useEffect } from "react";
-import "./add-right-section.css";
-import editicon from "../../../photos-logos/edit.png";
+import React from 'react';
+import './add-right-section.css';
+import downloadicon from "../../../photos-logos/download.png";
+import editicon from '../../../photos-logos/edit.png';
 import approveicon from "../../../photos-logos/approve.png";
-import rejecticon from "../../../photos-logos/reject.jpeg";
+import rejecticon from '../../../photos-logos/reject.jpeg';
 
 const AddRightSection = ({ term, setTerms }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [localStartDate, setLocalStartDate] = useState('');
-  const [localEndDate, setLocalEndDate] = useState('');
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
-
-  useEffect(() => {
-    if (term) {
-      // Convert term.startDate and term.endDate to local time for input fields
-      const startDate = new Date(term.startDate);
-      const endDate = new Date(term.endDate);
-  
-      const localStartDate = new Date(startDate.getTime() - startDate.getTimezoneOffset() * 60000)
-        .toISOString()
-        .slice(0, 16);
-  
-      const localEndDate = new Date(endDate.getTime() - endDate.getTimezoneOffset() * 60000)
-        .toISOString()
-        .slice(0, 16);
-  
-      setLocalStartDate(localStartDate);
-      setLocalEndDate(localEndDate);
-    }
-  }, [term]);  
-
-  const handleConfirm = async (e) => {
-    e.preventDefault();
-    
-    // Check if dates are valid before sending the request
-    if (!localStartDate || !localEndDate) {
-      console.error("Please provide valid start and end dates.");
-      return;
-    }
-  
-    try {
-      const response = await fetch(`/admin/${term._id}/edit/addCourses`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          termId: term._id,
-          startDate: localStartDate,
-          endDate: localEndDate,
-        }),
-      });
-  
-      if (!response.ok) {
-        const data = await response.json();
-        console.error('Error:', data.error);
-      } else {
-        const updatedTerm = await response.json();
-        console.log('Term updated successfully:', updatedTerm);
-  
-        // Update the state to reflect the changes
-        setTerms((prevTerms) =>
-          prevTerms.map((t) => (t._id === term._id ? updatedTerm : t))
-        );
-      }
-    } catch (error) {
-      console.error('Error updating term:', error);
-    }
-  
-    setIsEditing(false); // Exit editing mode
-  };
-  
-
-  const formatDateTime = (dateString) => {
-    const date = new Date(dateString);
-    return `${date.toLocaleDateString()} ${date.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    })}`;
+  const handleEdit = (id) => {
+    setTerms((prevTerms) =>
+      prevTerms.map((item) =>
+        item._id === id ? { ...item, isEditing: true } : item
+      )
+    );
   };
 
-  const handleEdit = () => {
-    setIsEditing(true);
+  const handleConfirm = (id) => {
+    const startDate = document.getElementById(`start-date-${id}`).value.replace('T', ' ');
+    const endDate = document.getElementById(`end-date-${id}`).value.replace('T', ' ');
+
+    setTerms((prevTerms) =>
+      prevTerms.map((item) =>
+        item._id === id
+          ? { ...item, startDate, endDate, isEditing: false }
+          : item
+      )
+    );
   };
 
-  const handleCancel = () => {
-    setIsEditing(false);
-    setLocalStartDate(new Date(term.startDate).toISOString().slice(0, 16));
-    setLocalEndDate(new Date(term.endDate).toISOString().slice(0, 16));
+  const handleCancel = (id) => {
+    setTerms((prevTerms) =>
+      prevTerms.map((item) =>
+        item._id === id ? { ...item, isEditing: false } : item
+      )
+    );
   };
 
   return (
     <tr key={term._id}>
-      <td className="start-date">
-        {isEditing ? (
+      <td>
+        <button className="download-btn">
+          <img src={downloadicon} alt="download" />
+        </button>
+      </td>
+      <td className="table-start-date">
+        {term.isEditing ? (
           <input
             type="datetime-local"
-            value={localStartDate}
-            onChange={(e) => setLocalStartDate(e.target.value)}
+            id={`start-date-${term._id}`}
+            defaultValue={term.startDate.replace(' ', 'T')}
           />
         ) : (
-          formatDateTime(term.startDate)
+          term.startDate
         )}
       </td>
-      <td className="end-date">
-        {isEditing ? (
+      <td className="table-end-date">
+        {term.isEditing ? (
           <input
             type="datetime-local"
-            value={localEndDate}
-            onChange={(e) => setLocalEndDate(e.target.value)}
+            id={`end-date-${term._id}`}
+            defaultValue={term.endDate.replace(' ', 'T')}
           />
         ) : (
-          formatDateTime(term.endDate)
+          term.endDate
         )}
       </td>
       <td className="ad-tick-cross">
-        {isEditing ? (
+        {term.isEditing ? (
           <>
-            <button onClick={handleConfirm}>
+            <button onClick={() => handleConfirm(term._id)}>
               <img src={approveicon} alt="approve" />
             </button>
-            <button onClick={handleCancel}>
+            <button onClick={() => handleCancel(term._id)}>
               <img src={rejecticon} alt="reject" />
             </button>
           </>
         ) : (
-          <button onClick={handleEdit}>
+          <button onClick={() => handleEdit(term._id)}>
             <img src={editicon} alt="edit" />
           </button>
         )}

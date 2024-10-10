@@ -25,39 +25,40 @@ const AddCoursesPage = () => {
   console.log('Terms from store:', allTerms);
 
   // get the term using id
-  const termNeeded = allTerms.find((term) => term._id === termId);
+  const termNeeded = allTerms.find((allTerms) => allTerms._id === termId);
   console.log('Term needed:', termNeeded);
-
-  // Check if the startDate and endDate exist and are not empty
-  const hasValidDates = termNeeded && termNeeded.startDate && termNeeded.endDate;
 
   return (
     <div className="main">
       <Header />
+      <div className="admin-add-content">
       <AdminSideBar />
+      <div className='add-right-sec'> 
       <TemplatePage />
-      <div className="content">
         <AddLeftSection rows={terms} setTerms={setTerms} />
         <div className="ad-right-section">
           <table id="ad-table">
             <thead>
               <tr>
+                <th>DOWNLOAD</th>
                 <th>Start Date</th>
                 <th>End Date</th>
                 <th>Edit</th>
               </tr>
             </thead>
             <tbody id="table-body">
-              {termNeeded && hasValidDates ? (
+              {termNeeded ? (
                 <AddRightSection key={termNeeded._id} term={termNeeded} setTerms={setTerms}/>
               ) : (
                 <tr>
                   <td colSpan="4">No courses added yet.</td>
                 </tr>
               )}
+            
             </tbody>
           </table>
         </div>
+      </div>
       </div>
     </div>
   );

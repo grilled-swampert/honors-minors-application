@@ -28,7 +28,7 @@ const AlpRightSection = ({ term }) => {
 
   return (
         <tbody>
-            <tr>
+            <tr className = 'alp-tr'>
               <td>{term.termYear}</td>
               <td id="view-box">
                 <Link to={`/admin/${term._id}/edit/addCourses`}><button className="edit-button">

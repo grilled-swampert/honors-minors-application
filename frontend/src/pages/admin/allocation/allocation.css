@@ -1,9 +1,31 @@
+:root {
+  --primary-bg: #f3d2c1;
+  --table-header-bg: #bc414e;
+  --table-odd-row: #172c66;
+  --table-even-row: white;
+  --button-bg: #8bd3dd;
+  --button-hover-bg: #6bbbc5;
+  --text-light: #fff7f7;
+  --text-dark: #172c66;
+  --border-color: #ccc;
+}
+
 /* Main content area */
+.al-main {
+  display: flex;
+  justify-content: center;
+  gap: 2%;
+  padding: 20px;
+}
+
 .ad-content {
-  background-color: #f3d2c1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--primary-bg);
   height: 70vh;
-  width: 90%;
-  margin: 2% auto 0;
+  width: 100%;
+  max-width: 1200px;
+  margin: 1% auto;
   overflow: auto;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -17,12 +39,12 @@
 }
 
 #myTable th {
-  background-color: #bc414e;
+  background-color: var(--table-header-bg);
   position: sticky;
   top: 0;
   height: 60px;
-  color: #fff7f7;
-  font-size: 1rem;
+  color: var(--text-light);
+  font-size: 0.9rem;
   z-index: 1;
   text-transform: uppercase;
 }
@@ -31,6 +53,7 @@
 #myTable td {
   text-align: center;
   padding: 10px;
+  width: fit-content;
 }
 
 #myTable tbody td {
@@ -39,13 +62,13 @@
 }
 
 #myTable tbody tr:nth-child(odd) {
-  background-color: #172c66;
-  color: white;
+  background-color: var(--table-odd-row);
+  color: var(--text-light);
 }
 
 #myTable tbody tr:nth-child(even) {
-  background-color: white;
-  color: #172c66;
+  background-color: var(--table-even-row);
+  color: var(--text-dark);
 }
 
 /* Input styles */
@@ -54,7 +77,7 @@
   height: 30px;
   width: 80%;
   font-size: 0.9rem;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   padding: 0 5px;
 }
@@ -66,17 +89,18 @@
 
 /* Download button styles */
 .download-btn {
-  background-color: #8bd3dd;
+  background-color: var(--button-bg);
   border: none;
   height: 40px;
   width: 40px;
   border-radius: 50%;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, transform 0.1s;
 }
 
 .download-btn:hover {
-  background-color: #6bbbc5;
+  background-color: var(--button-hover-bg);
+  transform: scale(1.05);
 }
 
 .download-icon {
@@ -86,17 +110,24 @@
 }
 
 /* Action buttons */
+.action-buttons-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
 .apply-btn,
 .submit-btn,
 .download-all-btn {
   height: 50px;
   min-width: 120px;
-  background-color: #8bd3dd;
+  background-color: var(--button-bg);
   border: none;
   border-radius: 25px;
   padding: 10px 20px;
   font-size: 1rem;
-  margin: 15px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.1s;
 }
@@ -104,7 +135,8 @@
 .apply-btn:hover,
 .submit-btn:hover,
 .download-all-btn:hover {
-  background-color: #6bbbc5;
+  background-color: var(--button-hover-bg);
+  transform: scale(1.05);
 }
 
 .apply-btn:active,
@@ -113,20 +145,16 @@
   transform: scale(0.98);
 }
 
-.action-buttons-container {
-  display: flex;
-  justify-content: flex-end;
-  padding: 20px;
-}
-
 /* Responsive design */
 @media (max-width: 1200px) {
   .ad-content {
     width: 95%;
   }
 
-  #myTable th, #myTable td {
+  #myTable th, 
+  #myTable td {
     font-size: 0.9rem;
+    padding: 8px;
   }
 
   #myTable tbody td {
@@ -137,29 +165,94 @@
   .submit-btn,
   .download-all-btn {
     font-size: 0.9rem;
-    height: 40px;
-    min-width: 100px;
+    height: 45px;
+    min-width: 110px;
   }
 }
 
 @media (max-width: 768px) {
+  .al-main {
+    padding: 10px;
+  }
+
   .ad-content {
     width: 100%;
   }
 
   #myTable th {
     font-size: 0.8rem;
+    height: 50px;
   }
 
   #myTable tbody td {
     font-size: 0.8rem;
+    height: 6vh;
+  }
+
+  #myTable input[type="number"],
+  #myTable input[type="checkbox"] {
+    height: 25px;
+    font-size: 0.8rem;
+  }
+
+  .download-btn {
+    height: 35px;
+    width: 35px;
+  }
+
+  .download-icon {
+    height: 18px;
+    width: 18px;
   }
 
   .apply-btn,
   .submit-btn,
   .download-all-btn {
     font-size: 0.8rem;
+    height: 40px;
+    min-width: 100px;
+    padding: 8px 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .al-main {
+    padding: 5px;
+  }
+
+  #myTable th, 
+  #myTable td {
+    font-size: 0.7rem;
+    padding: 6px;
+  }
+
+  #myTable tbody td {
+    font-size: 0.7rem;
+    height: 5vh;
+  }
+
+  #myTable input[type="number"],
+  #myTable input[type="checkbox"] {
+    height: 22px;
+    font-size: 0.7rem;
+  }
+
+  .download-btn {
+    height: 30px;
+    width: 30px;
+  }
+
+  .download-icon {
+    height: 16px;
+    width: 16px;
+  }
+
+  .apply-btn,
+  .submit-btn,
+  .download-all-btn {
+    font-size: 0.7rem;
     height: 35px;
-    min-width: 80px;
+    min-width: 90px;
+    padding: 6px 12px;
   }
 }
