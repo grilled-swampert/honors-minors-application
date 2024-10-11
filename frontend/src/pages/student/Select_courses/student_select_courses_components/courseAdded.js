@@ -50,47 +50,48 @@ export default function CourseAdded({
       });
 
       if (!response.ok) {
-        throw new Error("Failed to update courses");
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to update courses");
       }
 
       const result = await response.json();
       console.log("Courses updated successfully:", result);
-      alert("Courses submitted successfully!");
+      alert("Courses submitted successfully! A confirmation email has been sent to your registered email address.");
       navigate(`/student/${studentId}/dashboard`);
     } catch (error) {
       console.error("Error updating courses:", error);
-      alert("Failed to submit courses.");
+      alert(`Failed to submit courses: ${error.message}`);
     }
   };
 
   return (
-    <div>
-      <div className={styles.coursesAddedTable}>
-        <div className={styles.coursesAddedContent} ref={containerRef}>
-          {selectedCourses.map((course, index) => (
-            <div
-              className={styles.coursesAddedRow}
-              data-course-id={course.id || course._id}
-              key={`${course.id || course._id}-${index}`}
+    <div className={styles.coursesAddedContainer}>
+      <div className={styles.coursesAddedTable} ref={containerRef}>
+        {selectedCourses.map((course, index) => (
+          <div
+            className={styles.coursesAddedRow}
+            data-course-id={course.id || course._id}
+            key={`${course.id || course._id}-${index}`}
+          >
+            <span className={styles.dragHandle}>☰</span>
+            <span className={styles.preference}>Preference {index + 1}</span>
+            <span className={styles.courseCode}>{course.code}</span>
+            <span className={styles.courseName}>{course.name}</span>
+            <button
+              className={styles.removeBtn}
+              onClick={() => handleRemoveCourse(course.id || course._id)}
             >
-              <span className={styles.dragHandle}>☰</span>
-              <span className={styles.courseRank}>{index + 1}</span>
-              <span className={styles.somaiyaCourseName}>
-                {course.programName}
-              </span>
-              <span className={styles.courseType}>{course.category}</span>
-              <button
-                className={styles.removeCourse}
-                onClick={() => handleRemoveCourse(course.id || course._id)}
-              >
-                Remove
-              </button>
-            </div>
-          ))}
-        </div>
+              Remove
+            </button>
+          </div>
+        ))}
       </div>
       <div className={styles.buttons}>
-        <button className={styles.submitBtn} onClick={handleSubmit}>
+        <button 
+          className={styles.submitBtn} 
+          onClick={handleSubmit}
+          disabled={selectedCourses.length !== 6}
+        >
           Submit
         </button>
       </div>

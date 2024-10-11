@@ -1,0 +1,35 @@
+.courseRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 10px;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .courseRow:hover {
+    background-color: #F8F8F8;
+    transform: translateY(-2px);
+  }
+  
+  .courseItem {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .syllabusLink {
+    color: #B7202E;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .syllabusLink:hover {
+    color: #ED1C24;
+    text-decoration: underline;
+  }
+  
+  .courseSelect {
+    cursor: pointer;
+  }

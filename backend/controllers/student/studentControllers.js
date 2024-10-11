@@ -2,7 +2,7 @@ const Term = require("../../models/termModel/termModel");
 const Student = require("../../models/studentModel/studentModel");
 const Course = require("../../models/courseModel/courseModel");
 const Broadcast = require("../../models/broadcastModel/broadcastMessageModel");
-
+const nodemailer = require('nodemailer');
 const multer = require('multer');
 const path = require('path');
 const asyncHandler = require("express-async-handler");
@@ -17,6 +17,16 @@ exports.getAllTerms = asyncHandler(async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+// Create a nodemailer transporter
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
+
 
 // GET a single term
 exports.getTerm = asyncHandler(async (req, res) => {
@@ -219,10 +229,11 @@ exports.getStudentDetails = asyncHandler(async (req, res) => {
 });
 
 // PATCH update all preference counts for a specific student
+
 exports.submitCourses = async (req, res) => {
   try {
     const studentId = req.params.studentId;
-    const { courses } = req.body; // Expecting an array of course IDs
+    const { courses } = req.body;
 
     console.log("Student ID:", studentId);
     console.log("Courses:", courses);
@@ -233,27 +244,22 @@ exports.submitCourses = async (req, res) => {
 
     // Find the course documents using the course IDs
     const validCourses = await Course.find({ _id: { $in: courses } });
-
     console.log("Valid courses:", validCourses);
 
     if (validCourses.length !== courses.length) {
       return res.status(404).json({ message: "One or more courses not found" });
     }
 
-    console.log("Valid courses length = courses length");
-
     // Update the student's courses field with the valid courses
     const student = await Student.findByIdAndUpdate(
       studentId,
       {
         courses: validCourses.map((course) => course._id),
-        submissionTime: Date.now(), // This will correctly record the current time
-        status: "submitted", // Add the status update here
+        submissionTime: Date.now(),
+        status: "submitted",
       },
-      { new: true } // This option returns the updated document
-    );
-
-    console.log("Found student.");
+      { new: true }
+    ).populate('courses'); // Populate the courses for the email
 
     if (!student) {
       return res.status(404).json({ message: "Student not found" });
@@ -262,79 +268,148 @@ exports.submitCourses = async (req, res) => {
     // Set firstPreference and update finalCourse
     const firstPreference = student.courses[0];
     student.finalCourse = firstPreference;
-    await student.save(); // Save the updated student document
+    await student.save();
 
-    const studentBranch = student.branch;
-    const studentsListKey = `${studentBranch}_SL`; // e.g., EXCP_SL, COMP_SL
+    // Prepare email content
+    const courseList = student.courses.map((course, index) => 
+      `${index + 1}. ${course.name} (${course.code})`
+    ).join('\n');
 
-    console.log("Student Branch:", studentBranch);
-    console.log("Students List Key:", studentsListKey);
+    const emailOptions = {
+      from: process.env.EMAIL_USER,
+      to: student.email,
+      subject: "Course Selection Submission Confirmation",
+      text: `Dear ${student.name},
 
-    const term = await Term.findOne({ [studentsListKey]: studentId })
-      .populate(studentsListKey)
-      .exec();
+Your course preferences have been successfully submitted. Here are your selected courses in order of preference:
 
-    console.log("Found term");
+${courseList}
 
-    if (!term) {
-      return res.status(404).json({ message: "Term or student not found" });
-    }
+Your first preference has been automatically set as your final course. Please note that this selection is subject to approval and availability.
 
-    console.log("Checked term");
+If you need to make any changes or have questions, please contact your faculty advisor.
 
-    if (!student.courses || !student.courses.length) {
-      return res.status(404).json({ message: "Student or courses not found" });
-    }
+Best regards,
+Course Registration Team`,
+    };
 
-    console.log("Student courses:", student.courses);
-    console.log("First Preference:", firstPreference);
+    // Send confirmation email
+    await transporter.sendMail(emailOptions);
+    console.log("Confirmation email sent to:", student.email);
 
-    // Preference keys for updating
-    const preferenceKeys = [
-      "firstPreference",
-      "secondPreference",
-      "thirdPreference",
-      "fourthPreference",
-      "fifthPreference",
-    ];
-
-    // Loop through all preferences (1st, 2nd, etc.) for the specific student
+    // Update preference counts
     for (let i = 0; i < student.courses.length; i++) {
-      const courseId = student.courses[i];
-      console.log("Course ID:", courseId);
-      console.log("Preference Key:", preferenceKeys[i]);
-
-      const preferenceKey = preferenceKeys[i]; // Select the preference key based on index
+      const courseId = student.courses[i]._id;
+      const preferenceKey = [
+        "firstPreference",
+        "secondPreference",
+        "thirdPreference",
+        "fourthPreference",
+        "fifthPreference",
+      ][i];
 
       if (preferenceKey) {
-        // Find the course in the term and increment the corresponding preference count
         await Course.findOneAndUpdate(
-          { _id: courseId }, // Ensure the course is part of the term
-          { $inc: { [preferenceKey]: 1 } }, // Increment the corresponding preference attribute by 1
+          { _id: courseId },
+          { $inc: { [preferenceKey]: 1 } },
           { new: true }
         );
       }
     }
 
-    console.log("Updated all preferences");
-
-    student.submissionTime = Date.now();
-    student.save();
-
+    // Update final count for first preference
     await Course.findByIdAndUpdate(
-      { _id: firstPreference },
+      firstPreference,
       { $inc: { finalCount: 1 } },
       { new: true }
     );
 
-    console.log(`Final count updated for course ${firstPreference}`);
-    console.log(`All preference counts updated for student ${studentId}`);
     return res.status(200).json({
-      message: `All preference counts updated for student ${studentId}`,
+      message: "Course preferences submitted and confirmation email sent",
+      student
     });
   } catch (error) {
-    console.error("Error updating preference counts for student:", error);
+    console.error("Error submitting courses:", error);
     res.status(500).json({ message: error.message });
+  }
+};
+
+// Helper function to get all student emails from a term
+const getStudentEmailsFromTerm = async (termId) => {
+  const term = await Term.findById(termId);
+  if (!term) return [];
+
+  const studentLists = Object.keys(term.toObject()).filter(key => key.endsWith('_SL'));
+  let studentEmails = [];
+
+  for (const listKey of studentLists) {
+    const studentIds = term[listKey];
+    const students = await Student.find({ _id: { $in: studentIds } });
+    studentEmails = studentEmails.concat(students.map(student => student.email));
+  }
+
+  return studentEmails;
+};
+
+// Send broadcast email to all students
+const sendBroadcastEmail = async (message, termId) => {
+  const studentEmails = await getStudentEmailsFromTerm(termId);
+  
+  if (studentEmails.length === 0) {
+    console.log('No student emails found for term:', termId);
+    return;
+  }
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    bcc: studentEmails, // Use BCC for privacy
+    subject: 'New Broadcast Message',
+    html: `
+      <h2>New Broadcast Message</h2>
+      <p>${message}</p>
+      <hr>
+      <p>This is an automated message. Please do not reply.</p>
+    `
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log('Broadcast email sent successfully');
+  } catch (error) {
+    console.error('Error sending broadcast email:', error);
+    throw error;
+  }
+};
+
+// Updated toggleBroadcastMessage controller
+exports.toggleBroadcastMessage = async (req, res) => {
+  const { id } = req.body;
+  const { termId } = req.params;
+
+  try {
+    const message = await BroadcastMessage.findById(id);
+    if (!message) {
+      return res.status(404).json({ message: "Broadcast message not found" });
+    }
+
+    // Toggle the message status
+    message.isActive = !message.isActive;
+    await message.save();
+
+    // If message is being activated, send email to all students
+    if (message.isActive) {
+      try {
+        await sendBroadcastEmail(message.text, termId);
+      } catch (emailError) {
+        console.error('Error sending broadcast email:', emailError);
+        // Continue with the response even if email fails
+      }
+    }
+
+    res.status(200).json(message);
+  } catch (error) {
+    console.error('Error in toggleBroadcastMessage:', error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
@@ -469,16 +544,13 @@ exports.updateDropDetails = async (req, res) => {
   }
 };
 
-exports.getActiveBroadcastMessages = asyncHandler(async (req, res) => {
+exports.getActiveBroadcastMessages = async (req, res) => {
   try {
-    const messages = await Broadcast.find({ isActive: true }).sort('-createdAt');
-
-    console.log(`Active broadcast messages found: ${messages.length}`);
-    console.log('Messages:', messages);
-
+    const messages = await BroadcastMessage.find({ isActive: true })
+      .sort("-createdAt");
     res.json(messages);
   } catch (error) {
     console.error("Error fetching broadcast messages:", error);
-    res.status(500).json({ error: "Server error. Please try again later." });
+    res.status(500).json({ error: "Server error. Please try again later."});
   }
-});
+};

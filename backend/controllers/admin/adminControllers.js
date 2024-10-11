@@ -6,8 +6,18 @@ const { Parser } = require("json2csv");
 const { ObjectId } = require("mongoose");
 const path = require("path");
 const fs = require("fs");
-
 const asyncHandler = require("express-async-handler");
+const nodemailer = require("nodemailer");
+
+// Configure nodemailer
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD
+  }
+});
+
 
 // GET all terms
 exports.getAllTerms = asyncHandler(async (req, res) => {

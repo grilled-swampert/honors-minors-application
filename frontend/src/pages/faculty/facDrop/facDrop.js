@@ -8,7 +8,6 @@ import rejectIcon from "../../photos-logos/reject.jpeg";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import emailjs from "@emailjs/browser";
 import DropStudents from "./dropStudents";
 import { FETCH_ALL_COURSES } from "../../../constants/actonsTypes";
 const { getDropStudents } = require("../../../actions/terms");
@@ -77,23 +76,16 @@ function FacDrop() {
         });
         console.log(response.data);
 
-        // Send email using EmailJS
-        const emailResult = await emailjs.send(
-            "service_4wecekt",
-            isApproved ? "template_pr494zi" : "template_sao7chz",
-            response.data.emailParams,
-            process.env.REACT_APP_EMAILJS_PUBLIC_KEY
-        );
-
-        console.log('Email sent successfully:', emailResult);
+        // Email is now sent from the backend
         alert(isApproved ? 'Course drop request approved and email sent' : 'Course drop request rejected and email sent');
         closeOverlay();
         fetchStudents(); // Refresh the student list
-      } catch (error) {
-          console.error('Error handling course drop request:', error);
-          alert('Failed to process course drop request: ' + (error.response?.data?.error || error.message));
-      }
+    } catch (error) {
+        console.error('Error handling course drop request:', error);
+        alert('Failed to process course drop request: ' + (error.response?.data?.error || error.message));
+    }
   };
+  
   return (
     <div className="main">
       <Header />

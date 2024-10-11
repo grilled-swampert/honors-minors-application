@@ -1,12 +1,21 @@
+const multer = require('multer');
+const csv = require('csv-parser');
+const fs = require('fs');
+const { auth } = require("../../firebase");
 const Term = require("../../models/termModel/termModel");
 const Student = require("../../models/studentModel/studentModel");
+const nodemailer = require("nodemailer");
 
 const asyncHandler = require("express-async-handler");
 
-const emailjs = require("emailjs-com");
-emailjs.init({
-  publicKey: "mAQfMUC0eZbsdo2VB",
-  privateKey: "DsRki0KYlmq7BgmQbEZ8o",
+// Create a nodemailer transporter
+const transporter = nodemailer.createTransport({
+  // Configure your email service here
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
 });
 
 // GET all terms
@@ -154,20 +163,23 @@ exports.updateDropApprovalStatus = asyncHandler(async (req, res) => {
     console.log('Updated student:', student);
 
     // Prepare email content
-    const emailParams = {
-      to_email: student.email,
-      to_name: student.name,
-      message: isApproved 
+    const emailOptions = {
+      from: process.env.EMAIL_USER,
+      to: student.email,
+      subject: isApproved ? "Course Drop Request Approved" : "Course Drop Request Rejected",
+      text: isApproved 
         ? "Your course drop request has been approved."
         : `Your course drop request has been rejected. Reason: ${rejectionReason}`
     };
 
-    console.log('Email params:', emailParams);
+    console.log('Email options:', emailOptions);
 
-    // Return the email parameters to the frontend
+    // Send email using Nodemailer
+    await transporter.sendMail(emailOptions);
+
     res.status(200).json({ 
-      message: "Course drop request processed successfully",
-      emailParams: emailParams
+      message: "Course drop request processed successfully and email sent",
+      emailOptions: emailOptions
     });
   } catch (error) {
     console.error("Error processing course drop request:", error);
