@@ -1,6 +1,6 @@
 # Minors-Honors Application
 
-Welcome to the **Minors-Honors Application** repository! This platform streamlines the process for students enrolling in minors and honors courses, allowing for efficient course management and allocation based on student preferences.
+This application streamlines the process for students enrolling in minors and honors courses, allowing for efficient course management and allocation based on student preferences.
 
 ## Features
 
