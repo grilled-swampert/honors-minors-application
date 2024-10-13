@@ -2,6 +2,7 @@ const multer = require('multer');
 const csv = require('csv-parser');
 const fs = require('fs');
 const { auth } = require("../../firebase");
+const { ObjectId } = require('mongoose').Types;
 const Term = require("../../models/termModel/termModel");
 const Student = require("../../models/studentModel/studentModel");
 const nodemailer = require("nodemailer");
@@ -187,3 +188,57 @@ exports.updateDropApprovalStatus = asyncHandler(async (req, res) => {
     res.status(500).json({ error: "Internal Server Error", details: error.message, stack: error.stack });
   }
 });
+
+exports.deleteStudents = async (req, res) => {
+  try {
+    console.log("Received request to delete student:", req.body);
+    const { studentId, termId } = req.body;
+
+    // Ensure the studentId is a valid ObjectId before proceeding
+    if (!ObjectId.isValid(studentId)) {
+      return res.status(400).json({ message: "Invalid student ID format" });
+    }
+
+    console.log("Deleting student with ID:", studentId);
+
+    // Convert the studentId to ObjectId
+    const studentObjectId = new ObjectId(studentId);
+
+    // Find the student by ObjectId
+    const student = await Student.findById(studentObjectId);
+
+    if (!student) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    const studentTerm = student.terms;
+
+    if (studentTerm) {
+      const term = await Term.findById(studentTerm);
+
+      if (!term) {
+        return res.status(404).json({ message: `Term with ID ${termId} not found` });
+      }
+
+      const branch = student.branch;
+      const branchListField = `${branch}_SL`;
+
+      if (!term[branchListField]) {
+        return res.status(404).json({ message: `Branch list ${branchListField} not found in term ${termId}` });
+      }
+
+      // Remove the student ID from the branch list
+      term[branchListField] = term[branchListField].filter(id => id.toString() !== studentObjectId.toString());
+
+      await term.save();
+    }
+
+    // Finally, delete the student
+    await Student.findByIdAndDelete(studentObjectId);
+
+    return res.status(200).json({ message: "Student successfully deleted" });
+  } catch (error) {
+    console.error("Error deleting student:", error);
+    return res.status(500).json({ message: "An error occurred while deleting the student" });
+  }
+};

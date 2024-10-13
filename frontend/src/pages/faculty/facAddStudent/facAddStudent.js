@@ -68,8 +68,6 @@ function FacAddStudent() {
         <div className='add-right'>
           <FacAddTop />
           <div className="fac-add-bottom">
-            <input type="file" onChange={handleFileChange} accept=".csv" />
-            <button onClick={handleUpload}>Upload Students</button>
             {uploadStatus && <p>{uploadStatus}</p>}
             {emailStatus && <p>{emailStatus}</p>}
             {termNeeded ? (

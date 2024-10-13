@@ -54,3 +54,5 @@ export const getDropStudents = (branch, termId) =>
   axios.get(`${urlFaculty}/${branch}/${termId}/edit/facDrop`);
 export const putDropApplication = (branch, termId, studentId) =>
   axios.put(`${urlFaculty}/${branch}/${termId}/edit/facDrop`, studentId);
+export const deleteStudents = (studentId, branch, termId) => 
+  axios.delete(`${urlFaculty}/${branch}/${termId}/facView`, { data: { studentId } });

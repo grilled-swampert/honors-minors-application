@@ -93,7 +93,7 @@ const Broadcast = () => {
                     <td>{message.text}</td>
                     <td className='br-btn'>
                       <div class="toggle-cont">
-                        <input class="toggle-input" id="toggle" name="toggle" type="checkbox" />
+                        <input class="toggle-input" id="toggle" name="toggle" type="checkbox" onClick={handleToggleMessage}/>
                         <label class="toggle-label" for="toggle">
                           <div class="cont-label-play">
                             <span class="label-play"></span>

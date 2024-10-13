@@ -1,7 +1,7 @@
 const Term = require("../../models/termModel/termModel");
 const Student = require("../../models/studentModel/studentModel");
 const Course = require("../../models/courseModel/courseModel");
-const Broadcast = require("../../models/broadcastModel/broadcastMessageModel");
+const BroadcastMessage = require("../../models/broadcastModel/broadcastMessageModel");
 const nodemailer = require('nodemailer');
 const multer = require('multer');
 const path = require('path');
@@ -211,8 +211,6 @@ exports.getTermFromStudent = asyncHandler(async (req, res) => {
   }
 });
 
-
-
 exports.getStudentDetails = asyncHandler(async (req, res) => {
   const studentId = req.params.studentId;
 
@@ -229,7 +227,6 @@ exports.getStudentDetails = asyncHandler(async (req, res) => {
 });
 
 // PATCH update all preference counts for a specific student
-
 exports.submitCourses = async (req, res) => {
   try {
     const studentId = req.params.studentId;

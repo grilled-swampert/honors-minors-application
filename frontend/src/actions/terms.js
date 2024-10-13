@@ -168,3 +168,22 @@ export const applyForDrop = (studentId) => async (dispatch) => {
     dispatch({ type: "APPLY_FOR_DROP_FAILURE", payload: error.message });
   }
 };
+
+export const deleteStudents = (studentId, branch, termId) => async (dispatch) => {
+  try {
+    console.log("Attempting to delete student with ID:", studentId);
+    console.log("For term ID:", termId);
+
+    // Check if API call works and log the response
+    const response = await api.deleteStudents(studentId, branch, termId);
+    console.log("API response:", response);
+
+    // Dispatch success action if no errors
+    dispatch({ type: "DELETE_STUDENTS_SUCCESS", payload: studentId });
+    console.log("Delete action dispatched successfully");
+  } catch (error) {
+    // Log the error to see exactly what's wrong
+    console.error("Error in deleteStudents action:", error.message);
+    dispatch({ type: "DELETE_STUDENTS_FAILURE", payload: error.message });
+  }
+};

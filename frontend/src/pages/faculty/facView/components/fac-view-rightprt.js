@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./fac-view-rightprt.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getStudents } from "../../../../actions/terms";
+import { getStudents, deleteStudents } from "../../../../actions/terms";
 import FacViewLeftprt from "./fac-view-leftprt";
 import ViewDashboard from "./fac-student-details";
 
@@ -98,6 +98,15 @@ function FacViewRightprt() {
     setSelectedStudent(student);
     setOverlayVisible(true);
   };
+
+  const handleDeleteButtonClick = (studentId) => {
+    console.log("Delete button clicked for student:", studentId);
+    console.log("Term ID:", termId);
+    const confirmDelete = window.confirm("Are you sure you want to delete this student?");
+    if (confirmDelete) {
+      dispatch(deleteStudents(studentId, branch, termId)); // Dispatch delete action
+    }
+  };
   
 
   const closeOverlay = () => {
@@ -134,8 +143,9 @@ function FacViewRightprt() {
           <div className="student-info-grid-container">
             {filteredStudentData.map((student) => (
               <ViewDashboard
-                key={student.rollNumber}
+                key={student._id}
                 student={student}
+                handleDeleteButtonClick={handleDeleteButtonClick}
                 handleViewButtonClick={handleViewButtonClick}
               />
             ))}

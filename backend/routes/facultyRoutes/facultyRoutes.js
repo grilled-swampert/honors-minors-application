@@ -8,6 +8,7 @@ const {
   getAllStudentsInTerm,
   getDropStudents,
   updateDropApprovalStatus,
+  deleteStudents,
 } = require("../../controllers/faculty/facultyControllers");
 const studentFileController = require("../../controllers/faculty/studentFileController");
 
@@ -28,6 +29,7 @@ router.patch(
 
 // GET all students in a term
 router.get("/:branch/:termId/facView", getAllStudentsInTerm);
+router.delete("/:branch/:termId/facView", deleteStudents);
 
 router.get("/:branch/:termId/edit/facDrop", getDropStudents);
 router.put("/:branch/:termId/edit/facDrop", updateDropApprovalStatus);

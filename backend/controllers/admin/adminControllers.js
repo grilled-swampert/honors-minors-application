@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD
+    pass: process.env.EMAIL_PASS
   }
 });
 
@@ -330,8 +330,6 @@ exports.toggleCourseActivation = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
-
 
 // Helper function to find the next active course
 async function getNextActiveCourse(courses, deactivatedCourseId) {
@@ -656,11 +654,31 @@ exports.deleteBroadcastMessage = async (req, res) => {
 
 exports.toggleBroadcastMessage = async (req, res) => {
   const { id } = req.body;
-  const message = await BroadcastMessage.findById(id);
-  if (!message) {
-    return res.status(404).json({ message: "Broadcast message not found" });
+  const { termId } = req.params;
+
+  try {
+    const message = await BroadcastMessage.findById(id);
+    if (!message) {
+      return res.status(404).json({ message: "Broadcast message not found" });
+    }
+
+    // Toggle the message status
+    message.isActive = !message.isActive;
+    await message.save();
+
+    // If message is being activated, send email to all students
+    if (message.isActive) {
+      try {
+        await sendBroadcastEmail(message.text, termId);
+      } catch (emailError) {
+        console.error('Error sending broadcast email:', emailError);
+        // Continue with the response even if email fails
+      }
+    }
+
+    res.status(200).json(message);
+  } catch (error) {
+    console.error('Error in toggleBroadcastMessage:', error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
-  message.isActive = !message.isActive;
-  await message.save();
-  res.status(200).json(message);
 };

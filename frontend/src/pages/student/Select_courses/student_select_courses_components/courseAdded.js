@@ -75,8 +75,8 @@ export default function CourseAdded({
           >
             <span className={styles.dragHandle}>☰</span>
             <span className={styles.preference}>Preference {index + 1}</span>
-            <span className={styles.courseCode}>{course.code}</span>
-            <span className={styles.courseName}>{course.name}</span>
+            <span className={styles.courseCode}>{course.programCode}</span>
+            <span className={styles.courseName}>{course.programName}</span>
             <button
               className={styles.removeBtn}
               onClick={() => handleRemoveCourse(course.id || course._id)}
