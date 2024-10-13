@@ -28,6 +28,8 @@ const AddCoursesPage = () => {
   const termNeeded = allTerms.find((allTerms) => allTerms._id === termId);
   console.log('Term needed:', termNeeded);
 
+  const hasValidDates = termNeeded && termNeeded.startDate && termNeeded.endDate;
+
   return (
     <div className="main">
       <Header />
@@ -40,14 +42,13 @@ const AddCoursesPage = () => {
           <table id="ad-table">
             <thead>
               <tr>
-                <th>DOWNLOAD</th>
                 <th>Start Date</th>
                 <th>End Date</th>
                 <th>Edit</th>
               </tr>
             </thead>
             <tbody id="table-body">
-              {termNeeded ? (
+              {termNeeded && hasValidDates ? (
                 <AddRightSection key={termNeeded._id} term={termNeeded} setTerms={setTerms}/>
               ) : (
                 <tr>

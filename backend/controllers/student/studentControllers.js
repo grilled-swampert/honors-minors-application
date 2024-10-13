@@ -180,6 +180,7 @@ exports.getTermFromStudent = asyncHandler(async (req, res) => {
     // Retrieve the term ID from the student object
     const termId = student.terms;
 
+
     // Find the term by the term ID
     const term = await Term.findById(termId);
     console.log("Term:", term);
@@ -271,6 +272,9 @@ exports.submitCourses = async (req, res) => {
     const courseList = student.courses.map((course, index) => 
       `${index + 1}. ${course.name} (${course.code})`
     ).join('\n');
+
+    console.log("email id:", process.env.EMAIL_USER);
+    console.log("student email:", student.email);
 
     const emailOptions = {
       from: process.env.EMAIL_USER,

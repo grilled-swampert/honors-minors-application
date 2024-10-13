@@ -1,39 +1,42 @@
-import React from 'react';
-import { useParams } from "react-router-dom";
-import "./allocation.css";
+import React, { useState } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const AllocationRow = ({
   course,
   handleInputChange,
+  handleDeactivationSelection,
   downloadRowData,
   downloadIcon,
 }) => {
   const { termId } = useParams();
+  const [temporaryStatus, setTemporaryStatus] = useState(course.temporaryStatus);
+  const { status } = useState(course.status);
 
-  const handleToggleDeactivation = async (e, id) => {
-    const isChecked = e.target.checked; // Get checkbox status (checked or unchecked)
+  // Function to handle temporary status checkbox changes
+  const handleTemporaryStatusChange = async (courseId, isChecked) => {
+    const newStatus = isChecked ? "inactive" : "active";
+
+    console.log(`Course ID: ${courseId}`);
+    console.log(`Temporary Status: ${newStatus}`);
+
     try {
-      const response = await axios.patch(`/admin/${termId}/edit/allocation`, {
-        courseId: id,
-        status: isChecked ? 'inactive' : 'active', // Toggle based on checkbox state
+      const response = await axios.put(`/admin/${termId}/edit/allocation`, {
+        courseId,
+        temporaryStatus: newStatus,
       });
 
-      if (response.status !== 200) {
-        console.error("Error toggling course status:", response.data);
-      } else {
-        console.log(
-          `Course ${isChecked ? 'deactivated' : 'activated'}:`,
-          response.data
-        );
-      }
+      console.log("Status update response:", response.data);
+      setTemporaryStatus(newStatus);
     } catch (error) {
-      console.error("Error toggling course status:", error);
+      console.error("Error updating temporary status:", error);
     }
   };
 
+  const isDisabled = status === "inactive";
+
   return (
-    <tr>
+    <tr className={isDisabled ? "row-disabled" : ""}>
       <td>{course.offeringDepartment}</td>
       <td>{course.programName}</td>
       <td>{course.category}</td>
@@ -44,26 +47,36 @@ const AllocationRow = ({
       <td>
         <input
           type="number"
-          placeholder="Count"
-          defaultValue={course.maxCount}
+          value={course.maxCount}
           onChange={(e) => handleInputChange(course._id, e)}
           id="maxCount"
+          disabled={isDisabled}
         />
       </td>
       <td>
         <input
           type="checkbox"
-          onChange={(e) => handleToggleDeactivation(e, course._id)}
-          id="notRun"
+          checked={temporaryStatus === "inactive"}
+          onChange={(e) =>
+            handleTemporaryStatusChange(course._id, e.target.checked)
+          }
+          disabled={isDisabled}
+        />
+      </td>
+      <td>
+        <input
+          type="checkbox"
+          checked={course.isSelectedForDeactivation}
+          onChange={(e) =>
+            handleDeactivationSelection(course._id, e.target.checked)
+          }
+          disabled={isDisabled}
         />
       </td>
       <td>{course.finalCount}</td>
       <td>
-        <button
-          onClick={() => downloadRowData(course)}
-          className="download-btn"
-        >
-          <img src={downloadIcon} alt="Download" className="download-icon" />
+        <button onClick={() => downloadRowData(course._id)} disabled={isDisabled}>
+          <img src={downloadIcon} alt="Download" />
         </button>
       </td>
     </tr>
