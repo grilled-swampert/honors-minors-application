@@ -68,6 +68,7 @@ const Allocation = () => {
       // Refresh the courses after applying changes
       dispatch(getCourses(termId));
       setUpdatedCourses({}); // Reset the changes after applying
+      window.location.reload(); // Force window reload
     } catch (error) {
       console.error("Error applying changes:", error);
     }
@@ -88,6 +89,7 @@ const Allocation = () => {
 
       await Promise.all(deactivationPromises);
       console.log("All deactivations submitted successfully");
+      window.location.reload(); // Force window reload
     } catch (error) {
       console.error("Error submitting deactivations:", error);
     }
@@ -160,7 +162,6 @@ const Allocation = () => {
                 </th>
                 <th>MAX COUNT</th>
                 <th>TEMPORARY STATUS</th>
-                <th>SELECT FOR DEACTIVATION</th>
                 <th>FINAL COUNT</th>
                 <th>DOWNLOAD</th>
               </tr>
