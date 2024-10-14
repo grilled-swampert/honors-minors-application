@@ -98,7 +98,8 @@ const Allocation = () => {
   // Download a single course's student list
   const downloadRowData = async (courseId) => {
     try {
-      const response = await axios.get(`/admin/${termId}/edit/allocation`, {
+      console.log("Downloading data for course:", courseId);
+      const response = await axios.get(`/admin/${termId}/courses/${courseId}/students`, {
         responseType: "blob",
       });
       const blob = new Blob([response.data], { type: "text/csv" });
@@ -116,7 +117,7 @@ const Allocation = () => {
   // Download all courses' allocation information
   const downloadAllData = async () => {
     try {
-      const response = await axios.get(`/admin/${termId}/edit/allocation`, {
+      const response = await axios.get(`/admin/${termId}/allocation-info`, {
         responseType: "blob",
       });
 

@@ -540,49 +540,64 @@ exports.setMaxCount = async (req, res) => {
 // DOWNLOAD course allocation
 exports.getStudentsAllocatedToCourse = async (req, res) => {
   try {
-    const { termId } = req.params;
-    const { courseId } = req.body;
-    console.log(
-      `Fetching students for termId: ${termId}, courseId: ${courseId}`
-    );
+    const { termId, courseId } = req.params;
+    console.log(`Fetching students for termId: ${termId}, courseId: ${courseId}`);
 
+    // Fetch the term by ID
+    console.log(`[1] Fetching term with ID: ${termId}`);
     const term = await Term.findById(termId);
+    
     if (!term) {
-      console.log(`Term not found for termId: ${termId}`);
+      console.log(`[2] Term not found for termId: ${termId}`);
       return res.status(404).json({ message: "Term not found" });
     }
-    console.log(`Term found: ${term._id}`);
+    console.log(`[2] Term found: ${term._id}, Term Object: ${JSON.stringify(term)}`);
 
-    const studentLists = Object.keys(term.toObject()).filter((key) =>
-      key.endsWith("_SL")
-    );
-    console.log(`Student lists found: ${studentLists.join(", ")}`);
+    // Get student lists ending with "_SL"
+    console.log(`[3] Extracting student lists with '_SL' keys`);
+    const studentLists = Object.keys(term.toObject()).filter((key) => key.endsWith('_SL'));
+    
+    if (studentLists.length === 0) {
+      console.log(`[3.1] No student lists found in term: ${termId}`);
+    } else {
+      console.log(`[3.1] Student lists found: ${studentLists.join(", ")}`);
+    }
 
     let allocatedStudents = [];
 
+    // Iterate through student lists
     for (const listKey of studentLists) {
+      console.log(`[4] Processing student list: ${listKey}`);
+
       const studentIds = term[listKey];
-      console.log(
-        `Processing ${listKey}, found ${studentIds.length} student IDs`
-      );
+      if (!studentIds || studentIds.length === 0) {
+        console.log(`[4.1] No student IDs found in list: ${listKey}`);
+        continue;
+      }
 
+      console.log(`[4.1] Found ${studentIds.length} student IDs in ${listKey}`);
       const students = await Student.find({ _id: { $in: studentIds } });
-      console.log(`Found ${students.length} students for ${listKey}`);
+      
+      if (students.length === 0) {
+        console.log(`[4.2] No students found for IDs in ${listKey}`);
+      } else {
+        console.log(`[4.2] Found ${students.length} students for list ${listKey}`);
+      }
 
+      console.log("courseId", courseId);
+
+      // Filter students matching the courseId
       const matchingStudents = students.filter(
-        (student) =>
-          student.finalCourse && student.finalCourse.toString() === courseId
+        (student) => student.finalCourse && student.finalCourse.toString() === courseId
       );
-      console.log(
-        `${matchingStudents.length} students match the course in ${listKey}`
-      );
+      console.log(`[5] ${matchingStudents.length} students match the course ID ${courseId} in ${listKey}`);
 
       allocatedStudents = allocatedStudents.concat(matchingStudents);
     }
 
-    console.log(`Total allocated students: ${allocatedStudents.length}`);
+    console.log(`[6] Total allocated students after all lists: ${allocatedStudents.length}`);
 
-    // Prepare data for CSV
+    // Prepare CSV data
     const csvData = allocatedStudents.map((student) => ({
       branch: student.branch,
       rollNumber: student.rollNumber,
@@ -591,90 +606,106 @@ exports.getStudentsAllocatedToCourse = async (req, res) => {
       contactNumber: student.contactNumber,
     }));
 
-    // Log the first few rows of CSV data for verification
-    console.log("First few rows of CSV data:");
-    console.log(JSON.stringify(csvData.slice(0, 3), null, 2));
+    console.log(`[7] First few rows of CSV data (if any):`, JSON.stringify(csvData.slice(0, 3), null, 2));
 
-    // Generate CSV
+    if (csvData.length === 0) {
+      console.log(`[7.1] No student data available to generate CSV.`);
+      return res.status(404).json({ message: "No students allocated to this course" });
+    }
+
+    // Generate CSV with json2csv
+    console.log(`[8] Generating CSV`);
     const fields = ["branch", "rollNumber", "name", "email", "contactNumber"];
-    const json2csvParser = new Parser({ fields });
+    const json2csvParser = new Parser({ fields, delimiter: ',', eol: '\r\n' });
     const csv = json2csvParser.parse(csvData);
 
-    // Log the first few lines of the generated CSV
-    console.log("First few lines of generated CSV:");
-    console.log(csv.split('\n').slice(0, 4).join('\n'));
+    console.log(`[8.1] First few lines of generated CSV:`, csv.split('\n').slice(0, 4).join('\n'));
 
-    // Save CSV to file
+    const csvWithBOM = '\ufeff' + csv; // Add BOM for Excel compatibility
     const fileName = `students_allocated_to_course_${courseId}.csv`;
     const filePath = path.join(__dirname, "..", "..", "downloads", fileName);
 
-    fs.writeFile(filePath, csv, (err) => {
+    // Write CSV to file using promises
+    console.log(`[9] Writing CSV file to path: ${filePath}`);
+    await fs.promises.writeFile(filePath, csvWithBOM);
+
+    console.log(`[9.1] CSV file saved successfully at ${filePath}`);
+
+    // Send the file as a download
+    res.download(filePath, fileName, (err) => {
       if (err) {
-        console.error("Error writing CSV file:", err);
-        return res
-          .status(500)
-          .json({ message: "Error saving CSV file", error: err.message });
+        console.error(`[10] Error sending file:`, err);
+        return res.status(500).send("Error downloading file");
+      } else {
+        console.log(`[10] File sent successfully for download.`);
       }
-
-      console.log(`CSV file saved successfully at ${filePath}`);
-
-      // Send the file as a download
-      res.download(filePath, fileName, (err) => {
-        if (err) {
-          console.error("Error sending file:", err);
-          res.status(500).send("Error downloading file");
-        }
-      });
     });
   } catch (error) {
-    console.error("Error in getStudentsAllocatedToCourse:", error);
-    res.status(500).json({ message: "Server error", error: error.message });
+    console.error(`[11] Error in getStudentsAllocatedToCourse:`, error);
+    return res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
 exports.getAllocationInfo = async (req, res) => {
   try {
     const { termId } = req.params;
-    console.log(`Fetching allocation info for termId: ${termId}`);
+    console.log(`[1] Fetching allocation info for termId: ${termId}`);
 
+    // Fetch the term by ID
+    console.log(`[2] Fetching term with ID: ${termId}`);
     const term = await Term.findById(termId);
+    
     if (!term) {
-      console.log(`Term not found for termId: ${termId}`);
+      console.log(`[3] Term not found for termId: ${termId}`);
       return res.status(404).json({ message: "Term not found" });
     }
+    console.log(`[3] Term found: ${term._id}, Courses in term: ${term.courses.join(', ')}`);
 
+    // Fetch courses related to the term
+    console.log(`[4] Fetching courses for termId: ${termId}`);
     const courses = await Course.find({ _id: { $in: term.courses } });
+    
+    if (courses.length === 0) {
+      console.log(`[4.1] No courses found for termId: ${termId}`);
+    } else {
+      console.log(`[4.1] Found ${courses.length} courses for termId: ${termId}`);
+    }
 
     // Prepare data for CSV
-    const csvData = courses.map((course) => ({
+    console.log(`[5] Preparing data for CSV`);
+    const csvData = courses.map(course => ({
       offeringDepartment: course.offeringDepartment,
       programName: course.programName,
       category: course.category, // This should be minors/honors
       finalCount: course.finalCount,
     }));
 
-    // Generate CSV
-    const fields = [
-      "offeringDepartment",
-      "programName",
-      "category",
-      "finalCount",
-    ];
-    const json2csvParser = new Parser({ fields });
+    console.log(`[5.1] CSV Data Prepared:`, JSON.stringify(csvData, null, 2));
+
+    const fields = ["offeringDepartment", "programName", "category", "finalCount"];
+    const json2csvParser = new Parser({ fields, header: true, delimiter: ',' });
+    console.log(`[6] Generating CSV from prepared data`);
+
     const csv = json2csvParser.parse(csvData);
+    console.log(`[6.1] CSV generated successfully, first few lines:`, csv.split('\n').slice(0, 4).join('\n'));
+
+    // Add BOM for UTF-8 encoding compatibility
+    const csvWithBOM = '\ufeff' + csv;
 
     // Set headers for CSV download
-    res.setHeader(
-      "Content-disposition",
-      `attachment; filename=allocation_info_${termId}.csv`
-    );
-    res.set("Content-Type", "text/csv");
-    res.status(200).send(csv);
+    res.setHeader('Content-Disposition', `attachment; filename=allocation_info_${termId}.csv`);
+    res.setHeader('Content-Type', 'text/csv');
+    console.log(`[7] Sending CSV file for download`);
+
+    // Send the CSV data
+    res.status(200).send(csvWithBOM);
+    console.log(`[7.1] CSV file sent successfully`);
   } catch (error) {
-    console.error("Error in getAllocationInfo:", error);
+    console.error(`[8] Error in getAllocationInfo:`, error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
 
 exports.createBroadcastMessage = async (req, res) => {
   const { text } = req.body;
