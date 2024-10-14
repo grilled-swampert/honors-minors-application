@@ -8,28 +8,32 @@ const AllocationRow = ({
   handleDeactivationSelection,
   downloadRowData,
   downloadIcon,
+  onStatusChange,
 }) => {
   const { termId } = useParams();
   const [temporaryStatus, setTemporaryStatus] = useState(course.temporaryStatus);
   const { status } = useState(course.status);
 
-  // Function to handle temporary status checkbox changes
-  const handleTemporaryStatusChange = async (courseId, isChecked) => {
+  // Function to handle both temporary and permanent deactivation
+  const handleStatusChange = async (courseId, isChecked) => {
     const newStatus = isChecked ? "inactive" : "active";
 
     console.log(`Course ID: ${courseId}`);
-    console.log(`Temporary Status: ${newStatus}`);
+    console.log(`Status: ${newStatus}`);
 
     try {
       const response = await axios.put(`/admin/${termId}/edit/allocation`, {
         courseId,
         temporaryStatus: newStatus,
+        status: newStatus, // Update both temporary and permanent statuses
       });
 
       console.log("Status update response:", response.data);
       setTemporaryStatus(newStatus);
+      handleDeactivationSelection(courseId, isChecked); // Trigger selection for deactivation
+      onStatusChange(); // Trigger the force refresh in the parent component
     } catch (error) {
-      console.error("Error updating temporary status:", error);
+      console.error("Error updating status:", error);
     }
   };
 
@@ -56,20 +60,8 @@ const AllocationRow = ({
       <td>
         <input
           type="checkbox"
-          checked={temporaryStatus === "inactive"}
-          onChange={(e) =>
-            handleTemporaryStatusChange(course._id, e.target.checked)
-          }
-          disabled={isDisabled}
-        />
-      </td>
-      <td>
-        <input
-          type="checkbox"
-          checked={course.isSelectedForDeactivation}
-          onChange={(e) =>
-            handleDeactivationSelection(course._id, e.target.checked)
-          }
+          checked={temporaryStatus === "inactive" || status === "inactive"}
+          onChange={(e) => handleStatusChange(course._id, e.target.checked)}
           disabled={isDisabled}
         />
       </td>

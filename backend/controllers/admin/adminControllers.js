@@ -362,7 +362,7 @@ exports.toggleCourseActivation = async (req, res) => {
       }
     
       console.log("Setting course status to active");
-      course.status = "active";
+      course.temporaryStatus = "active";
       await course.save();
     
       console.log("Course activated, final counts updated");
@@ -582,7 +582,7 @@ exports.getStudentsAllocatedToCourse = async (req, res) => {
 
     console.log(`Total allocated students: ${allocatedStudents.length}`);
 
-    // 6. Prepare data for CSV
+    // Prepare data for CSV
     const csvData = allocatedStudents.map((student) => ({
       branch: student.branch,
       rollNumber: student.rollNumber,
@@ -591,12 +591,20 @@ exports.getStudentsAllocatedToCourse = async (req, res) => {
       contactNumber: student.contactNumber,
     }));
 
-    // 7. Generate CSV
+    // Log the first few rows of CSV data for verification
+    console.log("First few rows of CSV data:");
+    console.log(JSON.stringify(csvData.slice(0, 3), null, 2));
+
+    // Generate CSV
     const fields = ["branch", "rollNumber", "name", "email", "contactNumber"];
     const json2csvParser = new Parser({ fields });
     const csv = json2csvParser.parse(csvData);
 
-    // 8. Save CSV to file
+    // Log the first few lines of the generated CSV
+    console.log("First few lines of generated CSV:");
+    console.log(csv.split('\n').slice(0, 4).join('\n'));
+
+    // Save CSV to file
     const fileName = `students_allocated_to_course_${courseId}.csv`;
     const filePath = path.join(__dirname, "..", "..", "downloads", fileName);
 
