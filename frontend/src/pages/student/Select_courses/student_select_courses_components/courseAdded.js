@@ -13,6 +13,7 @@ export default function CourseAdded({
   const containerRef = useRef(null);
 
   useEffect(() => {
+    // Initialize Sortable.js to allow drag-and-drop reordering
     if (containerRef.current) {
       Sortable.create(containerRef.current, {
         animation: 150,
@@ -23,7 +24,7 @@ export default function CourseAdded({
           );
           setSelectedCourses((prevCourses) => {
             const courseMap = new Map(
-              prevCourses.map((course) => [course.id || course._id, course])
+              prevCourses.map((course) => [course._id || course.id, course])
             );
             return newOrder.map((id) => courseMap.get(id)).filter(Boolean);
           });
@@ -45,7 +46,7 @@ export default function CourseAdded({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          courses: selectedCourses.map((course) => course._id || course.id),
+          courses: selectedCourses.map((course) => course._id || course.id), // Submit in correct order
         }),
       });
 
@@ -54,9 +55,7 @@ export default function CourseAdded({
         throw new Error(errorData.message || "Failed to update courses");
       }
 
-      const result = await response.json();
-      console.log("Courses updated successfully:", result);
-      alert("Courses submitted successfully! A confirmation email has been sent to your registered email address.");
+      alert("Courses submitted successfully!");
       navigate(`/student/${studentId}/dashboard`);
     } catch (error) {
       console.error("Error updating courses:", error);
@@ -70,8 +69,8 @@ export default function CourseAdded({
         {selectedCourses.map((course, index) => (
           <div
             className={styles.coursesAddedRow}
-            data-course-id={course.id || course._id}
-            key={`${course.id || course._id}-${index}`}
+            data-course-id={course._id || course.id}
+            key={`${course._id || course.id}-${index}`}
           >
             <span className={styles.dragHandle}>☰</span>
             <span className={styles.preference}>Preference {index + 1}</span>
@@ -79,7 +78,7 @@ export default function CourseAdded({
             <span className={styles.courseName}>{course.programName}</span>
             <button
               className={styles.removeBtn}
-              onClick={() => handleRemoveCourse(course.id || course._id)}
+              onClick={() => handleRemoveCourse(course._id || course.id)}
             >
               Remove
             </button>
@@ -90,7 +89,6 @@ export default function CourseAdded({
         <button 
           className={styles.submitBtn} 
           onClick={handleSubmit}
-          disabled={selectedCourses.length !== 6}
         >
           Submit
         </button>

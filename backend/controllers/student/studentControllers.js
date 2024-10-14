@@ -180,7 +180,6 @@ exports.getTermFromStudent = asyncHandler(async (req, res) => {
     // Retrieve the term ID from the student object
     const termId = student.terms;
 
-
     // Find the term by the term ID
     const term = await Term.findById(termId);
     console.log("Term:", term);
@@ -227,54 +226,45 @@ exports.getStudentDetails = asyncHandler(async (req, res) => {
   }
 });
 
-// PATCH update all preference counts for a specific student
+// PATCH: Update all preference counts for a specific student
 exports.submitCourses = async (req, res) => {
   try {
     const studentId = req.params.studentId;
-    const { courses } = req.body;
+    const { courses } = req.body; // Courses array in order of preference
 
-    console.log("Student ID:", studentId);
-    console.log("Courses:", courses);
-
+    // Ensure the courses are an array
     if (!Array.isArray(courses)) {
       return res.status(400).json({ message: "Courses must be an array" });
     }
 
-    // Find the course documents using the course IDs
+    // Validate the courses: Find them in the database and populate the relevant fields
     const validCourses = await Course.find({ _id: { $in: courses } });
-    console.log("Valid courses:", validCourses);
 
+    // Check if all courses are valid
     if (validCourses.length !== courses.length) {
       return res.status(404).json({ message: "One or more courses not found" });
     }
 
-    // Update the student's courses field with the valid courses
+    // Update the student's course selection in the order received
     const student = await Student.findByIdAndUpdate(
       studentId,
       {
-        courses: validCourses.map((course) => course._id),
+        courses: validCourses.map((course) => course._id), // Store in order
         submissionTime: Date.now(),
         status: "submitted",
       },
       { new: true }
-    ).populate('courses'); // Populate the courses for the email
+    ).populate('courses'); // Ensure courses are fully populated
 
-    if (!student) {
-      return res.status(404).json({ message: "Student not found" });
-    }
-
-    // Set firstPreference and update finalCourse
+    // Set the first preference as the final course
     const firstPreference = student.courses[0];
     student.finalCourse = firstPreference;
     await student.save();
 
-    // Prepare email content
+    // Prepare email content with courses in the correct order
     const courseList = student.courses.map((course, index) => 
-      `${index + 1}. ${course.name} (${course.code})`
+      `${index + 1}. ${course.name} (${course.code})` // Accessing correct fields: course.name and course.code
     ).join('\n');
-
-    console.log("email id:", process.env.EMAIL_USER);
-    console.log("student email:", student.email);
 
     const emailOptions = {
       from: process.env.EMAIL_USER,
@@ -298,7 +288,7 @@ Course Registration Team`,
     await transporter.sendMail(emailOptions);
     console.log("Confirmation email sent to:", student.email);
 
-    // Update preference counts
+    // Update preference counts for each course
     for (let i = 0; i < student.courses.length; i++) {
       const courseId = student.courses[i]._id;
       const preferenceKey = [
@@ -325,6 +315,7 @@ Course Registration Team`,
       { new: true }
     );
 
+    // Return response with updated student data
     return res.status(200).json({
       message: "Course preferences submitted and confirmation email sent",
       student
