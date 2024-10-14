@@ -18,6 +18,54 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+// Helper function to get all student emails from a term
+const getStudentEmailsFromTerm = async (termId) => {
+  const term = await Term.findById(termId);
+  if (!term) return [];
+
+  const studentLists = Object.keys(term.toObject()).filter(key => key.endsWith('_SL'));
+  let studentEmails = [];
+
+  for (const listKey of studentLists) {
+    const studentIds = term[listKey];
+    const students = await Student.find({ _id: { $in: studentIds } });
+    studentEmails = studentEmails.concat(students.map(student => student.email));
+  }
+
+  return studentEmails;
+};
+
+// Send broadcast email to all students
+const sendBroadcastEmail = async (message, termId) => {
+  const studentEmails = await getStudentEmailsFromTerm(termId);
+  
+  if (studentEmails.length === 0) {
+    console.log('No student emails found for term:', termId);
+    return;
+  }
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    bcc: studentEmails, // Use BCC for privacy
+    subject: 'New Broadcast Message',
+    html: `
+      <h2>New Broadcast Message</h2>
+      <p>${message}</p>
+      <hr>
+      <p>This is an automated message. Please do not reply.</p>
+    `
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log('Broadcast email sent successfully');
+  } catch (error) {
+    console.error('Error sending broadcast email:', error);
+    throw error;
+  }
+};
+
+
 
 // GET all terms
 exports.getAllTerms = asyncHandler(async (req, res) => {
@@ -629,7 +677,8 @@ exports.createBroadcastMessage = async (req, res) => {
 
 exports.getActiveBroadcastMessages = async (req, res) => {
   try {
-    const messages = await BroadcastMessage.find().sort("-createdAt");
+    const messages = await BroadcastMessage.find()
+      .sort("-createdAt");
     res.json(messages);
   } catch (error) {
     console.error("Error fetching broadcast messages:", error);
@@ -652,6 +701,7 @@ exports.deleteBroadcastMessage = async (req, res) => {
   }
 };
 
+// Updated toggleBroadcastMessage controller
 exports.toggleBroadcastMessage = async (req, res) => {
   const { id } = req.body;
   const { termId } = req.params;
@@ -660,6 +710,12 @@ exports.toggleBroadcastMessage = async (req, res) => {
     const message = await BroadcastMessage.findById(id);
     if (!message) {
       return res.status(404).json({ message: "Broadcast message not found" });
+    }
+
+    // If the message is being activated, deactivate all other messages
+    if (!message.isActive) {
+      // Deactivate all other messages
+      await BroadcastMessage.updateMany({ isActive: true }, { isActive: false });
     }
 
     // Toggle the message status

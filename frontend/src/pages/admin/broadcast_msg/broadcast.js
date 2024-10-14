@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'; 
 import axios from 'axios';
 import './broadcast.css';
 import deleteicon from '../../photos-logos/delete.png';
@@ -55,7 +55,7 @@ const Broadcast = () => {
     try {
       const response = await axios.patch(`/admin/${termId}/edit/broadcast`, { id });
       console.log('Message toggled:', response.data);
-      fetchMessages();
+      fetchMessages(); // Refetch messages after toggling
     } catch (error) {
       console.error('Error toggling message:', error);
     }
@@ -76,7 +76,7 @@ const Broadcast = () => {
             />
             <button onClick={handleAddMessage} className="enter-button">Enter</button>
           </div>
-
+  
           <div className="br-bottom">
             <table id="message-table">
               <thead>
@@ -91,12 +91,19 @@ const Broadcast = () => {
                   <tr key={message._id}>
                     <td>{index + 1}</td>
                     <td>{message.text}</td>
-                    <td className='br-btn'>
-                      <div class="toggle-cont">
-                        <input class="toggle-input" id="toggle" name="toggle" type="checkbox" onClick={handleToggleMessage}/>
-                        <label class="toggle-label" for="toggle">
-                          <div class="cont-label-play">
-                            <span class="label-play"></span>
+                    <td className="br-btn">
+                      <div className="toggle-cont">
+                        <input
+                          className="toggle-input"
+                          id={`toggle-${message._id}`} // Unique ID for each toggle
+                          name="toggle"
+                          type="checkbox"
+                          checked={message.isActive} // Checkbox reflects active status
+                          onChange={() => handleToggleMessage(message._id)} // Handle toggle
+                        />
+                        <label className="toggle-label" htmlFor={`toggle-${message._id}`}>
+                          <div className="cont-label-play">
+                            <span className="label-play"></span>
                           </div>
                         </label>
                       </div>
