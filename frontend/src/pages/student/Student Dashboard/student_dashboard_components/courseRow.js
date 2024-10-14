@@ -120,9 +120,16 @@ export default function CourseRow({
             <strong className={styles.courseChosen}>COURSE CHOICES: </strong>
             <ul className={styles.selectedCourseName}>
               {student && student.courses && student.courses.length > 0 ? (
-                courses.map((course, index) => (
-                  <li key={index}>{course.programName}</li>
-                ))
+                student.courses.map((courseId) => {
+                  const course = courses.find((course) =>
+                    course._id === courseId
+                  );
+                  return (
+                    <li key={courseId}>
+                      {course ? course.programName : "Course not found"}
+                    </li>
+                  );
+                })
               ) : (
                 <li>No courses chosen</li>
               )}

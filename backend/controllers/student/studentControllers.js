@@ -194,10 +194,18 @@ exports.getTermFromStudent = asyncHandler(async (req, res) => {
 
     console.log("Final Course ID:", finalCourseId);
     console.log("Course IDs:", courseIds);
-
-    // Find final course and courses by their IDs
+    
+    // Find final course
     const finalCourse = finalCourseId ? await Course.findById(finalCourseId) : null;
-    const courses = courseIds && courseIds.length > 0 ? await Course.find({ _id: { $in: courseIds } }) : [];
+    
+    // Find courses by their IDs
+    const courses = await Course.find({ _id: { $in: courseIds } });
+    
+    // Sort courses according to the order in courseIds
+    const sortedCourses = courseIds.map(courseId => courses.find(course => course._id.equals(courseId)));
+    
+    console.log("Final Course:", finalCourse);
+    console.log("Courses:", sortedCourses);
 
     // Return student, term, finalCourse (if it exists), and courses (if they exist)
     res.json({
@@ -237,14 +245,26 @@ exports.submitCourses = async (req, res) => {
       return res.status(400).json({ message: "Courses must be an array" });
     }
 
+    // Debugging: Print courses[0] after receiving from req.body
+    console.log("Step 1 - Received courses[0]:", courses[0]);
+
     // Sort courses by preference
     courses.sort((a, b) => a.preference - b.preference);
+
+    // Debugging: Print courses[0] after sorting
+    console.log("Step 2 - Sorted courses[0]:", courses[0]);
 
     // Extract course IDs in order of preference
     const courseIds = courses.map(course => course.id);
 
+    // Debugging: Print courses[0] after extracting course IDs
+    console.log("Step 3 - Extracted course IDs for courses[0]:", courses[0]);
+
     // Validate the courses: Find them in the database and populate the relevant fields
     const validCourses = await Course.find({ _id: { $in: courseIds } });
+
+    // Debugging: Print courses[0] after fetching valid courses from DB
+    console.log("Step 4 - Validated courses[0]:", courses[0]);
 
     // Check if all courses are valid
     if (validCourses.length !== courseIds.length) {
@@ -253,6 +273,9 @@ exports.submitCourses = async (req, res) => {
 
     // Create a map of course id to course object for easy lookup
     const courseMap = new Map(validCourses.map(course => [course._id.toString(), course]));
+
+    // Debugging: Print courses[0] after creating courseMap
+    console.log("Step 5 - Mapped course IDs for courses[0]:", courses[0]);
 
     // Update the student's course selection in the order of preference
     const student = await Student.findByIdAndUpdate(
@@ -265,10 +288,16 @@ exports.submitCourses = async (req, res) => {
       { new: true }
     );
 
+    // Debugging: Print courses[0] after updating student courses
+    console.log("Step 6 - Updated student courses[0]:", courses[0]);
+
     // Set the first preference as the final course
     const firstPreference = courseMap.get(courseIds[0]);
     student.finalCourse = firstPreference._id;
     await student.save();
+
+    // Debugging: Print courses[0] after setting the final course
+    console.log("Step 7 - Set final course for student from courses[0]:", courses[0]);
 
     // Prepare email content with courses in the correct order
     const courseList = courseIds.map((id, index) => {
@@ -296,7 +325,7 @@ Course Registration Team`,
 
     // Send confirmation email
     await transporter.sendMail(emailOptions);
-    console.log("Confirmation email sent to:", student.email);
+    console.log("Step 8 - Confirmation email sent to:", student.email);
 
     // Update preference counts for each course
     const preferenceKeys = [
@@ -319,6 +348,9 @@ Course Registration Team`,
           { new: true }
         );
       }
+
+      // Debugging: Print courses[0] after updating course preferences
+      console.log(`Step 9 - Updated preference count for course ${i + 1}, courses[0]:`, courses[0]);
     }
 
     // Update final count for first preference
@@ -328,6 +360,9 @@ Course Registration Team`,
       { new: true }
     );
 
+    // Debugging: Print courses[0] after updating final count
+    console.log("Step 10 - Updated final count for first preference, courses[0]:", courses[0]);
+
     // Return response with updated student data
     return res.status(200).json({
       message: "Course preferences submitted and confirmation email sent",
@@ -335,9 +370,14 @@ Course Registration Team`,
     });
   } catch (error) {
     console.error("Error submitting courses:", error);
+
+    // Debugging: Print courses[0] in case of error
+    console.log("Step 11 - Error occurred, courses[0]:", courses[0]);
+
     res.status(500).json({ message: error.message });
   }
 };
+
 
 // Helper function to get all student emails from a term
 const getStudentEmailsFromTerm = async (termId) => {
