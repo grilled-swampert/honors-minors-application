@@ -4,7 +4,7 @@
   --text-color: #333;
   --button-bg: #007bff;
   --button-hover: #0056b3;
-  --table-header-bg: rgba(240, 183, 161, 0.9);
+  --table-header-bg: #bc414e;
 }
 
 .ad-right-section {
@@ -22,168 +22,138 @@
   padding: 15px;
 }
 
-.cer-dead {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-.cer-dead label {
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--text-color);
-}
-
-#certificate-deadline {
-  width: 50%;
-  padding: 8px;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  font-size: 0.9rem;
-}
-
 #ad-table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
+  table-layout: fixed;
+}
+
+#ad-table th,
+#ad-table td {
+  width: 33.33%; /* Equal width for all columns */
+  padding: 12px 10px;
+  text-align: center;
+  vertical-align: middle;
 }
 
 #ad-table th {
   position: sticky;
   top: 0;
-  padding: 15px 10px;
   font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  background-color: #bc414e;
+  background-color: var(--table-header-bg);
   color: white;
-  text-align: center;
 }
 
 #ad-table td {
-  padding: 12px 10px;
   font-size: 0.9rem;
-  vertical-align: middle;
   border-bottom: 1px solid var(--border-color);
 }
 
-#table-body img {
-  height: 20px;
-  width: auto;
-  object-fit: contain;
+
+.ad-tick-cross {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  height: 100%;
 }
 
-tbody button {
-  height: 30px;
-  width: 30px;
+.ad-tick-cross button {
+  height: 50px;
+  width: 50px;
   border: none;
   border-radius: 50%;
   cursor: pointer;
   transition: all 0.3s ease;
   background-color: var(--button-bg);
   color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  margin: 0 2px;
 }
 
-tbody button:hover {
+.ad-tick-cross button:hover {
   background-color: var(--button-hover);
   transform: scale(1.1);
 }
 
-tbody input {
-  font-size: 0.9rem;
-  padding: 8px;
-  width: 90%;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
+.ad-tick-cross img {
+  height: 18px;
+  width: 18px;
+  object-fit: contain;
 }
 
-.edit-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-}
 
-.confirm-button, .cancel-button {
-  border: none;
-  cursor: pointer;
-  font-size: 0.8rem;
-  padding: 6px 12px;
-  border-radius: 4px;
-  transition: all 0.3s ease;
-  background-color: var(--button-bg);
-  color: white;
-}
-
-.confirm-button:hover, .cancel-button:hover {
-  background-color: var(--button-hover);
-}
-
-.ad-tick-cross {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-}
-
-/* Responsive adjustments */
-@media (max-width: 1024px) {
-  .ad-right-section {
-    padding: 10px;
-  }
-
-  #ad-table th, #ad-table td {
-    padding: 10px 8px;
-  }
-
-  .cer-dead {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-
-  #certificate-deadline {
-    width: 100%;
-  }
-}
 
 @media (max-width: 768px) {
-  #ad-table {
-    font-size: 0.8rem;
+
+  .ad-tick-cross button {
+    height: 28px;
+    width: 28px;
   }
 
-  #ad-table th, #ad-table td {
-    padding: 8px 5px;
-  }
-
-  tbody button {
-    height: 25px;
-    width: 25px;
-  }
-
-  .confirm-button, .cancel-button {
-    padding: 5px 10px;
+  .ad-tick-cross img {
+    height: 16px;
+    width: 16px;
   }
 }
 
 @media (max-width: 480px) {
-  .ad-right-section {
-    padding: 5px;
+  /* ... (other styles remain unchanged) ... */
+
+  .ad-tick-cross button {
+    height: 25px;
+    width: 25px;
   }
 
-  #ad-table {
-    font-size: 0.7rem;
+  .ad-tick-cross img {
+    height: 14px;
+    width: 14px;
+  }
+}
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  #ad-table th,
+  #ad-table td {
+    padding: 10px 8px;
+    font-size: 0.85rem;
   }
 
-  #ad-table th, #ad-table td {
-    padding: 6px 3px;
+  .ad-tick-cross button {
+    height: 28px;
+    width: 28px;
   }
 
-  tbody button {
-    height: 22px;
-    width: 22px;
+  .ad-tick-cross img {
+    height: 16px;
+    width: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  #ad-table th,
+  #ad-table td {
+    padding: 8px 5px;
+    font-size: 0.8rem;
   }
 
-  .confirm-button, .cancel-button {
-    padding: 4px 8px;
+  .ad-tick-cross button {
+    height: 25px;
+    width: 25px;
+  }
+
+  .ad-tick-cross img {
+    height: 14px;
+    width: 14px;
+  }
+
+  #ad-table input[type="datetime-local"] {
+    padding: 6px;
+    font-size: 0.8rem;
   }
 }

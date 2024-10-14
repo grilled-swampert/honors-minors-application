@@ -64,6 +64,7 @@ const AddRightSection = ({ term, setTerms }) => {
         setTerms((prevTerms) =>
           prevTerms.map((t) => (t._id === term._id ? updatedTerm : t))
         );
+        window.location.reload();
       }
     } catch (error) {
       console.error('Error updating term:', error);
