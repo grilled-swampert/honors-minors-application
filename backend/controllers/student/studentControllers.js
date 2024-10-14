@@ -230,41 +230,51 @@ exports.getStudentDetails = asyncHandler(async (req, res) => {
 exports.submitCourses = async (req, res) => {
   try {
     const studentId = req.params.studentId;
-    const { courses } = req.body; // Courses array in order of preference
+    const { courses } = req.body; // Array of {id, preference} objects
 
     // Ensure the courses are an array
     if (!Array.isArray(courses)) {
       return res.status(400).json({ message: "Courses must be an array" });
     }
 
+    // Sort courses by preference
+    courses.sort((a, b) => a.preference - b.preference);
+
+    // Extract course IDs in order of preference
+    const courseIds = courses.map(course => course.id);
+
     // Validate the courses: Find them in the database and populate the relevant fields
-    const validCourses = await Course.find({ _id: { $in: courses } });
+    const validCourses = await Course.find({ _id: { $in: courseIds } });
 
     // Check if all courses are valid
-    if (validCourses.length !== courses.length) {
+    if (validCourses.length !== courseIds.length) {
       return res.status(404).json({ message: "One or more courses not found" });
     }
 
-    // Update the student's course selection in the order received
+    // Create a map of course id to course object for easy lookup
+    const courseMap = new Map(validCourses.map(course => [course._id.toString(), course]));
+
+    // Update the student's course selection in the order of preference
     const student = await Student.findByIdAndUpdate(
       studentId,
       {
-        courses: validCourses.map((course) => course._id), // Store in order
+        courses: courseIds, // Store in order of preference
         submissionTime: Date.now(),
         status: "submitted",
       },
       { new: true }
-    ).populate('courses'); // Ensure courses are fully populated
+    );
 
     // Set the first preference as the final course
-    const firstPreference = student.courses[0];
-    student.finalCourse = firstPreference;
+    const firstPreference = courseMap.get(courseIds[0]);
+    student.finalCourse = firstPreference._id;
     await student.save();
 
     // Prepare email content with courses in the correct order
-    const courseList = student.courses.map((course, index) => 
-      `${index + 1}. ${course.name} (${course.code})` // Accessing correct fields: course.name and course.code
-    ).join('\n');
+    const courseList = courseIds.map((id, index) => {
+      const course = courseMap.get(id);
+      return `${index + 1}. ${course.programName} (${course.programCode})`;
+    }).join('\n');
 
     const emailOptions = {
       from: process.env.EMAIL_USER,
@@ -289,19 +299,22 @@ Course Registration Team`,
     console.log("Confirmation email sent to:", student.email);
 
     // Update preference counts for each course
-    for (let i = 0; i < student.courses.length; i++) {
-      const courseId = student.courses[i]._id;
-      const preferenceKey = [
-        "firstPreference",
-        "secondPreference",
-        "thirdPreference",
-        "fourthPreference",
-        "fifthPreference",
-      ][i];
+    const preferenceKeys = [
+      "firstPreference",
+      "secondPreference",
+      "thirdPreference",
+      "fourthPreference",
+      "fifthPreference",
+      "sixthPreference",
+    ];
+
+    for (let i = 0; i < courseIds.length; i++) {
+      const courseId = courseIds[i];
+      const preferenceKey = preferenceKeys[i];
 
       if (preferenceKey) {
-        await Course.findOneAndUpdate(
-          { _id: courseId },
+        await Course.findByIdAndUpdate(
+          courseId,
           { $inc: { [preferenceKey]: 1 } },
           { new: true }
         );
@@ -310,7 +323,7 @@ Course Registration Team`,
 
     // Update final count for first preference
     await Course.findByIdAndUpdate(
-      firstPreference,
+      firstPreference._id,
       { $inc: { finalCount: 1 } },
       { new: true }
     );
