@@ -13,7 +13,6 @@ export default function CourseAdded({
   const containerRef = useRef(null);
 
   useEffect(() => {
-    // Initialize Sortable.js to allow drag-and-drop reordering
     if (containerRef.current) {
       Sortable.create(containerRef.current, {
         animation: 150,
@@ -46,7 +45,10 @@ export default function CourseAdded({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          courses: selectedCourses.map((course) => course._id || course.id), // Submit in correct order
+          courses: selectedCourses.map((course, index) => ({
+            id: course._id || course.id,
+            preference: index + 1
+          })),
         }),
       });
 
