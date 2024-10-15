@@ -1,6 +1,9 @@
 .kjsce-header {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   background-color: #ffffff;
+  border-radius: 1rem;
+  max-width: 98vw;
+  margin: 10px auto; /* Centers the header */
 }
 
 .kjsce-header__navbar {

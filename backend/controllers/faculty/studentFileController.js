@@ -4,6 +4,7 @@ const multer = require("multer");
 const mkdirp = require("mkdirp");
 const mongoose = require("mongoose");
 const axios = require("axios");
+const nodemailer = require("nodemailer");
 const asyncHandler = require("express-async-handler");
 
 // Import Student, and Term models
@@ -11,6 +12,15 @@ const Student = require("../../models/studentModel/studentModel");
 const Term = require("../../models/termModel/termModel");
 
 const backendUrl = 'http://localhost:9000';  
+
+// Create a nodemailer transporter
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
 
 // Ensure the uploads directory exists
 mkdirp.sync("uploads/faculty");
@@ -37,8 +47,9 @@ const allowedFields = [
   "AIDS_SL",
   "RAI_SL",
   "CCE_SL",
-  "VDT_SL",
+  "VLSI_SL",
   "CSBS_SL",
+  "EXTC_SL",
 ];
 
 // Middleware for file uploads
@@ -115,7 +126,6 @@ const importStudents = async (file, termId, branch) => {
                 contactNumber: row.contactNumber,
                 courses: row.courses,
                 finalCourses: row.finalCourse,
-                eligibility: row.onlineEligible,
                 coursesApprovalStatus: row.coursesApprovalStatus,
                 enrollmentStatus: "enrolled",
                 status: "not-submitted",
@@ -131,6 +141,26 @@ const importStudents = async (file, termId, branch) => {
                 branch: row.branch,
                 studentId: student._id,
               });
+
+              const emailOptions = {
+                from: process.env.EMAIL_USER,
+                to: row.email,
+                subject: "Welcome to Course Selection System",
+                text: `Dear ${student.name},
+
+We're pleased to inform you that you have been added to our Course Selection System.
+
+Your login credentials are as follows:
+Email: ${row.email}
+Password: ${password}
+
+Please log in and change your password upon your first login.
+
+Best regards,
+The Course Selection Team`
+              };
+
+              await transporter.sendMail(emailOptions);
 
               return student._id;
             });

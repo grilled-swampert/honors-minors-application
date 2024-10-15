@@ -31,7 +31,7 @@ const AllocationRow = ({
       console.log("Status update response:", response.data);
       setTemporaryStatus(newStatus);
       handleDeactivationSelection(courseId, isChecked); // Trigger selection for deactivation
-      onStatusChange(); // Trigger the force refresh in the parent component
+      window.location.reload(); // Force window reload
     } catch (error) {
       console.error("Error updating status:", error);
     }

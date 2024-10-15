@@ -8,8 +8,8 @@ const TableRow = ({ row }) => {
 
   const { branch } = useParams();
   return (
-    <tbody>
-      <tr>
+    <tbody className='tbody-tablerow'>
+      <tr className='tr-tablerow'>
         <td>{row.termYear}</td>
         <td>
           <button>

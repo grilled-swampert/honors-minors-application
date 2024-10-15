@@ -7,7 +7,6 @@ const studentSchema = new mongoose.Schema({
   branch: { type: String, required: true },
   division: { type: String, required: true },
   contactNumber: { type: String, required: true },
-  eligibility: { type: String, required: true },
   courses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
   enrollmentStatus: {
     type: String,

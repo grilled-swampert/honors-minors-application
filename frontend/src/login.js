@@ -3,17 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
+import { Navigate, useLocation ,useParams} from 'react-router-dom';
 
 // Your Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBIie5nG1ubs3k43ZICrE4ot4hiflr3u9M",
-  authDomain: "honors-minors-application.firebaseapp.com",
-  projectId: "honors-minors-application",
-  storageBucket: "honors-minors-application.appspot.com",
-  messagingSenderId: "775041152765",
-  appId: "1:775041152765:web:ed4b14ce874a56bf99f094",
-  measurementId: "G-44H8ZLSNB4"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 };
+
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -163,17 +165,83 @@ async function addUserToDatabase(email, password, role, branch = null, studentId
     console.error('Error adding user: ', error);
   }
 }
+const PrivateRoute = ({ children, allowedRoles }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const location = useLocation();
+  const params = useParams();
 
-export { Login, addUserToDatabase };
+  useEffect(() => {
+    const auth = getAuth();
+    const db = getFirestore();
+
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          const docRef = doc(db, 'users', user.uid);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            const fetchedUserData = docSnap.data();
+            setUserData(fetchedUserData);
+            setIsAuthenticated(true);
+          } else {
+            setIsAuthenticated(false);
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+          setIsAuthenticated(false);
+        }
+      } else {
+        setIsAuthenticated(false);
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/" state={{ from: location }} replace />;
+  }
+
+  if (allowedRoles && !allowedRoles.includes(userData.role)) {
+    return <Navigate to="/" state={{ from: location }} replace />;
+  }
+
+  // Check for faculty branch
+  if (userData.role === 'faculty' && params.branch && params.branch !== userData.branch) {
+    return <Navigate to="/" state={{ from: location }} replace />;
+  }
+
+  // Check for student ID
+  if (userData.role === 'student' && params.studentId && params.studentId !== userData.studentId) {
+    return <Navigate to="/" state={{ from: location }} replace />;
+  }
+
+  return children;
+};
+
+
+export { Login, addUserToDatabase, PrivateRoute };
 export default Login;
 
 // Uncomment this line to add a new user
-// addUserToDatabase('student@example.com', 'password123', 'student');
-// addUserToDatabase('admin2@example.com', 'password123', 'admin');
-// addUserToDatabase('admin@example.com', 'password123', 'admin');
-// addUserToDatabase('faculty@example.com', 'securePassword', 'faculty', 'aids');
-// addUserToDatabase('student3@example.com', 'studentPassword123', 'student');
-// addUserToDatabase('faculty2@example.com', 'securePassword', 'faculty', 'comps');
-// addUserToDatabase('faculty4@example.com', 'securePassword', 'faculty', 'mech');
-// addUserToDatabase('admin3@example.com', 'password123', 'admin');
-// addUserToDatabase('yash.aids@example.com', 'password123', 'student', 'aids', '66f7ea5b1407e65e2da772b2');
+// addUserToDatabase('admin@hm.com', 'admin1', 'admin');
+// addUserToDatabase('rai@hm.com', 'raibranch', 'faculty', 'rai');
+// addUserToDatabase('extc@hm.com', 'extc02', 'faculty', 'extc');
+// addUserToDatabase('aids@hm.com', 'aids03', 'faculty', 'aids');
+// addUserToDatabase('comp@hm.com', 'comp04', 'faculty', 'comp');
+// addUserToDatabase('csbs@hm.com', 'csbs05', 'faculty', 'csbs');
+// addUserToDatabase('vdt@hm.com', 'vdt006', 'faculty', 'vdt');
+// addUserToDatabase('it@hm.com', 'it0007', 'faculty', 'it');
+// addUserToDatabase('excp@hm.com', 'excp08', 'faculty', 'excp');
+// addUserToDatabase('mech@hm.com', 'mech09', 'faculty', 'mech');
+// addUserToDatabase('vlsi@hm.com', 'vlsi10', 'faculty', 'vlsi');
+// addUserToDatabase('s.ranadive@somaiya.edu', 'password123', 'student', 'excp', '670df9871426a210709bfe38');
+// addUserToDatabase('vighnesh.palande@somaiya.edu', 'password123', 'student', 'excp', '670df9871426a210709bfe3a');
+// addUserToDatabase('umang@somaiya.edu', 'password123', 'student', 'excp', '670df9871426a210709bfe36');

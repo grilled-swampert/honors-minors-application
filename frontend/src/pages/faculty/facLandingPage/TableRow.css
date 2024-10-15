@@ -1,29 +1,97 @@
-tbody tr:nth-child(odd){
-  background-color: #172c66;
-  color: white;
-}
-tbody tr:nth-child(even) { 
-  background-color: #fefefe;
-  
+/* TableRow.css */
+
+tbody tr:nth-child(odd) {
+  background-color: #f9f9f9;
+  color: #333;
 }
 
+tbody tr:nth-child(even) {
+  background-color: #ffffff;
+  color: #333;
+}
 
-tbody td{
-  border: none;
-  height: 5vh;
-  padding: 5px;
-  font-size: 1.5rem;
-}
-tbody button{
-  background-color: #8bd3dd;
-  border: none;
-  height: 6vh;
-  width: fit-content;
-  object-fit: contain;
-  margin: 0px 20px;
-  border-radius: 50%;
-  
-}
-th, td{
+tbody td {
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
   text-align: center;
+  vertical-align: middle; /* Aligns content vertically */
+}
+
+tbody button {
+  background-color: #e0f0ed;
+  border: 2px solid #5a7d7c;
+  padding: 10px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: inline-flex; /* Use inline-flex for proper alignment */
+  justify-content: center; /* Centers content horizontally */
+  align-items: center; /* Centers content vertically */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 0 auto; /* Centers button inside the cell */
+}
+
+tbody button:hover {
+  background-color: #b0d5d0;
+}
+
+tbody button img {
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+}
+
+thead th {
+  background-color: #e0f0ed;
+  font-size: 1.2rem;
+  padding: 12px;
+  text-align: center;
+  color: #5a7d7c;
+  border-bottom: 2px solid #ddd;
+}
+
+/* Responsive design */
+@media (max-width: 992px) {
+  tbody td {
+    font-size: 0.95rem;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  tbody td {
+    font-size: 0.9rem;
+    padding: 8px;
+  }
+
+  thead th {
+    font-size: 1.1rem;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 576px) {
+  tbody td {
+    font-size: 0.85rem;
+    padding: 6px;
+  }
+
+  thead th {
+    font-size: 1rem;
+    padding: 8px;
+  }
+}
+
+@media (max-width: 400px) {
+  tbody td {
+    font-size: 0.8rem;
+    padding: 5px;
+  }
+
+  thead th {
+    font-size: 0.9rem;
+    padding: 6px;
+  }
 }

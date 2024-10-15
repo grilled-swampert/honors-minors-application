@@ -1,25 +1,29 @@
-// models/Course.js
 const mongoose = require('mongoose');
 const Term = require('../termModel/termModel'); // Assuming the Term model is in the same directory
 const Student = require('../studentModel/studentModel'); // Assuming the Student model is in the same directory
 
 const courseSchema = new mongoose.Schema({
-   category: { type: String, enum: ['Minors', 'Honors'], required: true },
+   category: { 
+      type: String, 
+      enum: ['Minor', 'Honour'], 
+      required: true 
+   },
    offeringDepartment: { type: String, required: true },
    programCode: { type: String, required: true },
    programName: { type: String, required: true },
    programLink: { type: String, required: true },
 
-   EXCP: { type: String, enum: ['TRUE', 'FALSE'], required: true },
-   ETRX: { type: String, enum: ['TRUE', 'FALSE'], required: true },
-   COMP: { type: String, enum: ['TRUE', 'FALSE'], required: true },
-   IT: { type: String, enum: ['TRUE', 'FALSE'], required: true },
-   AIDS: { type: String, enum: ['TRUE', 'FALSE'], required: true },
-   MECH: { type: String, enum: ['TRUE', 'FALSE'], required: true },
-   RAI: { type: String, enum: ['TRUE', 'FALSE'], required: true },
-   CCE: { type: String, enum: ['TRUE', 'FALSE'], required: true },
-   VDT: { type: String, enum: ['TRUE', 'FALSE'], required: true },
-   CSBS: { type: String, enum: ['TRUE', 'FALSE'], required: true },
+   EXCP: { type: String, enum: ['YES', 'NO'], required: true },
+   ETRX: { type: String, enum: ['YES', 'NO'], required: true },
+   COMP: { type: String, enum: ['YES', 'NO'], required: true },
+   IT: { type: String, enum: ['YES', 'NO'], required: true },
+   AIDS: { type: String, enum: ['YES', 'NO'], required: true },
+   MECH: { type: String, enum: ['YES', 'NO'], required: true },
+   RAI: { type: String, enum: ['YES', 'NO'], required: true },
+   CCE: { type: String, enum: ['YES', 'NO'], required: true },
+   VLSI: { type: String, enum: ['YES', 'NO'], required: true },
+   CSBS: { type: String, enum: ['YES', 'NO'], required: true },
+   EXTC: { type: String, enum: ['YES', 'NO'], required: true },
 
    // Preference counts
    firstPreference: { type: Number, default: 0 },
@@ -48,6 +52,25 @@ const courseSchema = new mongoose.Schema({
    }
 });
 
+// Pre-save hook to handle spelling mistakes and case sensitivity for `category`
+courseSchema.pre('save', function (next) {
+   if (this.category) {
+      // Convert category to lowercase for easier comparison
+      const categoryLower = this.category.toLowerCase();
+      
+      // Correct the spelling mistakes and case variations
+      if (categoryLower === 'honours' || categoryLower === 'honor' || categoryLower === 'honour') {
+         this.category = 'Honour'; // Set to correct enum value
+      } else if (categoryLower === 'minor') {
+         this.category = 'Minor'; // Set to correct enum value
+      } else {
+         // If it doesn't match either, throw an error
+         return next(new Error('Invalid category value. Accepted values are "Minor" or "Honour".'));
+      }
+   }
+   next();
+});
+
 courseSchema.statics.countPreferencesForAllCourses = async function (termId) {
    console.log(`Start counting preferences for all courses in term: ${termId}`);
 
@@ -69,8 +92,9 @@ courseSchema.statics.countPreferencesForAllCourses = async function (termId) {
       term.MECH_SL || [],
       term.RAI_SL || [],
       term.CCE_SL || [],
-      term.VDT_SL || [],
-      term.CSBS_SL || []
+      term.VLSI_SL || [],
+      term.CSBS_SL || [],
+      term.EXTC_SL || [],
    ];
    console.log(`Student lists extracted from term. Lists count: ${studentLists.length}`);
 
