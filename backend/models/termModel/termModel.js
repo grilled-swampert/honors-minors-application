@@ -17,8 +17,9 @@ const termSchema = new mongoose.Schema({
     AIDS_SL: [{type: mongoose.Schema.Types.ObjectId, ref: 'Student' }],
     RAI_SL: [{type: mongoose.Schema.Types.ObjectId, ref: 'Student' }],
     CCE_SL: [{type: mongoose.Schema.Types.ObjectId, ref: 'Student' }],
-    VDT_SL: [{type: mongoose.Schema.Types.ObjectId, ref: 'Student' }],
+    VLSI_SL: [{type: mongoose.Schema.Types.ObjectId, ref: 'Student' }],
     CSBS_SL: [{type: mongoose.Schema.Types.ObjectId, ref: 'Student' }],
+    EXTC_SL: [{type: mongoose.Schema.Types.ObjectId, ref: 'Student' }],
     EXCP_students: { type: String },
     COMP_students: { type: String },
     MECH_students: { type: String },
@@ -27,8 +28,9 @@ const termSchema = new mongoose.Schema({
     AIDS_students: { type: String },
     RAI_students: { type: String },
     CCE_students: { type: String },
-    VDT_students: { type: String },
+    VLSI_students: { type: String },
     CSBS_students: { type: String },
+    EXTC_students: { type: String },
 });
   
 const Term = mongoose.model('Term', termSchema);

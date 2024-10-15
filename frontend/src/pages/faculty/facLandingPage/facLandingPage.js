@@ -19,20 +19,20 @@ const FacLandingPage = () => {
   console.log(rows);
 
   return (
-    <div className="main">
+    <div className="main-fac-landing">
       <Header />
-      <p id="intro">
+      <p id="intro-fac">
         WELCOME{" "}
-        <span className="highlight-branch">{`${branch.toUpperCase()}`}</span>'s
+        <span className="highlight-branch-fac">{`${branch.toUpperCase()}`}</span>'s
         Faculty Coordinator
       </p>
-      <div className="content">
-        <table>
-          <thead>
-            <tr>
-              <th>TERM</th>
-              <th>VIEW</th>
-              <th>EDIT</th>
+      <div className="content-fac">
+        <table className="table-fac-landing">
+          <thead className="thead-fac-landing">
+            <tr className="tr-fac-landing">
+              <th className="th-fac-landing">TERM</th>
+              <th className="th-fac-landing">VIEW</th>
+              <th className="th-fac-landing">EDIT</th>
             </tr>
           </thead>
           {rows && rows.map((row) => <TableRow row={row} key={row._id} />)}

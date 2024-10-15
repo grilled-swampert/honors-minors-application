@@ -24,10 +24,12 @@ function FacAddBottom({ term }) {
         studentData = term.RAI_students || 'No data available';
     } else if (branchRequired === 'CCE') {
         studentData = term.CCE_students || 'No data available';
-    } else if (branchRequired === 'VDT') {
-        studentData = term.VDT_students || 'No data available';
+    } else if (branchRequired === 'VLSI') {
+        studentData = term.VLSI_students || 'No data available';
     } else if (branchRequired === 'CSBS') {
         studentData = term.CSBS_students || 'No data available';
+    } else if (branchRequired === 'EXTC') {
+        studentData = term.EXTC_students || 'No data available';
     } else {
         studentData = 'Branch not recognized';
     }

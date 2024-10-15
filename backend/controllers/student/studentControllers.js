@@ -149,7 +149,7 @@ exports.getFilteredCoursesForStudent = async (req, res) => {
       const course = await Course.findById(courseId); // Assuming `Course` is the model for courses
       console.log("Course:", course);
 
-      if (course && course[branch] === "TRUE") {
+      if (course && course[branch] === "YES") {
         filteredCourses.push(course);
       }
     }

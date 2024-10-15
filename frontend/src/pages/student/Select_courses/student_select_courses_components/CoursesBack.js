@@ -12,7 +12,7 @@ export default function CoursesBack({ course, selectedCourses, handleCourseSelec
       <div className={styles.courseType}>{course.category}</div>
       <div className={styles.syllabus}>
         <Link to="#" className={styles.syllabusLink}>
-          View
+          {course.programLink}
         </Link>
       </div>
       <div className={styles.select}>

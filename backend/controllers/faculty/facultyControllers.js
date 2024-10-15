@@ -72,8 +72,9 @@ exports.getAllStudentsInTerm = asyncHandler(async (req, res) => {
         "AIDS_SL",
         "RAI_SL",
         "CCE_SL",
-        "VDT_SL",
+        "VLSI_SL",
         "CSBS_SL",
+        "EXTC_SL",
       ];
       studentIds = branchKeys.reduce((allIds, key) => {
         return allIds.concat(term[key] || []);
@@ -121,8 +122,9 @@ exports.getDropStudents = asyncHandler(async (req, res) => {
         "AIDS_SL",
         "RAI_SL",
         "CCE_SL",
-        "VDT_SL",
+        "VLSI_SL",
         "CSBS_SL",
+        "EXTC_SL",
       ];
       studentIds = branchKeys.reduce((allIds, key) => {
         return allIds.concat(term[key] || []);

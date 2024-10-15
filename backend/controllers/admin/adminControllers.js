@@ -546,6 +546,9 @@ exports.getStudentsAllocatedToCourse = async (req, res) => {
     // Fetch the term by ID
     console.log(`[1] Fetching term with ID: ${termId}`);
     const term = await Term.findById(termId);
+
+    const course = await Course.findById(courseId);
+    const programName = course.programName;
     
     if (!term) {
       console.log(`[2] Term not found for termId: ${termId}`);
@@ -622,7 +625,7 @@ exports.getStudentsAllocatedToCourse = async (req, res) => {
     console.log(`[8.1] First few lines of generated CSV:`, csv.split('\n').slice(0, 4).join('\n'));
 
     const csvWithBOM = '\ufeff' + csv; // Add BOM for Excel compatibility
-    const fileName = `students_allocated_to_course_${courseId}.csv`;
+    const fileName = `students_allocated_to_course_${programName}.csv`;
     const filePath = path.join(__dirname, "..", "..", "downloads", fileName);
 
     // Write CSV to file using promises

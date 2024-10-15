@@ -1,43 +1,167 @@
-#intro {
-  font-size: 24px;
-  margin-top: 30px;
-  margin-left: 100px;
-  color: #001858;
-}
-.content {
-  height: 75vh;
-  width: 90%;
-  margin-top: 30px;
-  margin-left: 100px;
-  background-color: #f3d2c1;
-  border-radius: 25px;
-  overflow-y: auto;
-  overflow-x: auto;
+.main-fac-landing {
+  margin: 0 auto;
+  padding: 20px;
+  color: #3e2723; /* Dark brown for text */
 }
 
-table {
-  table-layout: fixed;
-  width: 100%;
-  padding: 10px;
-  border-collapse: collapse;
-}
-thead tr {
-  background-color: #bc414e;
-  height: 7vh;
-  width: 25%;
-  color: white;
-  font-size: 1.6rem;
-}
-
-th,
-td {
+#intro-fac {
+  font-size: 2.5rem;
   text-align: center;
+  margin-bottom: 40px;
+  color: #6d4c41; /* Medium brown for intro text */
 }
 
-.highlight-branch {
-  color: rgb(104, 58, 1);
+.highlight-branch-fac {
+  color: #8d6e63; /* Lighter brown for highlighted branch */
   font-weight: bold;
-  padding: 0 5px;
-  border-radius: 5px;
 }
 
+.content-fac {
+  background-color: #f5f5f5; /* Light gray background */
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Softer shadow */
+}
+
+.table-fac-landing {
+  width: 100%;
+  border-radius: 1rem;  
+  color: #3e2723; /* Dark brown for table text */
+}
+
+.th-fac-landing,
+.td-fac-landing {
+  text-align: center;
+  padding: 15px;
+  font-size: 1.2rem;
+  border-bottom: 1px solid #a1887f; /* Lighter brown for borders */
+}
+
+.thead-fac-landing .th-fac-landing {
+  background-color: #d7ccc8; /* Light beige for header background */
+  font-weight: bold;
+  color: #3e2723; /* Dark brown for header text */
+}
+
+.tbody-fac-landing tr:nth-child(odd) {
+  background-color: #e7e7e7; /* Light gray for odd rows */
+}
+
+.tbody-fac-landing tr:nth-child(even) {
+  background-color: #ffffff; /* White for even rows */
+}
+
+.tbody-fac-landing .td-fac-landing {
+  padding: 12px;
+  font-size: 1rem;
+}
+
+.tbody-fac-landing button {
+  background-color: #a1887f; /* Medium brown for buttons */
+  border: 2px solid #6d4c41; /* Dark brown for button borders */
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.tbody-fac-landing button img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.tbody-fac-landing button:hover {
+  background-color: #8d6e63; /* Darker brown for hover effect */
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+  .main-fac-landing {
+    padding: 15px;
+  }
+
+  #intro-fac {
+    font-size: 2.2rem;
+  }
+
+  .th-fac-landing,
+  .td-fac-landing {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 992px) {
+  #intro-fac {
+    font-size: 2rem;
+  }
+
+  .th-fac-landing,
+  .td-fac-landing {
+    font-size: 1rem;
+    padding: 10px;
+  }
+
+  .tbody-fac-landing button {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-fac-landing {
+    padding: 10px;
+  }
+
+  #intro-fac {
+    font-size: 1.8rem;
+  }
+
+  .th-fac-landing,
+  .td-fac-landing {
+    font-size: 0.95rem;
+    padding: 8px;
+  }
+
+  .tbody-fac-landing button {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+@media (max-width: 576px) {
+  .main-fac-landing {
+    padding: 8px;
+  }
+
+  #intro-fac {
+    font-size: 1.6rem;
+  }
+
+  .th-fac-landing,
+  .td-fac-landing {
+    font-size: 0.9rem;
+    padding: 6px;
+  }
+
+  .tbody-fac-landing button {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+@media (max-width: 400px) {
+  #intro-fac {
+    font-size: 1.4rem;
+  }
+
+  .th-fac-landing,
+  .td-fac-landing {
+    font-size: 0.85rem;
+    padding: 5px;
+  }
+
+  .tbody-fac-landing button {
+    width: 25px;
+    height: 25px;
+  }
+}

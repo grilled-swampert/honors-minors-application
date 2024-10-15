@@ -9,7 +9,7 @@ const AdminSideBar = () => {
     <div className="adminSidebar-body">
       <div id="adminSidebar">
         <Link to={`/admin/${termId}/edit/addCourses`}>
-          <button className="nav-btn">Add Syllabus</button>
+          <button className="nav-btn">Add Courses</button>
         </Link>
         <Link to={`/admin/${termId}/edit/allocation`}>
           <button className="nav-btn">Allocation</button>

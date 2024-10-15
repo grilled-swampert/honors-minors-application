@@ -92,8 +92,9 @@ const importCourses = async (file, termId) => {
                                 MECH: row.MECH,
                                 RAI: row.RAI,
                                 CCE: row.CCE,
-                                VDT: row.VDT,
+                                VLSI: row.VLSI,
                                 CSBS: row.CSBS,
+                                EXTC: row.EXTC,
                                 term: termId,
                                 status: 'active',
                             });
