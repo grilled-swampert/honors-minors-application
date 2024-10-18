@@ -10,4 +10,4 @@ node_modules/
 # Ignore .env.development file
 .env.development
 
-/backend/config/honors-minors-application-7681836bed5c.json
+/config/honors-minors-application-7681836bed5c.json
