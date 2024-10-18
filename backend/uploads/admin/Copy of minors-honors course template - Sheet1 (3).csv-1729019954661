@@ -1,9 +1,0 @@
-category,offeringDepartment,programCode,programName,programLink,EXCP,ETRX,COMP,IT,AIDS,MECH,RAI,CCE,VLSI,CSBS,EXTC
-Minor,EXCP,M01,VLSI Design,https://drive.google.com/file/d/1V5VzHXy2rzZzlsjyUoxxThR4jH4mNXxn/view?usp=drive_link,YES,YES,YES,YES,YES,YES,YES,YES,YES,YES,YES
-Minor,EXCP,M02,Power Electronics and Industrial Drives,https://drive.google.com/file/d/1V5VzHXy2rzZzlsjyUoxxThR4jH4mNXxn/view?usp=drive_link,YES,YES,YES,YES,YES,YES,YES,YES,YES,YES,YES
-Minor,EXCP,M03,Electric Vehicles,https://drive.google.com/file/d/1V5VzHXy2rzZzlsjyUoxxThR4jH4mNXxn/view?usp=drive_link,YES,YES,YES,YES,YES,YES,YES,YES,YES,YES,YES
-Minor,IT,M11,Information Technology ,https://drive.google.com/file/d/1V5VzHXy2rzZzlsjyUoxxThR4jH4mNXxn/view?usp=drive_link,NO,YES,NO,NO,NO,YES,YES,NO,NO,NO,YES
-Honour,COMP,M22,Augmented and Virtual Reality,https://drive.google.com/file/d/1V5VzHXy2rzZzlsjyUoxxThR4jH4mNXxn/view?usp=drive_link,YES,YES,YES,YES,YES,YES,YES,YES,YES,YES,YES
-Minor,EXCP,M33,Robotics and Automation,https://drive.google.com/file/d/1V5VzHXy2rzZzlsjyUoxxThR4jH4mNXxn/view?usp=drive_link,YES,YES,YES,YES,YES,YES,YES,YES,YES,YES,YES
-Minor,EXCP,M44,Drone Technology,https://drive.google.com/file/d/1V5VzHXy2rzZzlsjyUoxxThR4jH4mNXxn/view?usp=drive_link,YES,YES,YES,YES,YES,YES,YES,YES,YES,YES,YES
-Minor,EXCP,M55,Maker Technology,https://drive.google.com/file/d/1V5VzHXy2rzZzlsjyUoxxThR4jH4mNXxn/view?usp=drive_link,YES,YES,YES,YES,YES,YES,YES,YES,YES,YES,YES
