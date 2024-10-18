@@ -16,7 +16,6 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 };
 
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -50,30 +49,50 @@ const Login = () => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      console.log("[DEBUG] Auth state changed. User:", user);
+  
       if (user) {
+        console.log("[DEBUG] User is authenticated:", user);
         setUser(user);
+  
         try {
           const docRef = doc(db, 'users', user.uid);
+          console.log("[DEBUG] Fetching user data from Firestore for UID:", user.uid);
+          console.log("[DEBUG] DocRef:", docRef);
+  
           const docSnap = await getDoc(docRef);
+          console.log("[DEBUG] DocSnap:", docSnap);
           if (docSnap.exists()) {
             const userData = docSnap.data();
+            console.log("[DEBUG] User data retrieved:", userData);
+  
             if (userData.role) {
+              console.log("[DEBUG] User role found:", userData.role);
               redirectUser(userData.role, userData.branch, userData.studentId);
             } else {
+              console.warn("[WARNING] User role not defined");
               setError('User role not defined');
             }
           } else {
+            console.warn("[WARNING] User data not found for UID:", user.uid);
             setError('User data not found');
           }
         } catch (error) {
-          console.error('Error fetching user data:', error);
+          console.error("[ERROR] Error fetching user data:", error);
           setError('Error fetching user data');
         }
+      } else {
+        console.log("[DEBUG] No user is signed in.");
+        setUser(null);
       }
+  
       setLoading(false);
     });
-
-    return () => unsubscribe();
+  
+    return () => {
+      console.log("[DEBUG] Cleaning up onAuthStateChanged listener.");
+      unsubscribe();
+    };
   }, [redirectUser]);
 
   const handleLogin = async (e) => {
@@ -244,4 +263,4 @@ export default Login;
 // addUserToDatabase('vlsi@hm.com', 'vlsi10', 'faculty', 'vlsi');
 // addUserToDatabase('s.ranadive@somaiya.edu', 'password123', 'student', 'excp', '670df9871426a210709bfe38');
 // addUserToDatabase('vighnesh.palande@somaiya.edu', 'password123', 'student', 'excp', '670df9871426a210709bfe3a');
-// addUserToDatabase('umang@somaiya.edu', 'password123', 'student', 'excp', '670df9871426a210709bfe36');
+// addUserToDatabase('jeet25@somaiya.edu', 'password123', 'student', 'excp', '670eb00c813702d9663b16d8');
