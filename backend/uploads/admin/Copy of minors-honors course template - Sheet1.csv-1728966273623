@@ -1,5 +1,0 @@
-category,offeringDepartment,programCode,programName,programLink,EXCP,ETRX,COMP,IT,AIDS,MECH,RAI,CCE,VLSI,CSBS,EXTC
-Minor,EXCP,M01,VLSI Design,https://drive.google.com/file/d/1V5VzHXy2rzZzlsjyUoxxThR4jH4mNXxn/view?usp=drive_link,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
-Minor,EXCP,M02,Power Electronics and Industrial Drives,https://drive.google.com/file/d/1V5VzHXy2rzZzlsjyUoxxThR4jH4mNXxn/view?usp=drive_link,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
-Minor,EXCP,M03,Electric Vehicles,https://drive.google.com/file/d/1V5VzHXy2rzZzlsjyUoxxThR4jH4mNXxn/view?usp=drive_link,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
-Minor,IT,M11,Information Technology ,https://drive.google.com/file/d/1V5VzHXy2rzZzlsjyUoxxThR4jH4mNXxn/view?usp=drive_link,FALSE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE
