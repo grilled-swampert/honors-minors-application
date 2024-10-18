@@ -11,15 +11,15 @@ const asyncHandler = require("express-async-handler");
 const Student = require("../../models/studentModel/studentModel");
 const Term = require("../../models/termModel/termModel");
 
-const backendUrl = 'http://localhost:9000';  
+const backendUrl = "http://localhost:9000";
 
 // Create a nodemailer transporter
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: "gmail",
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
+    pass: process.env.EMAIL_PASS,
+  },
 });
 
 // Ensure the uploads directory exists
@@ -79,44 +79,53 @@ exports.uploadFiles = (req, res, next) => {
 const importStudents = async (file, termId, branch) => {
   const results = [];
   const filePath = file.path;
-  console.log("Attempting to read file at:", filePath);
+  console.log("[DEBUG] Attempting to read file at:", filePath);
 
   try {
     await fs.promises.readFile(filePath, { encoding: "utf8" });
-    console.log("File successfully read.");
+    console.log("[DEBUG] File successfully read.");
   } catch (error) {
-    console.error("Error reading file:", error);
+    console.error("[ERROR] Error reading file:", error);
     throw new Error("File not found or inaccessible");
   }
 
   return new Promise((resolve, reject) => {
     fs.access(filePath, fs.constants.F_OK, (err) => {
       if (err) {
-        console.error("File not found or inaccessible:", filePath);
+        console.error("[ERROR] File not found or inaccessible:", filePath);
         return reject(new Error("File not found or inaccessible"));
       }
-      console.log("Processing file:", filePath);
+      console.log("[DEBUG] File exists, proceeding with processing:", filePath);
+
       fs.createReadStream(filePath)
         .on("error", (err) => {
-          console.error("Error reading CSV file:", err);
+          console.error("[ERROR] Error reading CSV file:", err);
           return reject(new Error("Error reading CSV file"));
         })
         .pipe(csv())
-        .on("data", (data) => results.push(data))
+        .on("data", (data) => {
+          console.log("[DEBUG] Pushed row to results:", data);
+          results.push(data);
+        })
         .on("end", async () => {
+          console.log("[DEBUG] Finished reading CSV, total rows:", results.length);
+
           try {
-            const studentPromises = results.map(async (row) => {
+            const studentPromises = results.map(async (row, index) => {
+              console.log(`[DEBUG] Processing row ${index + 1}:`, row);
+
               // Check if the student already exists by roll number or email
               const existingStudent = await Student.findOne({
                 $or: [{ rollNumber: row.rollNumber }, { email: row.email }],
               });
 
               if (existingStudent) {
-                console.log("Student already exists:", existingStudent);
+                console.log("[DEBUG] Student already exists:", existingStudent);
                 return existingStudent._id;
               }
 
               // Create a new student if not already present
+              console.log("[DEBUG] Creating new student with data:", row);
               const student = new Student({
                 name: row.studentName,
                 rollNumber: row.rollNumber,
@@ -131,16 +140,50 @@ const importStudents = async (file, termId, branch) => {
                 status: "not-submitted",
                 terms: termId,
               });
-              console.log("Creating new student:", student);
+
+              console.log("[DEBUG] Saving new student to database:", student);
               await student.save();
 
-              await axios.post(`${backendUrl}/faculty/create-user`, {
+              function generateRandomPassword(length = 6) {
+                const charset =
+                  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
+                let password = "";
+                for (let i = 0, n = charset.length; i < length; i++) {
+                  password += charset.charAt(Math.floor(Math.random() * n));
+                }
+                return password;
+              }
+
+              // Generate a random password
+              const password = generateRandomPassword(); // Generates a random 6-character password
+              console.log("[DEBUG] Generated password for student:", password);
+
+              // Convert the ObjectId to a string
+              const studentId = student._id.toString();
+              console.log("[DEBUG] Extracted studentId:", studentId);
+
+              const lowercaseBranch = row.branch.toLowerCase();
+
+              console.log("[DEBUG] Sending student data to backend:", {
                 email: row.email,
-                password: 'defaultPassword123', 
-                role: 'student', 
-                branch: row.branch,
-                studentId: student._id,
+                password: password,
+                role: "student",
+                branch: lowercaseBranch,
+                studentId: studentId,
               });
+
+              try {
+                const response = await axios.post(`${backendUrl}/faculty/create-user`, {
+                  email: row.email,
+                  password: password,
+                  role: "student",
+                  branch: lowercaseBranch,
+                  studentId: studentId,
+                });
+                console.log("User created:", response.data);
+              } catch (error) {
+                console.error("Error creating user:", error.response ? error.response.data : error.message);
+              }              
 
               const emailOptions = {
                 from: process.env.EMAIL_USER,
@@ -157,18 +200,22 @@ Password: ${password}
 Please log in and change your password upon your first login.
 
 Best regards,
-The Course Selection Team`
+The Course Selection Team`,
               };
 
+              console.log("[DEBUG] Sending welcome email to:", row.email);
               await transporter.sendMail(emailOptions);
 
+              console.log("[DEBUG] Finished processing student:", student._id);
               return student._id;
             });
 
+            console.log("[DEBUG] Awaiting all student promises.");
             const studentIds = await Promise.all(studentPromises);
+            console.log("[DEBUG] All students processed successfully. Total students:", studentIds.length);
             resolve({ studentIds, filePath });
           } catch (error) {
-            console.error("Error saving students:", error);
+            console.error("[ERROR] Error saving students:", error);
             reject(new Error(error));
           }
         });
