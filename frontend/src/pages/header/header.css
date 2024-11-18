@@ -1,77 +1,163 @@
-.kjsce-header {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  background-color: #ffffff;
-  border-radius: 1rem;
-  max-width: 98vw;
-  margin: 10px auto; /* Centers the header */
+@import url("https://fonts.googleapis.com/css2?family=Niramit:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&display=swap");
+
+.header-main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.kjsce-header__navbar {
+.header-navbar {
+  height: 6rem;
+  box-shadow: 1px 1px 5px 1px #888888;
+  background-color: white;
+  border-radius: 10px;
   display: flex;
+  align-items: center;
+  width: 90%;
   justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 0 2rem;
 }
 
-.kjsce-header__logo-link {
+:root {
+  --black: #000000;
+  --night-rider: #2e2e2e;
+  --white: #ffffff;
+  --af-white: #f3f3f3;
+}
+
+/* Button container */
+.header-logoutBtn {
   display: flex;
   align-items: center;
-}
-
-.kjsce-header__logo {
+  justify-content: flex-start;
+  width: 60px;
   height: 60px;
-  width: auto;
-  transition: height 0.3s ease;
-}
-
-.kjsce-header__logout-btn {
-  background-color: #8b0000;
-  color: white;
+  padding: 0;
   border: none;
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-  font-weight: bold;
-  border-radius: 4px;
+  border-radius: 10px;
+  background-color: var(--night-rider);
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
   cursor: pointer;
-  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  transition: width 0.3s ease;
 }
 
-.kjsce-header__logout-btn:hover {
-  background-color: #a50000;
-  transform: translateY(-2px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+.header-logoutBtn:hover {
+  background: linear-gradient(135deg, #000000 0%, #3a3a3a 100%);
+}
+
+/* Icon container */
+.logoutBtn-sign {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  transition: width 0.3s ease, padding 0.3s ease;
+}
+
+/* Icon styling */
+.logoutBtn-sign svg {
+  width: 20px;
+}
+
+.logoutBtn-sign svg path {
+  fill: var(--af-white);
+}
+
+/* Text styling */
+.logout-text {
+  right: 0;
+  width: 0;
+  opacity: 0;
+  color: var(--af-white);
+  font-family: "Niramit", sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: opacity 0.3s ease, width 0.3s ease;
+}
+
+/* Hover states */
+.header-logoutBtn:hover {
+  width: 160px;
+}
+
+.header-logoutBtn:hover .logoutBtn-sign {
+  width: 30%;
+  padding: 1rem;
+}
+
+.header-logoutBtn:hover .logout-text {
+  opacity: 1;
+  width: 80%;
+  margin-right: 1rem;
+}
+
+/* Active state */
+.header-logoutBtn:active {
+  transform: translate(2px, 2px);
+}
+
+.header-logoutBtn:active {
+  transform: translate(2px, 2px);
+}
+
+.header-somaiya-logo-main {
+  margin-left: 50px;
+  height: 60px;
+}
+
+@media (max-width: 1024px) {
+  .header-navbar {
+    height: 100px;
+    padding: 0 1.5rem;
+  }
+
+  .header-somaiya-logo-main {
+    margin-left: 10px;
+    height: 70px;
+  }
+
+  .header-logoutBtn {
+    font-size: 14px;
+    padding: 8px 16px;
+    margin-right: 20px;
+  }
 }
 
 @media (max-width: 768px) {
-  .kjsce-header__navbar {
-    padding: 0.75rem;
+  .header-navbar {
+    flex-direction: column;
+    height: auto;
+    padding: 1rem;
+    gap: 1rem;
   }
 
-  .kjsce-header__logo {
-    height: 50px;
+  .header-somaiya-logo-main {
+    height: 60px;
+    margin-left: 0;
   }
 
-  .kjsce-header__logout-btn {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.75rem;
+  .header-logoutBtn {
+    font-size: 14px;
+    padding: 8px 16px;
+    margin-right: 0;
   }
 }
 
 @media (max-width: 480px) {
-  .kjsce-header__navbar {
-    flex-direction: column;
-    align-items: flex-start;
+  .header-navbar {
+    padding: 0.5rem;
+    gap: 0.5rem;
   }
 
-  .kjsce-header__logo {
-    height: 40px;
-    margin-bottom: 0.5rem;
+  .header-somaiya-logo-main {
+    height: 50px;
   }
 
-  .kjsce-header__logout-btn {
-    align-self: flex-end;
-    margin-top: 0.5rem;
+  .header-logoutBtn {
+    font-size: 12px;
+    padding: 6px 12px;
+    margin-right: 0;
   }
 }

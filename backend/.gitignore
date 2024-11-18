@@ -10,5 +10,5 @@ node_modules/
 # Ignore .env.development file
 .env.development
 
-backend/config/
+config/
 

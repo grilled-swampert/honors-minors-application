@@ -23,7 +23,6 @@ const AddLeftSection = () => {
     formData.append('startDate', startDateTime.toISOString());  // Save as ISO string
     formData.append('endDate', endDateTime.toISOString());
 
-
     try {
       const response = await fetch(`/admin/${termId}/edit/addCourses`, {
         method: 'PATCH',

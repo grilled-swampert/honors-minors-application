@@ -38,15 +38,22 @@ const AlpLeftSection = () => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Academic Year"
-          id="termInput"
-          value={termYear}
-          onChange={(e) => setTermYear(e.target.value)}
-        />
-        <button id="createButton">CREATE</button>
+      <form className="new_term_form" onSubmit={handleSubmit}>
+        <div className="admin_term_formtitle">ADD A NEW TERM</div>
+        <div className="academic-year-input">
+          <label class="input-label">Academic Year</label>
+
+          <input
+            type="text"
+            placeholder="Academic Year"
+            id="termInput"
+            value={termYear}
+            onChange={(e) => setTermYear(e.target.value)}
+          />
+        </div>
+        <button id="createButton" type="submit">
+          CREATE
+        </button>
       </form>
 
       {error && <div className="error">{error}</div>}

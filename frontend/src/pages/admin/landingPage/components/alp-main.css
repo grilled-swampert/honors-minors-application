@@ -1,64 +1,110 @@
+:root {
+  --bg-primary: #f5f5dc;
+  --accent-primary: #43b3ae;
+  --text-light: #ffffff;
+  --border-radius: 1rem;
+  --transition: all 0.3s ease-in-out;
+}
+
 .alp-main {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    height: 85vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
 }
 
 .land-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    max-width: 1200px;
-    margin-top: 50px;
-}
-
-.left-panel, .right-panel {
-    background-color: white;
-    border-radius: 1rem;
-    /* padding: 20px; */
-    margin-bottom: 20px;
-    width: 95%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 50px;
 }
 
 .left-panel {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: auto;
-    min-height: 8rem;
-    background-color: transparent;
-}
-.right-panel {
-    background-color: transparent;
-    height: 25rem;
-    width: 75vw;
+  height: 5rem;
+  min-height: 5rem;
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 1rem;
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  background-color: white;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition);
+  margin-bottom: 2rem;
 }
 
-table {
-    table-layout: fixed;
-    width: 70vw;
-    border-collapse: collapse;
+.right-panel {
+  background-color: white;
+  border-radius: 1rem;
+  /* padding: 20px; */
+  margin-bottom: 20px;
+  width: 95%;
+}
+
+.right-panel {
+  background-color: transparent;
+  height: 25rem;
+  width: 75vw;
+}
+
+#admin-term-table {
+  width: 100%;
+  border-spacing: 0;
+  table-layout: fixed;
+  padding: 10px;
+  border-collapse: collapse;
+}
+
+#admin-term-table th:first-child {
+  border-top-left-radius: 1rem;
+}
+
+#admin-term-table th:last-child {
+  border-top-right-radius: 1rem;
+}
+
+#admin-term-table th {
+  background-color: var(--accent-primary);
+  color: var(--text-light);
+  font-size: 1rem;
+  width: 20%;
+  height: 1rem;
+  text-align: center;
+  font-weight: bold;
+  font-family: "Poppins", sans-serif;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+#admin-term-table td {
+  border-bottom: 1px solid rgba(15, 252, 190, 0.2);
+  width: 20%;
+  height: 1rem;
+  font-size: 1rem;
+  text-align: center;
+  font-family: "Poppins", sans-serif;
 }
 
 .alp-tr {
-    background-color: white;
-    height: 8vh;
-    font-size: 1.2rem;
-    
+  background-color: white;
+  height: 8vh;
+  font-size: 1.2rem;
 }
 
 .alp-tr th {
-    background-color: white;
-    position: sticky;
-    top: 0;
-    color:  #106EBE;
+  background-color: white;
+  position: sticky;
+  top: 0;
+  color: #106ebe;
 }
 
-th, td {
-    padding: 8px;
-    text-align: center;
+th,
+td {
+  padding: 8px;
+  text-align: center;
 }

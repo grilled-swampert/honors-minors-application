@@ -38,11 +38,12 @@ const AlpMain = () => {
         </div>
       </div>
       <div className="right-panel"> 
-        <table>
+        <table id="admin-term-table">
           <thead>
-            <tr className = 'alp-tr'>
+            <tr>
               <th scope="col">ACADEMIC YEAR</th>
-              <th scope="col">VIEW / EDIT</th>
+              <th scope="col">EDIT</th>
+              <th scope="col">DELETE</th>
             </tr>
           </thead>
           { terms && terms.map((term) => (

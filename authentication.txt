@@ -1,0 +1,11 @@
+admin@hm.com                admin1
+rai@hm.com                  rai01
+extc@hm.com                 extc02
+aids@hm.com                 aids03
+comp@hm.com                 comp04
+csbs@hm.com                 csbs05
+vdt@hm.com                  vdt006
+it@hm.com                   it0007
+excp@hm.com                 excp08
+mech@hm.com                 mech09
+vlsi@hm.com                 vlsi10

@@ -27,7 +27,6 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-
 // GET a single term
 exports.getTerm = asyncHandler(async (req, res) => {
   const { termId } = req.params;
@@ -377,7 +376,6 @@ Course Registration Team`,
     res.status(500).json({ message: error.message });
   }
 };
-
 
 // Helper function to get all student emails from a term
 const getStudentEmailsFromTerm = async (termId) => {

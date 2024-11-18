@@ -1,0 +1,161 @@
+
+
+.login_main {
+  min-height: 100vh;
+  background-image: url("../src/pages/photos-logos/college.jpeg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Navbar Styles */
+.navbar {
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 1.5rem 3rem;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+  height: 100px;
+}
+
+.logo {
+  height: 75px;
+  width: auto;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+}
+
+.trust {
+  height: 75px;
+  width: auto;
+}
+
+/* Content and Login Box Styles */
+.login-box {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  margin: 200px auto 2rem auto;
+  transition: transform 0.3s ease;
+}
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+.login-box:hover {
+  transform: translateY(-5px);
+}
+.login-box p {
+  color: #333;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  text-align: left;
+}
+.login-box input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  margin-bottom: 1.5rem;
+  border: 2px solid #e1e1e1;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: #fff;
+}
+.login-box input:focus {
+  outline: none;
+  border-color: #123bc9;
+  box-shadow: 0 0 0 3px rgba(18, 59, 201, 0.1);
+}
+.forget {
+  color: #123bc9;
+  font-size: 0.9rem;
+  text-align: right;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  margin-bottom: 1.5rem;
+}
+.forget:hover {
+  color: #0e2d99;
+  text-decoration: underline;
+}
+#login-button-text {
+  background-color: #123bc9;
+  color: white;
+  width: 100%;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+#login-button-text:hover {
+  background-color: #0e2d99;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(18, 59, 201, 0.2);
+}
+/* Responsive Design */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 1rem 1.5rem;
+    height: 80px;
+  }
+
+  .login-box {
+    width: 90%;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 1.5rem;
+  }
+
+  .logo,
+  .trust {
+    height: 55px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 0.8rem 1rem;
+    height: 70px;
+  }
+
+  .login-box {
+    width: 95%;
+    padding: 1.2rem;
+  }
+
+  .logo,
+  .trust {
+    height: 45px;
+  }
+
+  .input-group input,
+  #login-button-text {
+    padding: 0.6rem;
+  }
+
+  .content {
+    padding-top: 140px;
+  }
+}

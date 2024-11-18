@@ -4,7 +4,9 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 import { Navigate, useLocation ,useParams} from 'react-router-dom';
-
+import kjscelogo from '../src/pages/photos-logos/KJSCE-logo.png';
+import trustImg from '../src/pages/photos-logos/Trust.svg';
+import './login.css';
 // Your Firebase configuration
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -124,40 +126,58 @@ const Login = () => {
   }
 
   return (
-    <div>
-      <h2>Login</h2>
-      {user ? (
-        <div>
-          <p>Logged in as: {user.email}</p>
-          <button onClick={handleSignOut}>Sign Out</button>
+    <div className="login_main">
+      <header>
+        <div className="navbar">
+          <img className="logo" src={kjscelogo} alt="KJSCE Logo" />
+          <img src={trustImg} alt="Trust Logo"  className='trust'/>
         </div>
-      ) : (
-        <form onSubmit={handleLogin} autoComplete="off">
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-            required
-            autoComplete="new-email"
-          />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            required
-            autoComplete="new-password"
-          />
-          <button type="submit" disabled={loading}>
-            {loading ? 'Logging in...' : 'Login'}
-          </button>
-        </form>
-      )}
-      {error && <p style={{color: 'red'}}>{error}</p>}
+      </header>
+
+      <div className="login-content">
+        <div className="login-box">
+          {user ? (
+            <div>
+              <p>Logged in as: {user.email}</p>
+              <button onClick={handleSignOut}>Sign Out</button>
+            </div>
+          ) : (
+            <form onSubmit={handleLogin} className="loginForm" autoComplete="off">
+              <p>Username</p>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email"
+                required
+                autoComplete="new-email"
+                id='username'
+              />
+              <p>Password</p>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+                required
+                autoComplete="new-password"
+                id='password'
+              />
+              <div className="forget">
+                <u>Forget Password?</u>
+              </div>
+              <button type="submit" disabled={loading} id='login-button-text'>
+                {loading ? 'Logging in...' : 'Login'}
+              </button>
+            </form>
+          )}
+          {error && <p style={{ color: 'red' }}>{error}</p>}
+        </div>
+      </div>
     </div>
   );
-};
+}
+
 
 async function addUserToDatabase(email, password, role, branch = null, studentId = null) {
   try {
@@ -261,6 +281,6 @@ export default Login;
 // addUserToDatabase('excp@hm.com', 'excp08', 'faculty', 'excp');
 // addUserToDatabase('mech@hm.com', 'mech09', 'faculty', 'mech');
 // addUserToDatabase('vlsi@hm.com', 'vlsi10', 'faculty', 'vlsi');
-// addUserToDatabase('s.ranadive@somaiya.edu', 'password123', 'student', 'excp', '670df9871426a210709bfe38');
+addUserToDatabase('s.ranadive@somaiya.edu', 'password123', 'student', 'excp', '670f22a8080a98a767bdb094');
 // addUserToDatabase('vighnesh.palande@somaiya.edu', 'password123', 'student', 'excp', '670df9871426a210709bfe3a');
-// addUserToDatabase('jeet25@somaiya.edu', 'password123', 'student', 'excp', '670eb00c813702d9663b16d8');
+addUserToDatabase('jeet25@somaiya.edu', 'password123', 'student', 'excp', '670f22a8080a98a767bdb096');
