@@ -126,7 +126,7 @@ const Login = () => {
   }
 
   return (
-    <div className="login_main">
+    <div className="login-main">
       <header>
         <div className="navbar">
           <img className="logo" src={kjscelogo} alt="KJSCE Logo" />
@@ -281,6 +281,6 @@ export default Login;
 // addUserToDatabase('excp@hm.com', 'excp08', 'faculty', 'excp');
 // addUserToDatabase('mech@hm.com', 'mech09', 'faculty', 'mech');
 // addUserToDatabase('vlsi@hm.com', 'vlsi10', 'faculty', 'vlsi');
-addUserToDatabase('s.ranadive@somaiya.edu', 'password123', 'student', 'excp', '670f22a8080a98a767bdb094');
+// addUserToDatabase('s.ranadive@somaiya.edu', 'password123', 'student', 'excp', '670df9871426a210709bfe38');
 // addUserToDatabase('vighnesh.palande@somaiya.edu', 'password123', 'student', 'excp', '670df9871426a210709bfe3a');
-addUserToDatabase('jeet25@somaiya.edu', 'password123', 'student', 'excp', '670f22a8080a98a767bdb096');
+// addUserToDatabase('jeet25@somaiya.edu', 'password123', 'student', 'excp', '670eb00c813702d9663b16d8');

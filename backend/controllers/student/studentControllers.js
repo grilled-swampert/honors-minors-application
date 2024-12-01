@@ -377,6 +377,7 @@ Course Registration Team`,
   }
 };
 
+
 // Helper function to get all student emails from a term
 const getStudentEmailsFromTerm = async (termId) => {
   const term = await Term.findById(termId);
