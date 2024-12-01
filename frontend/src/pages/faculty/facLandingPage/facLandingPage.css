@@ -9,6 +9,7 @@
   text-align: center;
   margin-bottom: 40px;
   color: #6d4c41; /* Medium brown for intro text */
+  margin-top: 1%;
 }
 
 .highlight-branch-fac {
@@ -20,6 +21,9 @@
   background-color: #f5f5f5; /* Light gray background */
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Softer shadow */
+  width: 90%;
+  position: relative;
+  left: 5%;
 }
 
 .table-fac-landing {

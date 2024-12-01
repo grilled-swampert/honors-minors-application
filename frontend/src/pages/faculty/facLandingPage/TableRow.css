@@ -19,7 +19,7 @@ tbody td {
 }
 
 tbody button {
-  background-color: #e0f0ed;
+  background-color: #8bd3dd;
   border: 2px solid #5a7d7c;
   padding: 10px;
   width: 45px;
@@ -38,8 +38,8 @@ tbody button:hover {
 }
 
 tbody button img {
-  width: 80%;
-  height: 80%;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
 }
 

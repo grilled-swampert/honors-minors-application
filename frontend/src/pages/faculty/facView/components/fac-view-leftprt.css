@@ -5,7 +5,7 @@
   box-shadow: 1px 1px 5px 0 #888888;
   cursor: pointer;
   transition: width 0.3s ease-out;
-  width: 170px;
+  width: 220px;
   overflow: hidden;
   height: 100px;
   }
@@ -30,7 +30,7 @@
   }
   
   .side-tab.expanded {
-  width: 200px;
+  width: 240px;
   }
   
   .side-tab.expanded .number {

@@ -37,7 +37,8 @@ function FacAddBottom({ term }) {
     return (
         <div className="add-bottom">
             <div className="add-box">
-                <p>CSV: {studentData}</p>
+                <p className='csv-name'> CSV UPLOADED :</p>  
+                <p>{studentData}</p>
             </div>
         </div>
     );

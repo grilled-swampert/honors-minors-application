@@ -20,8 +20,8 @@ body {
 .left-section {
   background: linear-gradient(135deg, #f6d5c1 0%, var(--secondary-color) 100%);
   min-height: 25vh;
-  width: calc(100% - 40px);
-  margin: 10px;
+  width: 90%;
+  margin: 10px 50px;
   border-radius: 20px;
   display: flex;
   align-items: center;

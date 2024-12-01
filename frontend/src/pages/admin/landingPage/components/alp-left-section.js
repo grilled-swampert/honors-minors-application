@@ -41,8 +41,6 @@ const AlpLeftSection = () => {
       <form className="new_term_form" onSubmit={handleSubmit}>
         <div className="admin_term_formtitle">ADD A NEW TERM</div>
         <div className="academic-year-input">
-          <label class="input-label">Academic Year</label>
-
           <input
             type="text"
             placeholder="Academic Year"

@@ -5,7 +5,7 @@ import FacViewRightprt from "./components/fac-view-rightprt.js"
 
 function FacView() {
     return (
-      <div className='main'>
+      <div className='fac-view-main'>
         <Header />
         <FacViewRightprt />
       </div>

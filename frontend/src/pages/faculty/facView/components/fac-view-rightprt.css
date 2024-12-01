@@ -95,9 +95,11 @@
   margin: 5px;
   background-color: #f3d2c1;
   border-radius: 30px;
-  width: 100%;
+  width: 90%;
   padding: 30px;
   display: flex;
+  position: relative;
+  left: 5%;
 }
 
 .rightside {
@@ -107,13 +109,13 @@
   margin: 20px;
 }
 
-.download {
+.viewdownload {
   margin-top: 30px;
   position: relative;
   display: inline-block;
 }
 
-.downloadBtn {
+.viewdownloadBtn {
   font-size: 24px;
   width: 200px;
   height: 48px;
@@ -121,6 +123,7 @@
   border-radius: 10px;
   border: 3px solid #001858;
   cursor: pointer;
+  color: black;
 }
 
 .dropdown-menu {
@@ -214,7 +217,10 @@
   margin-left: 5px;
   vertical-align: middle;
 }
-
+.closeBtn{
+  background-color: black;
+  width: 50%;
+}
 @media (max-width: 1200px) {
   .hero-section {
     flex-direction: column;

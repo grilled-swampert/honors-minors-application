@@ -1,31 +1,68 @@
 .add-student-left {
-  height: 80vh;
-  width: 10%;
-  margin-top: 10px;
-  margin-left: 20px;
-  flex-direction: column;
+  display: flex;
   align-items: center;
-  text-align: center;
-  font-family: Marcellus;
-  border-right: 10px solid #001858;
-  border-radius: 5px;
+gap: 1%;
+  width: 90%; /* Adjusted for better responsiveness */
+  margin: 20px auto; /* Center the container and add vertical spacing */
+  padding: 2rem;
+  background-color: #fff3e6;
+  border-radius: 1.5rem;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
 }
+
+
+.add-student-left:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
 .icons {
   font-size: 2rem;
   color: #001858;
-  font-family: Marcellus;
+  font-family: 'Marcellus', serif;
+  margin-right: 1rem;
+  transition: color 0.3s ease;
 }
+
+
+
 .add-temp-btn {
   background-color: #8bd3dd;
   color: #094067;
-  width: 50%;
-  margin-top: 10px;
-  height: 10vh;
-  font-size: 2rem;
+  width: 150px; /* Fixed width for consistency */
+  height: 50px;
+  font-size: 1.25rem;
+  font-family: 'Marcellus', serif;
   border: none;
-  border-radius: 16px;
+  border-radius: 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
+
 .temp-img {
-  width: 100%;
-  object-fit: contain;
+  width: 50px; /* Fixed width */
+  height: 100%; 
+  border-radius: 50%; /* Optional: circular image */
+  margin-right: 1rem;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .add-student-left {
+    flex-direction: column;
+    width: 90%;
+    padding: 1.5rem;
+    margin: 15px auto;
+  }
+
+  .temp-img {
+    margin-bottom: 1rem;
+  }
+
+  .add-temp-btn {
+    width: 100%;
+    max-width: 300px;
+  }
 }

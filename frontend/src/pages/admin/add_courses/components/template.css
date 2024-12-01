@@ -1,6 +1,6 @@
 .template{
     height: 100px;
-    width: 98%;
+    width: 90%;
     background-color: #f3d2c1;
     border: 1px solid black;
     border-radius: 1rem;
@@ -9,7 +9,7 @@
     font-size: 32px;
     font-family: "Fira Sans", sans-serif;
     padding: 10px;
-    margin: 10px 10px;
+    margin: 10px 50px;
    }
   
    .template button {

@@ -31,26 +31,20 @@
   margin-top: 1rem;
   padding: 2rem;
   border-radius: var(--border-radius);
-  background-color: white;
+  background-color: #f3d2c1;
   box-shadow: var(--shadow-md);
   transition: var(--transition);
   margin-bottom: 2rem;
 }
 
 .right-panel {
-  background-color: white;
-  border-radius: 1rem;
-  /* padding: 20px; */
-  margin-bottom: 20px;
-  width: 95%;
-}
-
-.right-panel {
-  background-color: transparent;
   height: 25rem;
-  width: 75vw;
+  width: 70%;
+  border-radius: 1%;
 }
-
+.admin_term_formtitle{
+  font-size: 1.3rem;
+}
 #admin-term-table {
   width: 100%;
   border-spacing: 0;
@@ -68,7 +62,7 @@
 }
 
 #admin-term-table th {
-  background-color: var(--accent-primary);
+  background-color: #bc414e;
   color: var(--text-light);
   font-size: 1rem;
   width: 20%;

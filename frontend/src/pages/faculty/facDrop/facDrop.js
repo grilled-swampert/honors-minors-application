@@ -87,11 +87,11 @@ function FacDrop() {
   };
   
   return (
-    <div className="main">
+    <div className="drop-main">
       <Header />
-      <div className="add-content">
-        <FacNavbar />
-        <div className="drop-table">
+      <FacNavbar />
+      <div className="drop-content">
+        <div>
           <table className="drop-table">
             <thead>
               <tr className="drop-tr">

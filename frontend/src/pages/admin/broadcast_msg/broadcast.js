@@ -68,7 +68,7 @@ const Broadcast = () => {
         <AdminSideBar />
         <div className="br-content">
           <div className="br-top">
-            <h3>Broadcast Message:</h3>
+            <h3>Broadcast Message: </h3>
             <input
               placeholder="Enter Message"
               value={newMessage}

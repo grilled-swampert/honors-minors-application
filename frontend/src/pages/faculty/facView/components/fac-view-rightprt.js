@@ -151,9 +151,9 @@ function FacViewRightprt() {
             ))}
           </div>
 
-          <div className="download">
+          <div className="viewdownload">
             <button
-              className="downloadBtn"
+              className="viewdownloadBtn"
               onClick={() => toggleDropdown("downloadMenu")}
             >
               Download <span className="caret">▼</span>

@@ -1,7 +1,7 @@
 
 .add-box {
   height: 20vh;
-  width: 50%;
+  width: 30%;
   background-color: #fef6e4;
   color: #001858;
   margin-left: 1%;
@@ -9,10 +9,14 @@
   border-radius: 24px;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
 }
 .add-box a {
   color: #ef4565;
   text-decoration: none;
+}
+.csv-name{
+  color: red;
 }
 .add-box p {
   padding: 10px;

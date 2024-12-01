@@ -63,8 +63,9 @@ function FacAddStudent() {
     <div className='main'>
       <Header />
       <div className='add-content'>
+      <FacNavbar />
         <FacTemplate />
-        <FacNavbar />
+       
         <div className='add-right'>
           <FacAddTop />
           <div className="fac-add-bottom">
