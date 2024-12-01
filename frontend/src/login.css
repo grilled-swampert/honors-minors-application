@@ -1,8 +1,20 @@
+/* Modern CSS Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+}
 
-
-.login_main {
+/* Body and Main Container Styles */
+body {
   min-height: 100vh;
-  background-image: url("../src/pages/photos-logos/college.jpeg");
+  background-color: #f5f5f5;
+}
+
+.login-main {
+  min-height: 100vh;
+  background-image: url("../src/pages/photos-logos/kjbackground.jpeg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

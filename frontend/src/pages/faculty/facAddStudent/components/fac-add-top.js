@@ -62,14 +62,14 @@ function FacAddTop() {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <label>
+    <div className='upload-container'>
+      <form onSubmit={handleSubmit} >
+        <label className='file-input-label'>
           Upload CSV File:
           <input type="file" onChange={handleFileUpload} />
         </label>
 
-        <button type="submit" disabled={isUploading}>
+        <button type="submit" disabled={isUploading} className='submit-button'>
           {isUploading ? 'Uploading...' : 'Submit'}
         </button>
 
