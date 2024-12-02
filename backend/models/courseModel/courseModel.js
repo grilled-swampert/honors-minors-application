@@ -5,7 +5,7 @@ const Student = require('../studentModel/studentModel'); // Assuming the Student
 const courseSchema = new mongoose.Schema({
    category: { 
       type: String, 
-      enum: ['Minor', 'Honour'], 
+      enum: ['Minor', 'Honor'], 
       required: true 
    },
    offeringDepartment: { type: String, required: true },
@@ -60,12 +60,12 @@ courseSchema.pre('save', function (next) {
       
       // Correct the spelling mistakes and case variations
       if (categoryLower === 'honours' || categoryLower === 'honor' || categoryLower === 'honour') {
-         this.category = 'Honour'; // Set to correct enum value
+         this.category = 'Honor'; // Set to correct enum value
       } else if (categoryLower === 'minor') {
          this.category = 'Minor'; // Set to correct enum value
       } else {
          // If it doesn't match either, throw an error
-         return next(new Error('Invalid category value. Accepted values are "Minor" or "Honour".'));
+         return next(new Error('Invalid category value. Accepted values are "Minor" or "Honor".'));
       }
    }
    next();

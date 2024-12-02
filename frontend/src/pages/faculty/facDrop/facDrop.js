@@ -2,90 +2,191 @@ import React, { useState, useEffect } from "react";
 import "./facDrop.css";
 import Header from "../../header/header";
 import FacNavbar from "../facNavbar/facNavbar";
-import viewicon from "../../photos-logos/view.jpeg";
-import approveIcon from "../../photos-logos/approve.png";
-import rejectIcon from "../../photos-logos/reject.jpeg";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import DropStudents from "./dropStudents";
-import { FETCH_ALL_COURSES } from "../../../constants/actonsTypes";
 const { getDropStudents } = require("../../../actions/terms");
 
 function FacDrop() {
   // State to handle overlay visibility and content
-  const [overlayVisible, setOverlayVisible] = useState(false);
-  const [overlayContent, setOverlayContent] = useState("");
+  const [overlayState, setOverlayState] = useState({
+    isVisible: false,
+    type: null,
+    studentId: null,
+    studentDetails: null,
+  });
   const [rejectionReason, setRejectionReason] = useState("");
-  const [currentStudentId, setCurrentStudentId] = useState(null);
   const { branch, termId } = useParams();
   const dispatch = useDispatch();
-  
-  // Fetch students from the Redux state or API
+
+  // Fetch students from the Redux state
   const dropStudents = useSelector((state) => state.students);
   const [students, setStudents] = useState([]);
 
+  // Fetch data on component mount or termId change
   useEffect(() => {
+    console.log("useEffect triggered: termId", termId);
     if (termId) {
       dispatch(getDropStudents(branch, termId));
       fetchStudents();
-      console.log("Branch:", branch, "Term ID:", termId); // Check if branch and termId are valid
     } else {
       console.warn("Term ID is undefined or invalid");
     }
   }, [dispatch, branch, termId]);
 
+  // Fetch students from API
   const fetchStudents = async () => {
     try {
+      console.log("Fetching students for branch:", branch, "termId:", termId);
       const response = await axios.get(`/faculty/${branch}/${termId}/facView`);
       setStudents(response.data);
+      console.log("Students fetched:", response.data);
     } catch (error) {
       console.error("Error fetching students:", error);
     }
   };
 
-  console.log("Drop Students:", dropStudents);
+  // Function to open the overlay
+  const openOverlay = (type, studentId = null) => {
+    
+    console.log("openOverlay called with type:", type, "studentId:", studentId);
+    // Find student details if studentId is provided
+    const studentDetails = studentId
+      ? dropStudents.find((student) => student._id === studentId)
+      : null;
 
-  // Function to open the overlay with content
-  const openOverlay = (content, studentId = null) => {
-    setOverlayContent(content);
-    setOverlayVisible(true);
-    setCurrentStudentId(studentId);
+    console.log("Student details found:", studentDetails);
+
+    setOverlayState({
+      isVisible: true,
+      type,
+      studentId,
+      studentDetails,
+    });
   };
 
   // Function to close the overlay
   const closeOverlay = () => {
-    setOverlayVisible(false);
-    setOverlayContent("");
-    setRejectionReason(""); // Reset the input box when closing the overlay
-    setCurrentStudentId(null);
+    console.log("Closing overlay");
+    setOverlayState({
+      isVisible: false,
+      type: null,
+      studentId: null,
+      studentDetails: null,
+    });
+    setRejectionReason(""); // Reset the rejection reason
   };
 
   // Handle the input change for rejection reason
   const handleRejectionReasonChange = (e) => {
+    console.log("Rejection reason changed:", e.target.value);
     setRejectionReason(e.target.value);
   };
 
   // Handle course drop request for approval/rejection
   const handleCourseDropRequest = async (isApproved) => {
+    console.log(
+      "Handling course drop request. Is Approved:",
+      isApproved,
+      "Student ID:",
+      overlayState.studentId,
+      "Rejection Reason:",
+      rejectionReason
+    );
     try {
-        const response = await axios.put(`/faculty/${branch}/${termId}/edit/facDrop`, {
-            studentId: currentStudentId,
-            isApproved,
-            rejectionReason: isApproved ? '' : rejectionReason
-        });
-        console.log(response.data);
+      const response = await axios.put(
+        `/faculty/${branch}/${termId}/edit/facDrop`,
+        {
+          studentId: overlayState.studentId,
+          isApproved,
+          rejectionReason: isApproved ? "" : rejectionReason,
+        }
+      );
 
-        // Email is now sent from the backend
-        alert(isApproved ? 'Course drop request approved and email sent' : 'Course drop request rejected and email sent');
-        closeOverlay();
-        fetchStudents(); // Refresh the student list
+      alert(
+        isApproved
+          ? "Course drop request approved and email sent"
+          : "Course drop request rejected and email sent"
+      );
+
+      closeOverlay();
+      fetchStudents(); // Refresh the student list
     } catch (error) {
-        console.error('Error handling course drop request:', error);
-        alert('Failed to process course drop request: ' + (error.response?.data?.error || error.message));
+      console.error("Error handling course drop request:", error);
+      alert(
+        "Failed to process course drop request: " +
+          (error.response?.data?.error || error.message)
+      );
     }
   };
-  
+
+  // Render overlay content based on type
+  const renderOverlayContent = () => {
+    const { type, studentId, studentDetails } = overlayState;
+    console.log("Rendering overlay content. Type:", type);
+
+    switch (type) {
+      case "view":
+        return (
+          <div>
+            <h2>Student Details</h2>
+            {studentDetails && (
+              <div>
+                <p>
+                  <strong>Name:</strong> {studentDetails.name}
+                </p>
+                <p>
+                  <strong>Roll No:</strong> {studentDetails.rollNo}
+                </p>
+                <p>
+                  <strong>Email:</strong> {studentDetails.email}
+                </p>
+                <p>
+                  <strong>Program:</strong> {studentDetails.program}
+                </p>
+              </div>
+            )}
+          </div>
+        );
+
+      case "approve":
+        return (
+          <div>
+            <p>Are you sure you want to approve the course drop request?</p>
+            <button onClick={() => handleCourseDropRequest(true)}>
+              Confirm Approval
+            </button>
+          </div>
+        );
+
+      case "reject":
+        return (
+          <div>
+            <p>
+              Please provide a reason for rejecting the course drop request:
+            </p>
+            <textarea
+              value={rejectionReason}
+              onChange={handleRejectionReasonChange}
+              placeholder="Enter reason for rejection"
+              rows={4}
+              style={{ width: "100%", marginBottom: "10px" }}
+            />
+            <button
+              onClick={() => handleCourseDropRequest(false)}
+              disabled={!rejectionReason.trim()} // Disable if no reason provided
+            >
+              Confirm Rejection
+            </button>
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="drop-main">
       <Header />
@@ -108,7 +209,6 @@ function FacDrop() {
               {dropStudents &&
                 dropStudents.map((student) => (
                   <DropStudents
-                    key={student._id}
                     student={student}
                     openOverlay={openOverlay}
                     branch={branch}
@@ -119,46 +219,13 @@ function FacDrop() {
           </table>
 
           {/* Overlay */}
-          {overlayVisible && (
+          {overlayState.isVisible && (
             <div className="overlay">
               <div className="overlay-content">
                 <button className="close-button" onClick={closeOverlay}>
                   X
                 </button>
-
-                {overlayContent === "view" && (
-                  <p>Viewing details for student ID: {currentStudentId}</p>
-                )}
-                {overlayContent === "approve" && (
-                  <div>
-                    <p>
-                      Approving the course drop request for student ID:{" "}
-                      {currentStudentId}
-                    </p>
-                    <button onClick={() => handleCourseDropRequest(true)}>
-                      Confirm Approval
-                    </button>
-                  </div>
-                )}
-
-                {overlayContent === "reject" && (
-                  <div>
-                    <p>
-                      Rejecting the course drop request for student ID:{" "}
-                      {currentStudentId}
-                    </p>
-                    <textarea
-                      value={rejectionReason}
-                      onChange={handleRejectionReasonChange}
-                      placeholder="Enter reason for rejection"
-                      rows={4}
-                      style={{ width: "100%", marginBottom: "10px" }}
-                    />
-                    <button onClick={() => handleCourseDropRequest(false)}>
-                      Confirm Rejection
-                    </button>
-                  </div>
-                )}
+                {renderOverlayContent()}
               </div>
             </div>
           )}

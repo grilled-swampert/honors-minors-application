@@ -1,17 +1,16 @@
 .add-content {
   display: flex;
-  flex-direction: column;
+  gap: 30px;
 }
 .add-right {
   display: flex;
   flex-direction: column;
   margin-top: 30px;
   width: 100%;
-  z-index: -1;
 }
 .add-bottom {
   background-color: #f3d2c1;
-  width: 90%;
+  width: 87%;
   height: 50vh;
   border-radius: 24px;
   display: flex;
@@ -20,8 +19,4 @@
   flex-wrap: wrap;
   overflow-y: auto;
   margin-top: 1%;
-  position: relative;
-  left: 5%;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
-  z-index: -1;
 }

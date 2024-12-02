@@ -2,4 +2,4 @@ studentName,rollNumber,branch,classDivision,email,contactNumber,onlineEligible
 Vighnesh Palande,16014011012,EXCP,A,vighnesh.palande@somaiya.edu,91444444444,YES
 crisplettuce,16014011025,EXCP,B,s.ranadive@somaiya.edu,91555555555,NO
 Jeet Patel,16014011044,EXCP,C,jeet25@somaiya.edu,91666666666,YES
-Arun Dange,16014022026,EXCP,B,arun.dange@somaiya.edu,92929929922,YES
+Arun Dange,16014022026,EXCP,B,arun.dange@somaiya.edu,,YES

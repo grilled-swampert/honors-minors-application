@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import './fac-add-top.css';
 import { useParams } from 'react-router-dom';
 
@@ -8,12 +8,19 @@ function FacAddTop() {
   const [error, setError] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
+  
+  // Add a ref for the file input
+  const fileInputRef = useRef(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!studentsList) {
       setError('Please upload a file');
+      // Ensure the file input is focused when no file is selected
+      if (fileInputRef.current) {
+        fileInputRef.current.click();
+      }
       return;
     }
 
@@ -39,6 +46,11 @@ function FacAddTop() {
         
         // Force refresh the page to get updated data
         window.location.reload();
+        
+        // Reset file input
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
       } else {
         const response = JSON.parse(xhr.response);
         setError(response.error || 'Something went wrong!');
@@ -57,8 +69,11 @@ function FacAddTop() {
   };
 
   const handleFileUpload = (event) => {
-    setStudentsList(event.target.files[0]);
-    console.log('File selected:', event.target.files[0]);
+    const file = event.target.files[0];
+    if (file) {
+      setStudentsList(file);
+      console.log('File selected:', file);
+    }
   };
 
   return (
@@ -66,7 +81,19 @@ function FacAddTop() {
       <form onSubmit={handleSubmit} >
         <label className='file-input-label'>
           Upload CSV File:
-          <input type="file" onChange={handleFileUpload} />
+          <input 
+            type="file" 
+            ref={fileInputRef}
+            onChange={handleFileUpload} 
+            // Add accept attribute to limit to CSV files
+            accept=".csv"
+            // Ensure input is visible and clickable
+            style={{ 
+              opacity: 1, 
+              position: 'relative', 
+              cursor: 'pointer' 
+            }}
+          />
         </label>
 
         <button type="submit" disabled={isUploading} className='submit-button'>

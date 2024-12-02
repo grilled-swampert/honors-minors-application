@@ -13,13 +13,19 @@ const Term = require("../../models/termModel/termModel");
 
 const backendUrl = "http://localhost:9000";
 
-// Create a nodemailer transporter
+// Create a nodemailer transporter with more robust configuration
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: 'smtp.gmail.com',
+  port: 465, // Secure SSL port
+  secure: true, // True for port 465
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
+  connectionTimeout: 10000, // 10 seconds
+  socketTimeout: 20000, // 20 seconds
+  logger: true, // Enable logging
+  debug: true, // Include debug information
 });
 
 // Ensure the uploads directory exists
@@ -39,41 +45,49 @@ const upload = multer({ storage: storage });
 
 // Middleware for file uploads
 const allowedFields = [
-  "EXCP_SL",
-  "COMP_SL",
-  "MECH_SL",
-  "IT_SL",
-  "ETRX_SL",
-  "AIDS_SL",
-  "RAI_SL",
-  "CCE_SL",
-  "VLSI_SL",
-  "CSBS_SL",
-  "EXTC_SL",
+  "EXCP_SL", "COMP_SL", "MECH_SL", "IT_SL", "ETRX_SL", "AIDS_SL", 
+  "RAI_SL", "CCE_SL", "VLSI_SL", "CSBS_SL", "EXTC_SL",
 ];
 
 // Middleware for file uploads
 exports.uploadFiles = (req, res, next) => {
   upload.any()(req, res, function (err) {
     if (err instanceof multer.MulterError) {
-      // A Multer error occurred when uploading.
       return res.status(400).json({ message: `Upload error: ${err.message}` });
     } else if (err) {
-      // An unknown error occurred when uploading.
-      return res
-        .status(500)
-        .json({ message: `Unknown upload error: ${err.message}` });
+      return res.status(500).json({ message: `Unknown upload error: ${err.message}` });
     }
 
-    // Check if any file was uploaded
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ message: "No file uploaded" });
     }
 
-    // Everything went fine, pass the first file to req.file for compatibility
     req.file = req.files[0];
     next();
   });
+};
+
+// Send email with retry mechanism
+const sendEmailWithRetry = async (emailOptions, maxRetries = 3) => {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`[EMAIL] Sending email - Attempt ${attempt}`);
+      await transporter.sendMail(emailOptions);
+      console.log(`[EMAIL] Email sent successfully to ${emailOptions.to}`);
+      return true;
+    } catch (error) {
+      console.error(`[EMAIL] Error sending email (Attempt ${attempt}):`, error);
+      
+      // If it's the last attempt, throw the error
+      if (attempt === maxRetries) {
+        console.error('[EMAIL] Max retries reached. Email sending failed.');
+        throw error;
+      }
+      
+      // Wait before retrying (exponential backoff)
+      await new Promise(resolve => setTimeout(resolve, attempt * 2000));
+    }
+  }
 };
 
 const importStudents = async (file, termId, branch) => {
@@ -155,7 +169,7 @@ const importStudents = async (file, termId, branch) => {
               }
 
               // Generate a random password
-              const password = generateRandomPassword(); // Generates a random 6-character password
+              const password = generateRandomPassword(); 
               console.log("[DEBUG] Generated password for student:", password);
 
               // Convert the ObjectId to a string
@@ -203,8 +217,13 @@ Best regards,
 The Course Selection Team`,
               };
 
-              console.log("[DEBUG] Sending welcome email to:", row.email);
-              await transporter.sendMail(emailOptions);
+              try {
+                console.log("[DEBUG] Attempting to send welcome email to:", row.email);
+                await sendEmailWithRetry(emailOptions);
+              } catch (emailError) {
+                console.error("[ERROR] Failed to send email after multiple attempts:", emailError);
+                // Optionally, you could log this to a file or alternative notification system
+              }
 
               console.log("[DEBUG] Finished processing student:", student._id);
               return student._id;
@@ -247,69 +266,29 @@ exports.addStudents = asyncHandler(async (req, res) => {
     const { studentIds, filePath } = await importStudents(file, termId, branch);
 
     // Initialize arrays for each branch if not already present
-    if (!term.EXCP_SL && branch.toUpperCase() === "EXCP") {
-      term.EXCP_SL = [];
-    }
-    if (!term.IT_SL && branch.toUpperCase() === "IT") {
-      term.IT_SL = [];
-    }
-    if (!term.COMP_SL && branch.toUpperCase() === "COMP") {
-      term.COMP_SL = [];
-    }
-    if (!term.CSBS_SL && branch.toUpperCase() === "CSBS") {
-      term.CSBS_SL = [];
-    }
-    if (!term.MECH_SL && branch.toUpperCase() === "MECH") {
-      term.MECH_SL = [];
-    }
-    if (!term.ETRX_SL && branch.toUpperCase() === "ETRX") {
-      term.ETRX_SL = [];
-    }
-    if (!term.AIDS_SL && branch.toUpperCase() === "AIDS") {
-      term.AIDS_SL = [];
-    }
-    if (!term.RAI_SL && branch.toUpperCase() === "RAI") {
-      term.RAI_SL = [];
-    }
-    if (!term.CCE_SL && branch.toUpperCase() === "CCE") {
-      term.CCE_SL = [];
-    }
-    if (!term.VDT_SL && branch.toUpperCase() === "VDT") {
-      term.VDT_SL = [];
+    const branchMappings = {
+      "EXCP": "EXCP_SL",
+      "IT": "IT_SL",
+      "COMP": "COMP_SL",
+      "CSBS": "CSBS_SL",
+      "MECH": "MECH_SL",
+      "ETRX": "ETRX_SL",
+      "AIDS": "AIDS_SL",
+      "RAI": "RAI_SL",
+      "CCE": "CCE_SL",
+      "VDT": "VDT_SL"
+    };
+
+    const branchUpperCase = branch.toUpperCase();
+    const branchSlKey = branchMappings[branchUpperCase];
+
+    if (!term[branchSlKey]) {
+      term[branchSlKey] = [];
     }
 
-    // Push student IDs and assign file paths for each branch
-    if (branch.toUpperCase() === "EXCP") {
-      term.EXCP_SL.push(...studentIds);
-      term.EXCP_students = filePath;
-    } else if (branch.toUpperCase() === "IT") {
-      term.IT_SL.push(...studentIds);
-      term.IT_students = filePath;
-    } else if (branch.toUpperCase() === "COMP") {
-      term.COMP_SL.push(...studentIds);
-      term.COMP_students = filePath;
-    } else if (branch.toUpperCase() === "CSBS") {
-      term.CSBS_SL.push(...studentIds);
-      term.CSBS_students = filePath;
-    } else if (branch.toUpperCase() === "MECH") {
-      term.MECH_SL.push(...studentIds);
-      term.MECH_students = filePath;
-    } else if (branch.toUpperCase() === "ETRX") {
-      term.ETRX_SL.push(...studentIds);
-      term.ETRX_students = filePath;
-    } else if (branch.toUpperCase() === "AIDS") {
-      term.AIDS_SL.push(...studentIds);
-      term.AIDS_students = filePath;
-    } else if (branch.toUpperCase() === "RAI") {
-      term.RAI_SL.push(...studentIds);
-      term.RAI_students = filePath;
-    } else if (branch.toUpperCase() === "CCE") {
-      term.CCE_SL.push(...studentIds);
-      term.CCE_students = filePath;
-    } else if (branch.toUpperCase() === "VDT") {
-      term.VDT_SL.push(...studentIds);
-      term.VDT_students = filePath;
-    }
+    // Push student IDs and assign file paths for the branch
+    term[branchSlKey].push(...studentIds);
+    term[`${branchUpperCase}_students`] = filePath;
 
     console.log(`Updating term with new students for branch: ${branch}`);
 
