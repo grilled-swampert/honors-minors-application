@@ -1,5 +1,6 @@
 .add-content {
   display: flex;
+  flex-direction: column;
   gap: 30px;
 }
 .add-right {
@@ -10,7 +11,7 @@
 }
 .add-bottom {
   background-color: #f3d2c1;
-  width: 87%;
+  width: 90%;
   height: 50vh;
   border-radius: 24px;
   display: flex;
@@ -19,4 +20,5 @@
   flex-wrap: wrap;
   overflow-y: auto;
   margin-top: 1%;
+  margin-left: 5%;
 }

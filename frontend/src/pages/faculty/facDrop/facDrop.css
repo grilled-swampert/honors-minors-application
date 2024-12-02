@@ -41,7 +41,7 @@ textarea {
   font-size: 16px;
 }
 
-button {
+.close-button {
   background-color: #007bff;
   color: white;
   border: none;
@@ -105,7 +105,7 @@ button {
   border: none;
   font-size: 20px;
   cursor: pointer;
-  color: #888;
+  color: blue;
 }
 
 .close-button:hover {
@@ -115,7 +115,7 @@ button {
 .overlay-content button {
   margin-top: 15px;
   padding: 10px 15px;
-  background-color: #007bff;
+  background-color: blue;
   color: white;
   border: none;
   border-radius: 5px;
