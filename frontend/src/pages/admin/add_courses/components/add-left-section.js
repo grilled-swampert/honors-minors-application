@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import './add-left-section.css'; 
 import { useParams } from 'react-router-dom';
+import './add-left-section.css';
 
 const AddLeftSection = () => {
   const { termId } = useParams();
@@ -9,6 +9,7 @@ const AddLeftSection = () => {
   const [endDate, setEndDate] = useState('');
   const [endTime, setEndTime] = useState('');
   const [syllabusFile, setSyllabusFile] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState(0); // Track upload progress
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
@@ -20,31 +21,44 @@ const AddLeftSection = () => {
 
     const formData = new FormData();
     formData.append('syllabusFile', syllabusFile);
-    formData.append('startDate', startDateTime.toISOString());  // Save as ISO string
+    formData.append('startDate', startDateTime.toISOString());
     formData.append('endDate', endDateTime.toISOString());
 
     try {
-      const response = await fetch(`/admin/${termId}/edit/addCourses`, {
-        method: 'PATCH',
-        body: formData,
-      });
+      const xhr = new XMLHttpRequest();
 
-      if (!response.ok) {
-        const data = await response.json();
-        setError(data.error || 'Something went wrong!');
+      xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+          setUploadProgress(Math.round((event.loaded / event.total) * 100));
+        }
+      };
+
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          setError(null);
+          setSuccess('File uploaded successfully!');
+          setUploadProgress(0);
+          setSyllabusFile(null);
+          setStartDate('');
+          setStartTime('');
+          setEndDate('');
+          setEndTime('');
+        } else {
+          setError('File upload failed. Please try again.');
+          setSuccess(null);
+        }
+      };
+
+      xhr.onerror = () => {
+        setError('An error occurred during file upload.');
         setSuccess(null);
-      } else {
-        setError(null);
-        setSuccess('Semester details updated successfully!');
-        setSyllabusFile(null);
-        setStartDate('');
-        setStartTime('');
-        setEndDate('');
-        setEndTime('');
-        window.location.reload();
-      }
+      };
+
+      xhr.open('PATCH', `/admin/${termId}/edit/addCourses`);
+      xhr.send(formData);
     } catch (err) {
       setError('Failed to submit the form');
+      setUploadProgress(0);
       console.error('Error during form submission:', err);
     }
   };
@@ -54,67 +68,80 @@ const AddLeftSection = () => {
     if (file && file.name.endsWith('.csv')) {
       setSyllabusFile(file);
       setError(null);
+      setSuccess(null);
     } else {
       setSyllabusFile(null);
       setError('Please upload a valid .csv file.');
+      setSuccess(null);
     }
   };
 
   return (
     <div className="left-section">
       <div className="date-selection">
-        <form onSubmit={handleSubmit} className='termForm'>
+        <form onSubmit={handleSubmit} className="termForm">
           <div className="form-group">
-          <div className="startDate">
-            <label className="start-date">Start Date:</label>
-            <input
-              type="date"
-              id="start-date"
-              className="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-            />
-            <input
-              type="time"
-              id="start-time"
-              className="date"
-              value={startTime}
-              onChange={(e) => setStartTime(e.target.value)}
-            />
+            <div className="startDate">
+              <label className="start-date">Start Date:</label>
+              <input
+                type="date"
+                id="start-date"
+                className="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+              />
+              <input
+                type="time"
+                id="start-time"
+                className="date"
+                value={startTime}
+                onChange={(e) => setStartTime(e.target.value)}
+              />
+            </div>
+
+            <div className="endDate">
+              <label className="end-date">End Date:</label>
+              <input
+                type="date"
+                id="end-date"
+                className="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+              />
+              <input
+                type="time"
+                id="end-time"
+                className="date"
+                value={endTime}
+                onChange={(e) => setEndTime(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="add-upload-sec">
+            <div id="upload-btn">
+              <input
+                type="file"
+                name="UPLOAD"
+                accept=".csv"
+                onChange={handleFileChange}
+              />
+            </div>
+
+            <button id="add-btn" type="submit" disabled={!syllabusFile}>
+              ADD
+            </button>
           </div>
 
-          <div className="endDate">
-            <label className="end-date">End Date &nbsp; :</label>
-            <input
-              type="date"
-              id="end-date"
-              className="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-            />
-            <input
-              type="time"
-              id="end-time"
-              className="date"
-              value={endTime}
-              onChange={(e) => setEndTime(e.target.value)}
-            />
-          </div>
-          </div>
-        <div className = 'add-upload-sec'>
-          <div id="upload-btn">
-            <input
-              type="file"
-              name="UPLOAD"
-              accept=".csv"
-              onChange={handleFileChange}
-            />
-          </div>
-
-          <button id="add-btn" type="submit">
-            ADD
-          </button>
-          </div>
+          {uploadProgress > 0 && (
+            <div className="progress-bar">
+              <div
+                className="progress"
+                style={{ width: `${uploadProgress}%` }}
+              >
+                {uploadProgress}%
+              </div>
+            </div>
+          )}
 
           {error && <div className="error">{error}</div>}
           {success && <div className="success">{success}</div>}

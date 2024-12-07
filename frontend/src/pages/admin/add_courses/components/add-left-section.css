@@ -138,7 +138,7 @@ body {
 }
 
 #upload-btn::after {
-  content: 'Upload CSV File';
+  content: 'Upload Syllabus File';
   position: absolute;
   top: 0;
   left: 0;
@@ -207,4 +207,21 @@ body {
     height: 40px;
     font-size: 0.9rem;
   }
+}
+
+.progress-bar {
+  width: 100%;
+  background-color: #f3f3f3;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.progress {
+  height: 20px;
+  background-color: var(--primary-color);
+  text-align: center;
+  color: white;
+  line-height: 20px;
+  border-radius: 5px;
 }

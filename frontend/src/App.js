@@ -33,63 +33,63 @@ function App() {
         
         {/* Admin Routes */}
         <Route path="/admin" element={
-          <PrivateRoute allowedRoles={['admin']}>
+          // <PrivateRoute allowedRoles={['admin']}>
             <AdminLandingPage />
-          </PrivateRoute>
+          // </PrivateRoute>
         } />
         <Route path="/admin/:termId/view" element={
-          <PrivateRoute allowedRoles={['admin']}>
+          // <PrivateRoute allowedRoles={['admin']}>
             <AdminViewPage />
-          </PrivateRoute>
+          // </PrivateRoute>
         } />
         <Route path="/admin/:termId/edit/addCourses" element={
-          <PrivateRoute allowedRoles={['admin']}>
+          // <PrivateRoute allowedRoles={['admin']}>
             <AddCoursesPage />
-          </PrivateRoute>
+          // </PrivateRoute>
         } />
         <Route path="/admin/:termId/edit/allocation" element={
-          <PrivateRoute allowedRoles={['admin']}>
+          // <PrivateRoute allowedRoles={['admin']}>
             <Allocation />
-          </PrivateRoute>
+          // </PrivateRoute>
         } />
         <Route path="/admin/:termId/edit/broadcast" element={
-          <PrivateRoute allowedRoles={['admin']}>
+          // <PrivateRoute allowedRoles={['admin']}>
             <Broadcast />
-          </PrivateRoute>
+          // </PrivateRoute>
         } />
 
         {/* Faculty Routes */}
         <Route path="/faculty/:branch/dashboard" element={
-          <PrivateRoute allowedRoles={['faculty']}>
+          // <PrivateRoute allowedRoles={['faculty']}>
             <FacLandingPage />
-          </PrivateRoute>
+          // </PrivateRoute>
         } />
         <Route path="/faculty/:branch/:termId/edit/facAddStudent" element={
-          <PrivateRoute allowedRoles={['faculty']}>
+          // <PrivateRoute allowedRoles={['faculty']}>
             <FacAddStudent />
-          </PrivateRoute>
+          // </PrivateRoute>
         } />
         <Route path='/faculty/:branch/:termId/facView' element={
-          <PrivateRoute allowedRoles={['faculty']}>
+          // <PrivateRoute allowedRoles={['faculty']}>
             <FacView />
-          </PrivateRoute>
+          // </PrivateRoute>
         } />
         <Route path='/faculty/:branch/:termId/edit/facDrop' element={
-          <PrivateRoute allowedRoles={['faculty']}>
+          // <PrivateRoute allowedRoles={['faculty']}>
             <FacDrop />
-          </PrivateRoute>
+          // </PrivateRoute>
         } />
 
         {/* Student Routes */}
         <Route path='/student/:studentId/dashboard' element={
-          <PrivateRoute allowedRoles={['student']}>
+          // <PrivateRoute allowedRoles={['student']}>
             <StudentDashboard />
-          </PrivateRoute>
+          // </PrivateRoute>
         } />
         <Route path='/student/:studentId/courses' element={
-          <PrivateRoute allowedRoles={['student']}>
+          // <PrivateRoute allowedRoles={['student']}>
             <SelectCourses />
-          </PrivateRoute>
+          // </PrivateRoute>
         } />
       </Routes> 
     </BrowserRouter>
