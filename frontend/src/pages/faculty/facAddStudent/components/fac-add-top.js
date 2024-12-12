@@ -80,7 +80,7 @@ function FacAddTop() {
     <div className='upload-container'>
       <form onSubmit={handleSubmit} >
         <label className='file-input-label'>
-          Upload CSV File:
+          Upload Student CSV File:
           <input 
             type="file" 
             ref={fileInputRef}
