@@ -7,7 +7,7 @@ import { Navigate, useLocation ,useParams} from 'react-router-dom';
 import kjscelogo from '../src/pages/photos-logos/KJSCE-logo.png';
 import trustImg from '../src/pages/photos-logos/Trust.svg';
 import './login.css';
-// Your Firebase configuration
+
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
@@ -40,7 +40,6 @@ const Login = () => {
         navigate(`/faculty/${branch}/dashboard`);
         break;
       case 'student':
-        // Replace 'studentId' with the actual ID if needed
         navigate(`/student/${studentId}/dashboard`);
         break;
       default:
@@ -51,28 +50,18 @@ const Login = () => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      console.log("[DEBUG] Auth state changed. User:", user);
   
       if (user) {
-        console.log("[DEBUG] User is authenticated:", user);
         setUser(user);
-  
         try {
           const docRef = doc(db, 'users', user.uid);
-          console.log("[DEBUG] Fetching user data from Firestore for UID:", user.uid);
-          console.log("[DEBUG] DocRef:", docRef);
-  
           const docSnap = await getDoc(docRef);
-          console.log("[DEBUG] DocSnap:", docSnap);
           if (docSnap.exists()) {
             const userData = docSnap.data();
-            console.log("[DEBUG] User data retrieved:", userData);
   
             if (userData.role) {
-              console.log("[DEBUG] User role found:", userData.role);
               redirectUser(userData.role, userData.branch, userData.studentId);
             } else {
-              console.warn("[WARNING] User role not defined");
               setError('User role not defined');
             }
           } else {
@@ -84,7 +73,6 @@ const Login = () => {
           setError('Error fetching user data');
         }
       } else {
-        console.log("[DEBUG] No user is signed in.");
         setUser(null);
       }
   
@@ -92,7 +80,6 @@ const Login = () => {
     });
   
     return () => {
-      console.log("[DEBUG] Cleaning up onAuthStateChanged listener.");
       unsubscribe();
     };
   }, [redirectUser]);
@@ -178,7 +165,6 @@ const Login = () => {
   );
 }
 
-
 async function addUserToDatabase(email, password, role, branch = null, studentId = null) {
   try {
     console.log({
@@ -196,10 +182,7 @@ async function addUserToDatabase(email, password, role, branch = null, studentId
       branch: branch,
       studentId: studentId
     });
-    console.log('User added successfully');
-    // Sign out the user after adding to the database
     await signOut(auth);
-    console.log('User signed out after creation');
   } catch (error) {
     console.error('Error adding user: ', error);
   }
@@ -252,12 +235,10 @@ const PrivateRoute = ({ children, allowedRoles }) => {
     return <Navigate to="/" state={{ from: location }} replace />;
   }
 
-  // Check for faculty branch
   if (userData.role === 'faculty' && params.branch && params.branch !== userData.branch) {
     return <Navigate to="/" state={{ from: location }} replace />;
   }
 
-  // Check for student ID
   if (userData.role === 'student' && params.studentId && params.studentId !== userData.studentId) {
     return <Navigate to="/" state={{ from: location }} replace />;
   }
@@ -265,22 +246,5 @@ const PrivateRoute = ({ children, allowedRoles }) => {
   return children;
 };
 
-
 export { Login, addUserToDatabase, PrivateRoute };
 export default Login;
-
-// Uncomment this line to add a new user
-// addUserToDatabase('admin@hm.com', 'admin1', 'admin');
-// addUserToDatabase('rai@hm.com', 'raibranch', 'faculty', 'rai');
-// addUserToDatabase('extc@hm.com', 'extc02', 'faculty', 'extc');
-// addUserToDatabase('aids@hm.com', 'aids03', 'faculty', 'aids');
-// addUserToDatabase('comp@hm.com', 'comp04', 'faculty', 'comp');
-// addUserToDatabase('csbs@hm.com', 'csbs05', 'faculty', 'csbs');
-// addUserToDatabase('vdt@hm.com', 'vdt006', 'faculty', 'vdt');
-// addUserToDatabase('it@hm.com', 'it0007', 'faculty', 'it');
-// addUserToDatabase('excp@hm.com', 'excp08', 'faculty', 'excp');
-// addUserToDatabase('mech@hm.com', 'mech09', 'faculty', 'mech');
-// addUserToDatabase('vlsi@hm.com', 'vlsi10', 'faculty', 'vlsi');
-// addUserToDatabase('s.ranadive@somaiya.edu', 'password123', 'student', 'excp', '670df9871426a210709bfe38');
-// addUserToDatabase('vighnesh.palande@somaiya.edu', 'password123', 'student', 'excp', '670df9871426a210709bfe3a');
-// addUserToDatabase('jeet25@somaiya.edu', 'password123', 'student', 'excp', '670eb00c813702d9663b16d8');
