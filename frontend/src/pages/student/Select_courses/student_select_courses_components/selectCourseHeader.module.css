@@ -1,5 +1,11 @@
 .searchInput {
-    width: 80%;
-    height: 30px;
-    border-radius: 20px;
+  width: 80%;
+  height: 30px;
+  border-radius: 15px;
+}
+
+@media (max-width: 768px) {
+  .searchInput {
+    width: 90%;
   }
+}

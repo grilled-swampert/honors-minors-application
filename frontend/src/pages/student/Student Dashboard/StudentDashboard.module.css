@@ -28,6 +28,12 @@
   color: #61dafb;
 }
 
+@media (max-width: 768px) {
+  .AppHeader {
+    font-size: calc(8px + 1.5vmin);
+  }
+}
+
 @keyframes AppLogoSpin {
   from {
     transform: rotate(0deg);

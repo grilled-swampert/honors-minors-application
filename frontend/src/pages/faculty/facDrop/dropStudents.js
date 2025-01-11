@@ -1,40 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import viewicon from "../../photos-logos/view.jpeg";
 import approveIcon from "../../photos-logos/approve.png";
 import rejectIcon from "../../photos-logos/reject.jpeg";
 import "./facDrop.css";
+import PdfPreviewOverlay from './PDFPreviewOverlay';  // Import PDF preview overlay component
 
-export default function DropStudents({ student, openOverlay, branch, termId }) {
-  // Extensive logging to understand what's happening
-  console.log("DropStudents Component Render - Full Student Object:", student);
-  console.log("DropStudents Props:", { 
-    openOverlay: typeof openOverlay, 
-    student, 
-    branch, 
-    termId 
+export default function DropStudents({
+  student,
+  openOverlay,
+  branch,
+  termId,
+  handleShowPreview,  // Receive the function to show the preview
+}) {
+  const [overlayState, setOverlayState] = useState({
+    isVisible: false,
+    pdfUrl: null,
   });
 
-  // Wrapper function with extra logging
-  const handleButtonClick = (type) => {
-    console.error(`BUTTON CLICKED - Type: ${type}, Student ID: ${student._id}`);
-    
-    // Additional checks to ensure everything is defined
-    if (!openOverlay) {
-      console.error('openOverlay function is NOT DEFINED');
-      return;
-    }
-
-    if (!student._id) {
-      console.error('Student ID is UNDEFINED');
-      return;
-    }
-
-    // Call openOverlay with extensive logging
-    try {
-      openOverlay(type, student._id);
-    } catch (error) {
-      console.error('Error in openOverlay:', error);
-    }
+  // Function to handle showing the PDF preview
+  const handlePreviewClick = () => {
+    handleShowPreview(student._id);  // Trigger the function passed from FacDrop
   };
 
   // Action buttons render helper
@@ -65,23 +50,22 @@ export default function DropStudents({ student, openOverlay, branch, termId }) {
       .map((button) => (
         <button
           key={button.type}
-          // Change to use the wrapper function
-          onClick={() => handleButtonClick(button.type)}
+          onClick={() => openOverlay(button.type, student._id)}  // Open overlay for view/approve/reject
           className={`action-button ${button.type}`}
-          style={{ 
-            cursor: 'pointer', 
-            background: 'none', 
-            border: '1px solid #ccc', 
-            padding: '5px' 
+          style={{
+            cursor: 'pointer',
+            background: 'none',
+            border: '1px solid #ccc',
+            padding: '5px',
           }}
         >
-          <img 
-            src={button.icon} 
-            alt={button.alt} 
-            style={{ 
-              width: '24px', 
-              height: '24px' 
-            }} 
+          <img
+            src={button.icon}
+            alt={button.alt}
+            style={{
+              width: '24px',
+              height: '24px',
+            }}
           />
         </button>
       ));
@@ -94,8 +78,33 @@ export default function DropStudents({ student, openOverlay, branch, termId }) {
       <td>{student.email}</td>
       <td>{student.honours || "N/A"}</td>
       <td>{student.finalCourse}</td>
+      <td>{student.dropApplication}</td>
       <td>{student.dropApproval || "Pending"}</td>
-      <td className="actions-cell">{renderActionButtons()}</td>
+      <td className="actions-cell">
+        {renderActionButtons()}
+        <button
+          onClick={handlePreviewClick}  // Use the function to show the PDF preview
+          className="action-button preview-button"
+          style={{
+            cursor: 'pointer',
+            background: 'none',
+            border: '1px solid #ccc',
+            padding: '5px',
+            marginTop: '5px',
+          }}
+        >
+          Preview Drop Application
+        </button>
+      </td>
+
+      {/* PDF Preview Overlay */}
+      {overlayState.isVisible && (
+        <PdfPreviewOverlay
+          show={overlayState.isVisible}
+          handleClose={() => setOverlayState({ isVisible: false, pdfUrl: null })}
+          pdfUrl={overlayState.pdfUrl}
+        />
+      )}
     </tr>
   );
 }

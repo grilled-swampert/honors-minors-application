@@ -108,3 +108,16 @@
     display: flex;
     flex-direction: column;
   }
+
+  @media (max-width: 768px) {
+    .courseHeader, .courseRow {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .somaiyaCourseName, .facultyName, .syllabus, .offeringDept, .courseCode, .select {
+      width: 100%;
+      text-align: left;
+      margin-bottom: 5px;
+    }
+  }

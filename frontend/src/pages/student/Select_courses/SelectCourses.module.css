@@ -186,3 +186,15 @@ button {
   justify-content: flex-end;
   margin-top: 20px;
 }
+
+@media (max-width: 768px) {
+  .heroSection {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .coursesSelectorList, .coursesAdded {
+    width: 100%;
+    margin: 0;
+  }
+}

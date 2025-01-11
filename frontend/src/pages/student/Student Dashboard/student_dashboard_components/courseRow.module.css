@@ -1,9 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
 .coursesRow {
-  margin: 30px;
+  margin: 20px;
   background-color: #fef6e4;
-  border-radius: 20px;
+  border-radius: 15px;
+  padding: 20px;
   box-shadow: 1px 1px 5px 1px #888888;
 }
 
@@ -144,4 +145,18 @@
   background-color: #cccccc;
   color: #666666;
   border-color: #999999;
+}
+
+@media (max-width: 768px) {
+  .coursesRow {
+    margin: 10px;
+  }
+
+  .rowHeading {
+    align-items: center;
+  }
+
+  .completeApplicationBtn, .dropApplicationBtn {
+    font-size: 1rem;
+  }
 }

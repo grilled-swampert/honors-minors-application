@@ -1,10 +1,11 @@
 .mainBody {
-    margin: 30px;
-    padding: 20px;
+    margin: 15px;
+    padding: 15px;
     background-color: #f3d2c1;
     box-shadow: 1px 1px 5px 1px #888888;
     border-radius: 20px;
     color: #172c66;
+    font-size: 1rem;
   }
 
   .overlay {
@@ -124,4 +125,15 @@
   
   .closeOverlay:hover {
     background-color: #001858;
+  }
+
+  @media (max-width: 768px) {
+    .mainBody {
+      margin: 10px;
+      padding: 10px;
+    }
+  
+    .submitBtn, .cancelBtn {
+      font-size: 0.9rem;
+    }
   }

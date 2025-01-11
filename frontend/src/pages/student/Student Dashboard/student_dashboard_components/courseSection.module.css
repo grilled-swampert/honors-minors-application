@@ -1,8 +1,9 @@
 .coursesSection {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
     flex-wrap: wrap;
+    gap: 10px;
   }
 
   .courseTab {
@@ -112,4 +113,12 @@
     flex: 1;
     background-color: #001858;
     color: white;
+  }
+
+  @media (max-width: 768px) {
+    .courseTab {
+      padding: 15px;
+      font-size: 0.9rem;
+      width: 100%;
+    }
   }

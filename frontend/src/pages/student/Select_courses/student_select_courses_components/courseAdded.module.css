@@ -91,3 +91,15 @@
   margin: 10px;
   color: #001858;
   }
+
+  @media (max-width: 768px) {
+    .coursesAddedRow {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .submitBtn {
+      width: 80%;
+      margin: 10px auto;
+    }
+  }
