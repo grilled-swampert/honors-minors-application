@@ -1,7 +1,15 @@
-.fac-view-main{
-  margin-top: 1%;
+.fac-view-main {
+  margin: 1%;
 }
-.App{
+
+.App {
   display: flex;
   margin-top: 1%;
+  flex-direction: column; /* Ensure layout stacks vertically on small screens */
+}
+
+@media (max-width: 768px) {
+  .App {
+    padding: 10px;
+  }
 }

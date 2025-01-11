@@ -99,3 +99,14 @@
   transition-duration: 0.5s;
   transform: rotate(160deg);
 }
+
+@media (max-width: 768px) {
+  .student-info-grid-container {
+    grid-template-columns: 1fr;
+  }
+
+  .view-Btn, .deleteBtn {
+    width: 40px;
+    height: 40px;
+  }
+}

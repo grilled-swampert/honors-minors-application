@@ -221,34 +221,6 @@
   background-color: black;
   width: 50%;
 }
-@media (max-width: 1200px) {
-  .hero-section {
-    flex-direction: column;
-  }
-
-  .sem-info,
-  .view-dashboard {
-    width: 100%;
-    margin-bottom: 20px;
-  }
-}
-
-@media (max-width: 600px) {
-  .navbar {
-    flex-direction: column;
-    height: auto;
-    padding: 20px 0;
-  }
-
-  .somaiya-logo-main {
-    margin-left: 0;
-    margin-bottom: 20px;
-  }
-
-  .logoutBtn {
-    margin-right: 0;
-  }
-}
 
 .overlay {
   display: none;
@@ -272,4 +244,20 @@
 
 .closeBtn {
   margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .view-top {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .view-dashboard {
+    padding: 5px;
+  }
+
+  .viewdownloadBtn {
+    font-size: 14px;
+    padding: 10px;
+  }
 }

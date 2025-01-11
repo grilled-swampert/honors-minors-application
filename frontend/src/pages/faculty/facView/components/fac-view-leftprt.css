@@ -1,6 +1,6 @@
 .side-tab {
   padding: 10px;
-  border-radius: 0 20px 20px 0;
+  border-radius: 20px 20px 20px 20px;
   margin: 10px 50px 10px 0;
   box-shadow: 1px 1px 5px 0 #888888;
   cursor: pointer;
@@ -51,4 +51,19 @@
   
   #not-submitted{
     background-color: #ffe9b1;
+  }
+
+  @media (max-width: 768px) {
+    .side-tab {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .side-tab h2 {
+      font-size: 14px;
+    }
+  
+    .side-tab .number {
+      font-size: 12px;
+    }
   }
