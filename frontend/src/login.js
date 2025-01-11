@@ -115,9 +115,9 @@ const Login = () => {
   return (
     <div className="login-main">
       <header>
-        <div className="navbar">
+        <div className="login-navbar">
           <img className="logo" src={kjscelogo} alt="KJSCE Logo" />
-          <img src={trustImg} alt="Trust Logo"  className='trust'/>
+          <img src={trustImg} alt="Trust Logo" className='trust'/>
         </div>
       </header>
 
@@ -139,6 +139,7 @@ const Login = () => {
                 required
                 autoComplete="new-email"
                 id='username'
+                className='username-input'
               />
               <p>Password</p>
               <input
@@ -149,6 +150,7 @@ const Login = () => {
                 required
                 autoComplete="new-password"
                 id='password'
+                className='password-input'
               />
               <div className="forget">
                 <u>Forget Password?</u>
@@ -187,6 +189,7 @@ async function addUserToDatabase(email, password, role, branch = null, studentId
     console.error('Error adding user: ', error);
   }
 }
+
 const PrivateRoute = ({ children, allowedRoles }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userData, setUserData] = useState(null);
