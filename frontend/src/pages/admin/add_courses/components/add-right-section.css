@@ -8,14 +8,11 @@
 }
 
 .ad-right-section {
-  background: var(--primary-bg);
   height: 100%;
   max-height: 80vh;
   width: 90%;
   border-radius: 15px;
   overflow-y: auto;
-  border: 1px solid var(--border-color);
-  font-family: "Fira Sans", sans-serif;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   border: 1px solid black;
   margin: 10px 50px;
@@ -23,16 +20,18 @@
 }
 
 #ad-table {
-  width: 100%;
+  width: 95%;
+  margin-left: 2rem;
+  align-items: center;
   border-collapse: separate;
   border-spacing: 0;
   table-layout: fixed;
+  font-family: "Poppins", sans-serif;
 }
 
 #ad-table th,
 #ad-table td {
-  width: 100%; /* Equal width for all columns */
-  padding: 12px 10px;
+  width: 100%;
   text-align: center;
   vertical-align: middle;
 }
@@ -40,8 +39,9 @@
 #ad-table th {
   position: sticky;
   top: 0;
-  font-size: 0.9rem;
+  font-size: 1rem;
   text-transform: uppercase;
+  padding: 0px 0px;
   letter-spacing: 0.5px;
   background-color: var(--table-header-bg);
   color: white;
@@ -49,16 +49,12 @@
 
 #ad-table td {
   font-size: 0.9rem;
-  border-bottom: 1px solid var(--border-color);
 }
-
 
 .ad-tick-cross {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 8px;
-  height: 100%;
 }
 
 .ad-tick-cross button {
@@ -100,8 +96,6 @@
 }
 
 @media (max-width: 480px) {
-  /* ... (other styles remain unchanged) ... */
-
   .ad-tick-cross button {
     height: 25px;
     width: 25px;

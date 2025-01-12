@@ -1,14 +1,17 @@
-.admin-add-content{
+.topside-table {
   display: flex;
-  justify-content: center;
-  
+  flex-direction: row;
+  justify-content: flex-start;
+  margin-left: 5%;
+  margin-right: 5%;
+  gap: 3rem;
 }
 
 .add-right-container{
   display: flex;
   flex-direction: column;
-  width: 90%;
   table-layout: fixed;
+  margin-left: 2rem;
 }
  
  

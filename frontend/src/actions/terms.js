@@ -153,7 +153,9 @@ export const submitCourses = (studentId, courses) => async (dispatch) => {
 
 export const setMaxCount = (termId, courseId, maxCount) => async (dispatch) => {
   try {
+    console.log("Attempting to set max count for course ID:", courseId);
     const { data } = await api.setMaxCount(termId, courseId, maxCount);
+    console.log("API response:", data);
     dispatch({ type: "SET_MAX_COUNT_SUCCESS", payload: data });
   } catch (error) {
     dispatch({ type: "SET_MAX_COUNT_FAILURE", payload: error.message });

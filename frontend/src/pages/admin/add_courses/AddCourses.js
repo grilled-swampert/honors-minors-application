@@ -33,36 +33,35 @@ const AddCoursesPage = () => {
   return (
     <div className="main">
       <Header />
-      <div className="admin-add-content">
+      <div className="topside-table">
         <AdminSideBar />
-        <div className="add-right-container">
-          <TemplatePage />
-          <AddLeftSection rows={terms} setTerms={setTerms} />
-          <div className="ad-right-section">
-            <table id="ad-table">
-              <thead>
+        <TemplatePage />
+      </div>
+      <div className="add-right-container">
+        {/* <AddLeftSection rows={terms} setTerms={setTerms} /> */}
+          <table id="ad-table">
+            <thead>
+              <tr>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Syllabus</th>
+                <th>Edit</th>
+              </tr>
+            </thead>
+            <tbody>
+              {termNeeded && hasValidDates ? (
+                <AddRightSection
+                  key={termNeeded._id}
+                  term={termNeeded}
+                  setTerms={setTerms}
+                />
+              ) : (
                 <tr>
-                  <th>Start Date</th>
-                  <th>End Date</th>
-                  <th>Edit</th>
+                  <td colSpan="4">No courses added yet.</td>
                 </tr>
-              </thead>
-              <tbody id="table-body">
-                {termNeeded && hasValidDates ? (
-                  <AddRightSection
-                    key={termNeeded._id}
-                    term={termNeeded}
-                    setTerms={setTerms}
-                  />
-                ) : (
-                  <tr>
-                    <td colSpan="4">No courses added yet.</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
+              )}
+            </tbody>
+          </table>
       </div>
     </div>
   );

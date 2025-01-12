@@ -10,25 +10,17 @@
   --success-color: #51cf66;
 }
 
-body {
-  font-family: 'Poppins', sans-serif;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 .left-section {
-  background: linear-gradient(135deg, #f6d5c1 0%, var(--secondary-color) 100%);
   min-height: 25vh;
   width: 90%;
-  margin: 10px 50px;
+  margin-top: 3rem;
+  margin-left: 1rem;
   border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  border: 1px solid black;
   padding: 20px;
+  font-family: 'Poppins', sans-serif;
 }
 
 .date-selection {
@@ -51,12 +43,12 @@ body {
 
 .startDate, .endDate {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   width: 100%;
   gap: 10px;
 }
 
-.start-date, .end-date {
+.start-date, .end-date, .syllabus-label {
   font-size: 1.1rem;
   font-weight: 500;
   color: var(--text-color);
@@ -65,6 +57,7 @@ body {
 
 .date {
   height: 45px;
+  width: 40%;
   font-size: 1rem;
   padding: 0 15px;
   border: 2px solid var(--border-color);
@@ -81,74 +74,44 @@ body {
 }
 
 .add-upload-sec {
-  display: flex;
   align-items: center;
   justify-content: center;
   gap: 20px;
   width: 100%;
 }
 
-#upload-btn, #add-btn {
+#add-btn {
   position: relative;
   height: 45px;
-  width: 100%;
-  max-width: 500px;
+  width: 95%;
   border-radius: 10px;
-  overflow: hidden;
   cursor: pointer;
   transition: all 0.3s ease;
+  font-family: "Poppins", sans-serif;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 500;
-  color: #fff;
+  color: #000000;
 }
 
-#upload-btn {
-  background-color: var(--primary-color);
-}
 
 #add-btn {
-  background-color: var(--button-hover-color);
+  background-color: var(--primary-color);
   border: none;
 }
 
-#upload-btn:hover, #add-btn:hover {
+#add-btn:hover {
   background-color: var(--button-hover-color);
-  transform: translateY(-2px);
+  color: white;
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
-#upload-btn:active, #add-btn:active {
+#add-btn:active {
   transform: translateY(1px);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-#upload-btn input[type="file"] {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  cursor: pointer;
-  z-index: 2;
-}
-
-#upload-btn::after {
-  content: 'Upload Syllabus File';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-  z-index: 1;
 }
 
 .error, .success {
@@ -224,4 +187,68 @@ body {
   color: white;
   line-height: 20px;
   border-radius: 5px;
+}
+
+#upload-btn {
+  display: flex;
+  flex-direction: column;
+  font-family: 'Poppins', sans-serif;
+  gap: 1rem;
+  width: 100%;
+}
+
+.upload-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: #65b7ad;
+  font-size: large;
+  font-weight: 500;
+  color: rgb(0, 0, 0);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.upload-label:hover {
+  background-color: #25d366;
+}
+
+.upload-label:active {
+  transform: scale(0.98);
+}
+
+.upload-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.upload-file-data {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+
+#file-upload {
+  display: none;
+}
+
+#file-info {
+  margin-top: 10px;
+  width: 40%;
+  font-size: 0.8rem;
+  color: #333;
+}
+
+#file-name {
+  font-weight: bold;
+}
+
+#file-size {
+  display: block;
+  margin-top: 4px;
+  color: #666;
 }

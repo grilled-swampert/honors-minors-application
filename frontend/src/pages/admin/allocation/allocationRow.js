@@ -39,7 +39,7 @@ const AllocationRow = ({
     }
   };
 
-  const isDisabled = status === "inactive";
+  const isDisabled = status === "inactive" || course.permanent;
 
   return (
     <tr className={isDisabled ? "row-disabled" : ""}>
@@ -62,7 +62,7 @@ const AllocationRow = ({
       <td>
         <input
           type="checkbox"
-          checked={temporaryStatus === "inactive" || status === "inactive"}
+          checked={course.permanent || temporaryStatus === "inactive" || status === "inactive"}
           onChange={(e) => handleStatusChange(course._id, e.target.checked)}
           disabled={isDisabled}
         />
@@ -70,7 +70,7 @@ const AllocationRow = ({
       <td>{course.finalCount}</td>
       <td>
         <button onClick={() => downloadRowData(course._id)} disabled={isDisabled} className="downBtn">
-          <img src={downloadIcon} alt="Download" className="downImg"/>
+          <img src={downloadIcon} alt="Download" className="downImg" />
         </button>
       </td>
     </tr>

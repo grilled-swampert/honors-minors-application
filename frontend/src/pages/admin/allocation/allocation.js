@@ -8,6 +8,7 @@ import Header from "../../header/header";
 import AdminSideBar from "../admin-sidebar/adminSidebar";
 import { useParams } from "react-router-dom";
 import downloadIcon from "../../photos-logos/download.png";
+import { setMaxCount } from "../../../actions/terms";
 
 const Allocation = () => {
   const { termId } = useParams();
@@ -16,7 +17,8 @@ const Allocation = () => {
   const [updatedCourses, setUpdatedCourses] = useState({});
   const [localCourses, setLocalCourses] = useState([]);
 
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:9000";
+  const API_BASE_URL =
+    process.env.REACT_APP_API_BASE_URL || "http://localhost:9000";
 
   // Fetch the courses when the component is mounted or termId changes
   useEffect(() => {
@@ -52,29 +54,26 @@ const Allocation = () => {
   // Apply changes for all updated courses
   const applyChanges = async () => {
     try {
-      const promises = Object.entries(updatedCourses).map(
-        ([courseId, data]) => {
-          // Send only the changed fields (e.g., maxCount or notRun status)
-          if (data.maxCount !== undefined) {
-            return axios.put(`${API_BASE_URL}/admin/${termId}/edit/allocation`, {
-              courseId,
-              maxCount: data.maxCount,
-            });
-          }
-          return Promise.resolve();
+      console.log("Updated Courses:", updatedCourses);
+      const promises = Object.entries(updatedCourses).map(([courseId, data]) => {
+        console.log("Dispatching action for Course ID:", courseId, "Payload:", data);
+        if (data.maxCount !== undefined) {
+          return dispatch(setMaxCount(termId, courseId, data.maxCount));
         }
-      );
-
+        return Promise.resolve();
+      });
+  
       await Promise.all(promises);
       console.log("All changes applied successfully");
       // Refresh the courses after applying changes
       dispatch(getCourses(termId));
-      setUpdatedCourses({}); // Reset the changes after applying
-      window.location.reload(); // Force window reload
+      setUpdatedCourses({});
+      window.location.reload(); // Optional: refresh to reflect updates
     } catch (error) {
       console.error("Error applying changes:", error);
     }
   };
+  
 
   const submitDeactivations = async () => {
     try {
@@ -84,6 +83,7 @@ const Allocation = () => {
           axios.put(`${API_BASE_URL}/admin/${termId}/edit/allocation`, {
             courseId: course._id,
             status: "inactive",
+            permanent: true,
           })
         );
 
@@ -101,9 +101,12 @@ const Allocation = () => {
   const downloadRowData = async (courseId) => {
     try {
       console.log("Downloading data for course:", courseId);
-      const response = await axios.get(`${API_BASE_URL}/admin/${termId}/courses/${courseId}/students`, {
-        responseType: "blob",
-      });
+      const response = await axios.get(
+        `${API_BASE_URL}/admin/${termId}/courses/${courseId}/students`,
+        {
+          responseType: "blob",
+        }
+      );
       const blob = new Blob([response.data], { type: "text/csv" });
       const link = document.createElement("a");
       link.href = window.URL.createObjectURL(blob);
@@ -119,9 +122,12 @@ const Allocation = () => {
   // Download all courses' allocation information
   const downloadAllData = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/admin/${termId}/allocation-info`, {
-        responseType: "blob",
-      });
+      const response = await axios.get(
+        `${API_BASE_URL}/admin/${termId}/allocation-info`,
+        {
+          responseType: "blob",
+        }
+      );
 
       // Create a Blob from the response data
       const blob = new Blob([response.data], { type: "text/csv" });
