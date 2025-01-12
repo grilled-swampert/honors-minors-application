@@ -13,6 +13,8 @@ const AddLeftSection = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:9000";
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -54,7 +56,7 @@ const AddLeftSection = () => {
         setSuccess(null);
       };
 
-      xhr.open('PATCH', `/admin/${termId}/edit/addCourses`);
+      xhr.open('PATCH', `${API_BASE_URL}/admin/${termId}/edit/addCourses`);
       xhr.send(formData);
     } catch (err) {
       setError('Failed to submit the form');

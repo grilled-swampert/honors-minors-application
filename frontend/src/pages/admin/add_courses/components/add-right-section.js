@@ -12,6 +12,8 @@ const AddRightSection = ({ term, setTerms }) => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:9000";
+
   useEffect(() => {
     if (term) {
       // Convert term.startDate and term.endDate to local time for input fields
@@ -41,7 +43,7 @@ const AddRightSection = ({ term, setTerms }) => {
     }
   
     try {
-      const response = await fetch(`/admin/${term._id}/edit/addCourses`, {
+      const response = await fetch(`${API_BASE_URL}/admin/${term._id}/edit/addCourses`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

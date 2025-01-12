@@ -4,10 +4,11 @@ import { Link } from "react-router-dom";
 import editicon from "../../../photos-logos/edit.png";
 
 const AlpRightSection = ({ term }) => {
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:9000";
   const handleDelete = async () => {
     if (window.confirm("Are you sure you want to delete this term?")) {
       try {
-        const response = await fetch(`/admin/${term._id}`, {
+        const response = await fetch(`${API_BASE_URL}/admin/${term._id}`, {
           method: "DELETE",
         });
 

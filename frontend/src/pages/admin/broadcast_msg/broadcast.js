@@ -11,6 +11,7 @@ const Broadcast = () => {
   const [newMessage, setNewMessage] = useState('');
 
   const { termId } = useParams();
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:9000';
 
   useEffect(() => {
     fetchMessages();
@@ -19,7 +20,7 @@ const Broadcast = () => {
   const fetchMessages = async () => {
     try {
       console.log('Fetching messages...');
-      const response = await axios.get(`/admin/${termId}/edit/broadcast`);
+      const response = await axios.get(`${API_BASE_URL}/admin/${termId}/edit/broadcast`);
       console.log('Response:', response);
       console.log('Fetched messages:', response.data);
       setMessages(response.data);
@@ -31,7 +32,7 @@ const Broadcast = () => {
   const handleAddMessage = async () => {
     if (newMessage.trim()) {
       try {
-        const response = await axios.post(`/admin/${termId}/edit/broadcast`, { text: newMessage });
+        const response = await axios.post(`${API_BASE_URL}/admin/${termId}/edit/broadcast`, { text: newMessage });
         console.log('Message added:', response.data);
         setNewMessage('');
         fetchMessages();
@@ -43,7 +44,7 @@ const Broadcast = () => {
 
   const handleDeleteMessage = async (id) => {
     try {
-      await axios.delete(`/admin/${termId}/edit/broadcast/${id}`);
+      await axios.delete(`${API_BASE_URL}/admin/${termId}/edit/broadcast/${id}`);
       console.log('Message deleted:', id);
       fetchMessages();
     } catch (error) {
@@ -53,7 +54,7 @@ const Broadcast = () => {
 
   const handleToggleMessage = async (id) => {
     try {
-      const response = await axios.patch(`/admin/${termId}/edit/broadcast`, { id });
+      const response = await axios.patch(`${API_BASE_URL}/admin/${termId}/edit/broadcast`, { id });
       console.log('Message toggled:', response.data);
       fetchMessages(); // Refetch messages after toggling
     } catch (error) {

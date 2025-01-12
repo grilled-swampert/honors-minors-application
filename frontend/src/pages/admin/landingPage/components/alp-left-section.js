@@ -9,8 +9,9 @@ const AlpLeftSection = () => {
     e.preventDefault();
 
     const term = { termYear };
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:9000";
 
-    const response = await fetch("/admin", {
+    const response = await fetch(`${API_BASE_URL}/admin`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

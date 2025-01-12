@@ -14,6 +14,8 @@ const AllocationRow = ({
   const [temporaryStatus, setTemporaryStatus] = useState(course.temporaryStatus);
   const { status } = useState(course.status);
 
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:9000";
+
   // Function to handle both temporary and permanent deactivation
   const handleStatusChange = async (courseId, isChecked) => {
     const newStatus = isChecked ? "inactive" : "active";
@@ -22,7 +24,7 @@ const AllocationRow = ({
     console.log(`Status: ${newStatus}`);
 
     try {
-      const response = await axios.put(`/admin/${termId}/edit/allocation`, {
+      const response = await axios.put(`${API_BASE_URL}/admin/${termId}/edit/allocation`, {
         courseId,
         temporaryStatus: newStatus,
         status: newStatus, // Update both temporary and permanent statuses

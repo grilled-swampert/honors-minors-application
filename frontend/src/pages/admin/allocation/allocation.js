@@ -16,6 +16,8 @@ const Allocation = () => {
   const [updatedCourses, setUpdatedCourses] = useState({});
   const [localCourses, setLocalCourses] = useState([]);
 
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:9000";
+
   // Fetch the courses when the component is mounted or termId changes
   useEffect(() => {
     dispatch(getCourses(termId));
@@ -54,7 +56,7 @@ const Allocation = () => {
         ([courseId, data]) => {
           // Send only the changed fields (e.g., maxCount or notRun status)
           if (data.maxCount !== undefined) {
-            return axios.put(`/admin/${termId}/edit/allocation`, {
+            return axios.put(`${API_BASE_URL}/admin/${termId}/edit/allocation`, {
               courseId,
               maxCount: data.maxCount,
             });
@@ -79,7 +81,7 @@ const Allocation = () => {
       const deactivationPromises = localCourses
         .filter((course) => course.isSelectedForDeactivation)
         .map((course) =>
-          axios.put(`/admin/${termId}/edit/allocation`, {
+          axios.put(`${API_BASE_URL}/admin/${termId}/edit/allocation`, {
             courseId: course._id,
             status: "inactive",
           })
@@ -99,7 +101,7 @@ const Allocation = () => {
   const downloadRowData = async (courseId) => {
     try {
       console.log("Downloading data for course:", courseId);
-      const response = await axios.get(`/admin/${termId}/courses/${courseId}/students`, {
+      const response = await axios.get(`${API_BASE_URL}/admin/${termId}/courses/${courseId}/students`, {
         responseType: "blob",
       });
       const blob = new Blob([response.data], { type: "text/csv" });
@@ -117,7 +119,7 @@ const Allocation = () => {
   // Download all courses' allocation information
   const downloadAllData = async () => {
     try {
-      const response = await axios.get(`/admin/${termId}/allocation-info`, {
+      const response = await axios.get(`${API_BASE_URL}/admin/${termId}/allocation-info`, {
         responseType: "blob",
       });
 
