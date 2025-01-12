@@ -7,6 +7,7 @@ import CourseAdded from "./student_select_courses_components/courseAdded";
 import CourseAddedHeading from "./student_select_courses_components/courseAddedHeading";
 
 function SelectCourses() {
+  const [searchText, setSearchText] = useState("");
   const [selectedCourses, setSelectedCourses] = useState([]);
 
   const handleCourseSelection = (event, course) => {
@@ -52,10 +53,14 @@ function SelectCourses() {
       <Header />
       <div className={styles.heroSection}>
         <div className={styles.coursesSelectorList}>
-          <SelectCourseHeader />
+          <SelectCourseHeader 
+            searchText={searchText}  
+            setSearchText={setSearchText}
+          />
           <CourseList
             selectedCourses={selectedCourses}
             handleCourseSelection={handleCourseSelection}
+            searchText={searchText} 
           />
         </div>
         <div className={styles.coursesAdded}>
@@ -68,7 +73,7 @@ function SelectCourses() {
         </div>
       </div>
     </div>
-  );
+  );  
 }
 
 export default SelectCourses;

@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCourses } from "../../../../api/index";
 
-export default function CourseList({ selectedCourses, handleCourseSelection }) {
+export default function CourseList({ searchText, selectedCourses, handleCourseSelection }) {
   const { studentId } = useParams();
   const dispatch = useDispatch();
   const { filteredCourses, loading, error } = useSelector(
@@ -25,9 +25,13 @@ export default function CourseList({ selectedCourses, handleCourseSelection }) {
     }
   }, [filteredCourses]);
 
+  const filteredList = allCourses.filter((course) =>
+    course.programName.toLowerCase().includes(searchText.toLowerCase())
+  );
+
   if (loading) return <p>Loading courses...</p>;
   if (error) return <p>Error loading courses: {error}</p>;
-  if (!allCourses || allCourses.length === 0) return <p>No courses found</p>;
+  if (!filteredList || filteredList.length === 0) return <p>No courses found</p>;
 
   return (
     <div className={styles.courseList}>
@@ -39,7 +43,7 @@ export default function CourseList({ selectedCourses, handleCourseSelection }) {
         <div className={styles.select}>Select</div>
       </div>
       <div className={styles.courseRowsContainer}>
-        {allCourses.map((course) => (
+        {filteredList.map((course) => (
           <CoursesBack
             course={course}
             key={course._id || course.id}
