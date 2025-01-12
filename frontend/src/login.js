@@ -6,6 +6,7 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
   createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
   signOut,
 } from "firebase/auth";
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
@@ -34,6 +35,7 @@ const Login = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const [resetEmailSent, setResetEmailSent] = useState(false);
   const navigate = useNavigate();
 
   const redirectUser = useCallback(
@@ -116,6 +118,22 @@ const Login = () => {
     }
   };
 
+  const handlePasswordReset = async () => {
+    if (!email) {
+      setError("Please enter your email to reset the password.");
+      return;
+    }
+
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setResetEmailSent(true);
+      setError(null);
+    } catch (error) {
+      console.error("Password reset error:", error);
+      setError("Error sending password reset email. Please try again.");
+    }
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -165,13 +183,22 @@ const Login = () => {
                 id="password"
                 className="password-input"
               />
-              <div className="forget">
-                <u>Forget Password?</u>
+              <div
+                className="forget"
+                onClick={handlePasswordReset}
+                style={{ cursor: "pointer" }}
+              >
+                <u>Forgot Password?</u>
               </div>
               <button type="submit" disabled={loading} id="login-button-text">
                 {loading ? "Logging in..." : "Login"}
               </button>
             </form>
+          )}
+          {resetEmailSent && (
+            <p style={{ color: "green" }}>
+              Password reset email sent. Please check your inbox.
+            </p>
           )}
           {error && <p style={{ color: "red" }}>{error}</p>}
         </div>
