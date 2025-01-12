@@ -4,12 +4,12 @@ import "./facDrop.css";
 export default function DropStudents({ student, handleApprove, handleReject, handleShowPreview }) {
   return (
     <tr>
-      <td>{student.rollNumber}</td>
-      <td>{student.name}</td>
-      <td>{student.email}</td>
-      <td>{student.honours || "N/A"}</td>
-      <td>{student.finalCourse}</td>
-      <td>
+      <td data-label="Roll No">{student.rollNumber}</td>
+      <td data-label="Name">{student.name}</td>
+      <td data-label="Email">{student.email}</td>
+      <td data-label="Honours/Minors">{student.honours || "N/A"}</td>
+      <td data-label="Program">{student.finalCourse}</td>
+      <td data-label="Drop Application">
         {student.dropFile ? (
           <button
             className="action-button preview-button"
@@ -21,8 +21,8 @@ export default function DropStudents({ student, handleApprove, handleReject, han
           "No File"
         )}
       </td>
-      <td>{student.dropApproval || "Pending"}</td>
-      <td className="actions-cell">
+      <td data-label="Drop Approval">{student.dropApproval || "Pending"}</td>
+      <td data-label="Actions" className="actions-cell">
         <button
           className="action-button approve-button"
           onClick={() => handleApprove(student._id)}

@@ -93,7 +93,7 @@ function FacDrop() {
               <th>EMAIL</th>
               <th>HONOURS/MINORS</th>
               <th>PROGRAM</th>
-              <th>DROP APPLICATION</th>
+              <th>VIEW APPLICATION</th>
               <th>DROP APPROVAL</th>
               <th>ACTIONS</th>
             </tr>

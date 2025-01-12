@@ -1,31 +1,93 @@
+/* General Page Styling */
 .drop-main {
   margin: 2%;
 }
 
 .drop-content {
   margin: 3%;
+  overflow-x: auto; /* For horizontal scrolling on small screens */
 }
 
+/* Table Styling */
 .drop-table {
-  width: 95%;
+  width: 100%;
   border-collapse: collapse;
+  table-layout: fixed; /* Prevents columns from expanding disproportionately */
 }
 
-.drop-table th, .drop-table td {
+.drop-table th,
+.drop-table td {
   border: 1px solid #ddd;
-  padding: 8px;
+  padding: 12px 8px;
+  text-align: left;
+  word-wrap: break-word; /* Ensures content wraps within the cell */
+  overflow: hidden; /* Ensures no overflow */
+  text-overflow: ellipsis; /* Adds ellipsis for overflow text */
 }
 
-.actions-cell {
-  display: flex;
-  justify-content: space-around;
+.drop-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+  text-align: center;
 }
 
+.drop-table td {
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.drop-table th:nth-child(6),
+.drop-table td:nth-child(6) {
+  text-align: center;
+}
+
+/* Responsive Table */
+@media (max-width: 768px) {
+  .drop-table thead {
+    display: none;
+  }
+
+  .drop-table,
+  .drop-table tbody,
+  .drop-table tr,
+  .drop-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .drop-table tr {
+    margin-bottom: 10px;
+  }
+
+  .drop-table td {
+    text-align: right;
+    padding-left: 50%;
+    position: relative;
+  }
+
+  .drop-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 10px;
+    text-align: left;
+    font-weight: bold;
+  }
+
+  .actions-cell {
+    justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
+/* Button Styles */
 .action-button {
-  padding: 5px 10px;
+  padding: 6px 12px;
   cursor: pointer;
   border: none;
   border-radius: 4px;
+  font-size: 12px;
+  margin: 2px;
 }
 
 .approve-button {
@@ -43,6 +105,11 @@
   color: white;
 }
 
+.action-button:hover {
+  opacity: 0.8;
+}
+
+/* Overlay Styling */
 .overlay {
   position: fixed;
   top: 0;
@@ -59,7 +126,8 @@
   background: white;
   padding: 20px;
   border-radius: 10px;
-  max-width: 80%;
+  max-width: 90%;
+  width: 600px;
 }
 
 .close-button {
@@ -68,4 +136,12 @@
   border: none;
   border-radius: 50%;
   cursor: pointer;
+  font-size: 16px;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}
+
+.close-button:hover {
+  background: darkred;
 }
