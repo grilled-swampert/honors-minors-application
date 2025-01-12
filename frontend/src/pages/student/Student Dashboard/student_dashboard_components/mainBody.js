@@ -13,6 +13,8 @@ export default function MainBody({
   const [dropReason, setDropReason] = useState("");
   const [dropFile, setDropFile] = useState(null);
 
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:9000";
+
   const handleDropApplication = async (e) => {
     e.preventDefault();
 
@@ -21,7 +23,7 @@ export default function MainBody({
     formData.append("dropFile", dropFile);
 
     try {
-      const response = await fetch(`/student/${studentId}/dashboard`, {
+      const response = await fetch(`${API_BASE_URL}/student/${studentId}/dashboard`, {
         method: "PUT",
         body: formData,
       });

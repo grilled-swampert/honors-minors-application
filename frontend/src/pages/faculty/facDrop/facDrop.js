@@ -14,12 +14,13 @@ function FacDrop() {
     pdfUrl: null,
   });
   const { branch, termId } = useParams();
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:9000";
 
   useEffect(() => {
     const fetchDropStudents = async () => {
       try {
         console.log("Fetching drop students for:", { branch, termId });
-        const response = await axios.get(`/faculty/${branch}/${termId}/edit/facDrop`);
+        const response = await axios.get(`${API_BASE_URL}/faculty/${branch}/${termId}/edit/facDrop`);
         setDropStudents(response.data);
       } catch (error) {
         console.error("Error fetching drop students:", error.response?.data || error.message);
@@ -30,7 +31,7 @@ function FacDrop() {
 
   const handleApprove = async (studentId) => {
     try {
-      await axios.put(`/faculty/${branch}/${termId}/edit/facDrop/approve`, {
+      await axios.put(`${API_BASE_URL}/faculty/${branch}/${termId}/edit/facDrop/approve`, {
         studentId,
       });
       setDropStudents((prev) =>
@@ -64,7 +65,7 @@ function FacDrop() {
 
   const handleShowPreview = (studentId) => {
     axios
-      .get(`/api/faculty/getDropApplicationPdf/${studentId}`, { responseType: "blob" })
+      .get(`${API_BASE_URL}/faculty/${branch}/${termId}/edit/facDrop`, { responseType: "blob" })
       .then((response) => {
         const pdfUrl = URL.createObjectURL(response.data);
         setOverlayState({

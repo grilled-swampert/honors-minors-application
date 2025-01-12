@@ -4,12 +4,13 @@ import styles from './scrollText.module.css';
 
 export default function ScrollText() {
     const [messages, setMessages] = useState([]);
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:9000';
 
     useEffect(() => {
         const fetchMessages = async () => {
             try {
               console.log('Fetching broadcast messages...');
-              const response = await axios.get('/student/broadcast-messages');
+              const response = await axios.get(`${API_BASE_URL}/student/broadcast-messages`);
               console.log('Fetched messages:', response.data);
               setMessages(response.data); 
             } catch (error) {

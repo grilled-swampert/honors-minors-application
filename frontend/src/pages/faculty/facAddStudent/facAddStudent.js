@@ -16,6 +16,8 @@ function FacAddStudent() {
   const [uploadStatus, setUploadStatus] = useState('');
   const [emailStatus, setEmailStatus] = useState('');
 
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:9000';
+
   const dispatch = useDispatch();
   const terms = useSelector((state) => state.terms);
 
@@ -40,7 +42,7 @@ function FacAddStudent() {
 
     try {
       setUploadStatus('Uploading and processing file...');
-      const response = await axios.post(`/faculty/${branch}/${termId}/addStudents`, formData, {
+      const response = await axios.post(`${API_BASE_URL}/faculty/${branch}/${termId}/addStudents`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { getStudents, deleteStudents } from "../../../../actions/terms";
 import FacViewLeftprt from "./fac-view-leftprt";
 import ViewDashboard from "./fac-student-details";
+import { utils, writeFile } from "xlsx"; // Library for Excel export
 
 function FacViewRightprt() {
   const [activeTab, setActiveTab] = useState("total");
@@ -40,16 +41,16 @@ function FacViewRightprt() {
 
   const filteredStudentData = Array.isArray(termStudents)
     ? termStudents.filter((student) => {
-        const status = student.status?.toLowerCase(); // Normalize status
-        console.log("Active tab:", activeTab);
-        // eslint-disable-next-line default-case
+        const status = student.status?.toLowerCase();
         switch (activeTab) {
           case "total":
             return true;
           case "submitted":
             return status === "submitted";
           case "not-submitted":
-            return status === "not-submitted"; // Ensure this matches the exact status value
+            return status === "not-submitted";
+          default:
+            return false;
         }
       })
     : [];
@@ -59,76 +60,44 @@ function FacViewRightprt() {
     submitted: 0,
     notSubmitted: 0,
   });
-  const [dropdownVisible, setDropdownVisible] = useState({
-    downloadMenu: false,
-    download1Menu: false,
-    download2Menu: false,
-    download3Menu: false,
-  });
   const [overlayVisible, setOverlayVisible] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        !event.target.closest(".dropdown-menu") &&
-        !event.target.closest(".downloadBtn")
-      ) {
-        setDropdownVisible({
-          downloadMenu: false,
-          download1Menu: false,
-          download2Menu: false,
-          download3Menu: false,
-        });
-      }
-    };
-    window.addEventListener("click", handleClickOutside);
-
-    return () => {
-      window.removeEventListener("click", handleClickOutside);
-    };
-  }, []);
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
 
   const handleViewButtonClick = (student) => {
-    console.log('Button clicked:', student);
     setSelectedStudent(student);
     setOverlayVisible(true);
   };
 
   const handleDeleteButtonClick = (studentId) => {
-    console.log("Delete button clicked for student:", studentId);
-    console.log("Term ID:", termId);
     const confirmDelete = window.confirm("Are you sure you want to delete this student?");
     if (confirmDelete) {
-      dispatch(deleteStudents(studentId, branch, termId)); // Dispatch delete action
+      dispatch(deleteStudents(studentId, branch, termId));
     }
   };
-  
 
   const closeOverlay = () => {
     setOverlayVisible(false);
     setSelectedStudent(null);
   };
 
-  const toggleDropdown = (menu) => {
-    setDropdownVisible((prev) => ({
-      ...prev,
-      [menu]: !prev[menu],
+  const downloadExcel = (students, fileName) => {
+    const sheetData = students.map((student) => ({
+      Name: student.name,
+      RollNumber: student.rollNumber,
+      Branch: student.branch,
+      Division: student.division,
+      Email: student.email,
+      FinalCourse: student.finalCourse[0],
+      Status: student.status,
     }));
-  };
-
-  const downloadTemplate = (template) => {
-    console.log("Downloading template:", template);
-    setDropdownVisible({
-      downloadMenu: false,
-      download1Menu: false,
-      download2Menu: false,
-      download3Menu: false,
-    });
+    const worksheet = utils.json_to_sheet(sheetData);
+    const workbook = utils.book_new();
+    utils.book_append_sheet(workbook, worksheet, "Students");
+    writeFile(workbook, fileName);
   };
 
   return (
@@ -151,89 +120,35 @@ function FacViewRightprt() {
             ))}
           </div>
 
-          <div className="viewdownload">
+          <div className="download-buttons">
             <button
-              className="viewdownloadBtn"
-              onClick={() => toggleDropdown("downloadMenu")}
+              className="download-btn"
+              onClick={() => downloadExcel(termStudents, "All_Students.xlsx")}
             >
-              Download <span className="caret">▼</span>
+              Download All Students
             </button>
-            {dropdownVisible.downloadMenu && (
-              <ul id="downloadMenu" className="dropdown-menu">
-                <li className="dropdown-submenu">
-                  <a to="#" onClick={() => toggleDropdown("download1Menu")}>
-                    Download 1 <span className="caret">▶</span>
-                  </a>
-                  {dropdownVisible.download1Menu && (
-                    <ul id="download1Menu" className="dropdown-menu nested">
-                      <li>
-                        <a href="#" onClick={() => downloadTemplate("1.1")}>
-                          Download 1.1
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#" onClick={() => downloadTemplate("1.2")}>
-                          Download 1.2
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#" onClick={() => downloadTemplate("1.3")}>
-                          Download 1.3
-                        </a>
-                      </li>
-                    </ul>
-                  )}
-                </li>
-                <li className="dropdown-submenu">
-                  <a href="#" onClick={() => toggleDropdown("download2Menu")}>
-                    Download 2 <span className="caret">▶</span>
-                  </a>
-                  {dropdownVisible.download2Menu && (
-                    <ul id="download2Menu" className="dropdown-menu nested">
-                      <li>
-                        <a href="#" onClick={() => downloadTemplate("2.1")}>
-                          Download 2.1
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#" onClick={() => downloadTemplate("2.2")}>
-                          Download 2.2
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#" onClick={() => downloadTemplate("2.3")}>
-                          Download 2.3
-                        </a>
-                      </li>
-                    </ul>
-                  )}
-                </li>
-                <li className="dropdown-submenu">
-                  <a href="#" onClick={() => toggleDropdown("download3Menu")}>
-                    Download 3 <span className="caret">▶</span>
-                  </a>
-                  {dropdownVisible.download3Menu && (
-                    <ul id="download3Menu" className="dropdown-menu nested">
-                      <li>
-                        <a href="#" onClick={() => downloadTemplate("3.1")}>
-                          Download 3.1
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#" onClick={() => downloadTemplate("3.2")}>
-                          Download 3.2
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#" onClick={() => downloadTemplate("3.3")}>
-                          Download 3.3
-                        </a>
-                      </li>
-                    </ul>
-                  )}
-                </li>
-              </ul>
-            )}
+            <button
+              className="download-btn"
+              onClick={() => {
+                const submittedStudents = termStudents.filter(
+                  (student) => student.status?.toLowerCase() === "submitted"
+                );
+                downloadExcel(submittedStudents, "Submitted_Students.xlsx");
+              }}
+            >
+              Download Submitted Students
+            </button>
+            <button
+              className="download-btn"
+              onClick={() => {
+                const notSubmittedStudents = termStudents.filter(
+                  (student) => student.status?.toLowerCase() === "not-submitted"
+                );
+                downloadExcel(notSubmittedStudents, "Not_Submitted_Students.xlsx");
+              }}
+            >
+              Download Not Submitted Students
+            </button>
           </div>
         </div>
 

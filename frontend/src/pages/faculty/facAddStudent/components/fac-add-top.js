@@ -8,6 +8,8 @@ function FacAddTop() {
   const [error, setError] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
+
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:9000';
   
   // Add a ref for the file input
   const fileInputRef = useRef(null);
@@ -63,7 +65,7 @@ function FacAddTop() {
       setIsUploading(false);
     };
 
-    xhr.open('PATCH', `/faculty/${branch}/${termId}/edit/facAddStudent`, true);
+    xhr.open('PATCH', `${API_BASE_URL}/faculty/${branch}/${termId}/edit/facAddStudent`, true);
     xhr.send(formData);
     setIsUploading(true);
   };

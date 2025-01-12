@@ -41,8 +41,6 @@ exports.getTerm = asyncHandler(async (req, res) => {
   }
 });
 
-const path = require("path");
-
 exports.getDropApplicationPdf = asyncHandler(async (req, res) => {
   const { studentId } = req.params;
 
