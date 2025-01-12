@@ -1,9 +1,7 @@
 import React from "react";
 import "./alp-right-section.css";
 import { Link } from "react-router-dom";
-import viewicon from "../../../photos-logos/view.jpeg";
 import editicon from "../../../photos-logos/edit.png";
-import deleteicon from "../../../photos-logos/delete.png";
 
 const AlpRightSection = ({ term }) => {
   const handleDelete = async () => {

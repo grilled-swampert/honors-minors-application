@@ -1,12 +1,18 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
-import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
-import { Navigate, useLocation ,useParams} from 'react-router-dom';
-import kjscelogo from '../src/pages/photos-logos/KJSCE-logo.png';
-import trustImg from '../src/pages/photos-logos/Trust.svg';
-import './login.css';
+import React, { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { initializeApp } from "firebase/app";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import { Navigate, useLocation, useParams } from "react-router-dom";
+import kjscelogo from "../src/pages/photos-logos/KJSCE-logo.png";
+import trustImg from "../src/pages/photos-logos/Trust.svg";
+import "./login.css";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -15,7 +21,7 @@ const firebaseConfig = {
   storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.REACT_APP_FIREBASE_APP_ID,
-  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 
 const app = initializeApp(firebaseConfig);
@@ -23,62 +29,64 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  const redirectUser = useCallback((role, branch, studentId) => {
-    console.log('Redirecting user:', role, branch, studentId);
-    switch (role) {
-      case 'admin':
-        navigate('/admin');
-        break;
-      case 'faculty':
-        navigate(`/faculty/${branch}/dashboard`);
-        break;
-      case 'student':
-        navigate(`/student/${studentId}/dashboard`);
-        break;
-      default:
-        setError('Invalid user role');
-        setLoading(false);
-    }
-  }, [navigate]);
+  const redirectUser = useCallback(
+    (role, branch, studentId) => {
+      console.log("Redirecting user:", role, branch, studentId);
+      switch (role) {
+        case "admin":
+          navigate("/admin");
+          break;
+        case "faculty":
+          navigate(`/faculty/${branch}/dashboard`);
+          break;
+        case "student":
+          navigate(`/student/${studentId}/dashboard`);
+          break;
+        default:
+          setError("Invalid user role");
+          setLoading(false);
+      }
+    },
+    [navigate]
+  );
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-  
       if (user) {
         setUser(user);
         try {
-          const docRef = doc(db, 'users', user.uid);
+          const docRef = doc(db, "users", user.uid);
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
             const userData = docSnap.data();
-  
+
             if (userData.role) {
               redirectUser(userData.role, userData.branch, userData.studentId);
             } else {
-              setError('User role not defined');
+              setError("User role not defined");
             }
           } else {
             console.warn("[WARNING] User data not found for UID:", user.uid);
-            setError('User data not found');
+            setError("User data not found");
           }
         } catch (error) {
           console.error("[ERROR] Error fetching user data:", error);
-          setError('Error fetching user data');
+          setError("Error fetching user data");
         }
       } else {
         setUser(null);
       }
-  
+
       setLoading(false);
     });
-  
+
     return () => {
       unsubscribe();
     };
@@ -90,7 +98,7 @@ const Login = () => {
       setLoading(true);
       await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
-      console.error('Login error:', error);
+      console.error("Login error:", error);
       setError(error.message);
       setLoading(false);
     }
@@ -100,11 +108,11 @@ const Login = () => {
     try {
       await signOut(auth);
       setUser(null);
-      setEmail('');
-      setPassword('');
+      setEmail("");
+      setPassword("");
     } catch (error) {
-      console.error('Sign out error:', error);
-      setError('Error signing out');
+      console.error("Sign out error:", error);
+      setError("Error signing out");
     }
   };
 
@@ -117,19 +125,24 @@ const Login = () => {
       <header>
         <div className="login-navbar">
           <img className="logo" src={kjscelogo} alt="KJSCE Logo" />
-          <img src={trustImg} alt="Trust Logo" className='trust'/>
+          <img src={trustImg} alt="Trust Logo" className="trust" />
         </div>
       </header>
 
       <div className="login-content">
         <div className="login-box">
+          <div className="login-box-header">Honors & Minors Application</div>
           {user ? (
             <div>
               <p>Logged in as: {user.email}</p>
               <button onClick={handleSignOut}>Sign Out</button>
             </div>
           ) : (
-            <form onSubmit={handleLogin} className="loginForm" autoComplete="off">
+            <form
+              onSubmit={handleLogin}
+              className="loginForm"
+              autoComplete="off"
+            >
               <p>Username</p>
               <input
                 type="email"
@@ -138,8 +151,8 @@ const Login = () => {
                 placeholder="Email"
                 required
                 autoComplete="new-email"
-                id='username'
-                className='username-input'
+                id="username"
+                className="username-input"
               />
               <p>Password</p>
               <input
@@ -149,44 +162,54 @@ const Login = () => {
                 placeholder="Password"
                 required
                 autoComplete="new-password"
-                id='password'
-                className='password-input'
+                id="password"
+                className="password-input"
               />
               <div className="forget">
                 <u>Forget Password?</u>
               </div>
-              <button type="submit" disabled={loading} id='login-button-text'>
-                {loading ? 'Logging in...' : 'Login'}
+              <button type="submit" disabled={loading} id="login-button-text">
+                {loading ? "Logging in..." : "Login"}
               </button>
             </form>
           )}
-          {error && <p style={{ color: 'red' }}>{error}</p>}
+          {error && <p style={{ color: "red" }}>{error}</p>}
         </div>
       </div>
     </div>
   );
-}
+};
 
-async function addUserToDatabase(email, password, role, branch = null, studentId = null) {
+async function addUserToDatabase(
+  email,
+  password,
+  role,
+  branch = null,
+  studentId = null
+) {
   try {
     console.log({
       email,
       role,
       branch,
-      studentId
+      studentId,
     });
-    
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
     const user = userCredential.user;
-    await setDoc(doc(db, 'users', user.uid), {
+    await setDoc(doc(db, "users", user.uid), {
       email: email,
       role: role,
       branch: branch,
-      studentId: studentId
+      studentId: studentId,
     });
     await signOut(auth);
   } catch (error) {
-    console.error('Error adding user: ', error);
+    console.error("Error adding user: ", error);
   }
 }
 
@@ -204,7 +227,7 @@ const PrivateRoute = ({ children, allowedRoles }) => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
-          const docRef = doc(db, 'users', user.uid);
+          const docRef = doc(db, "users", user.uid);
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
             const fetchedUserData = docSnap.data();
@@ -214,7 +237,7 @@ const PrivateRoute = ({ children, allowedRoles }) => {
             setIsAuthenticated(false);
           }
         } catch (error) {
-          console.error('Error fetching user data:', error);
+          console.error("Error fetching user data:", error);
           setIsAuthenticated(false);
         }
       } else {
@@ -238,11 +261,19 @@ const PrivateRoute = ({ children, allowedRoles }) => {
     return <Navigate to="/" state={{ from: location }} replace />;
   }
 
-  if (userData.role === 'faculty' && params.branch && params.branch !== userData.branch) {
+  if (
+    userData.role === "faculty" &&
+    params.branch &&
+    params.branch !== userData.branch
+  ) {
     return <Navigate to="/" state={{ from: location }} replace />;
   }
 
-  if (userData.role === 'student' && params.studentId && params.studentId !== userData.studentId) {
+  if (
+    userData.role === "student" &&
+    params.studentId &&
+    params.studentId !== userData.studentId
+  ) {
     return <Navigate to="/" state={{ from: location }} replace />;
   }
 

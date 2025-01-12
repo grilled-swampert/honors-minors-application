@@ -1,23 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Niramit:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&display=swap");
 
-.header-main {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.header-navbar {
-  height: 6rem;
-  box-shadow: 1px 1px 5px 1px #888888;
-  background-color: white;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  width: 90%;
-  justify-content: space-between;
-  padding: 0 2rem;
-}
-
 :root {
   --black: #000000;
   --night-rider: #2e2e2e;
@@ -25,7 +7,25 @@
   --af-white: #f3f3f3;
 }
 
-/* Button container */
+.header-main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.header-navbar {
+  height: 6rem;
+  box-shadow: 1px 1px 5px 1px #888888;
+  background-color: white;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  width: 90%;
+  justify-content: space-between;
+  padding: 0 2rem;
+}
+
 .header-logoutBtn {
   display: flex;
   align-items: center;
@@ -47,7 +47,6 @@
   background: linear-gradient(135deg, #000000 0%, #3a3a3a 100%);
 }
 
-/* Icon container */
 .logoutBtn-sign {
   display: flex;
   align-items: center;
@@ -56,7 +55,6 @@
   transition: width 0.3s ease, padding 0.3s ease;
 }
 
-/* Icon styling */
 .logoutBtn-sign svg {
   width: 20px;
 }
@@ -65,7 +63,6 @@
   fill: var(--af-white);
 }
 
-/* Text styling */
 .logout-text {
   right: 0;
   width: 0;
@@ -77,7 +74,6 @@
   transition: opacity 0.3s ease, width 0.3s ease;
 }
 
-/* Hover states */
 .header-logoutBtn:hover {
   width: 160px;
 }
@@ -93,7 +89,6 @@
   margin-right: 1rem;
 }
 
-/* Active state */
 .header-logoutBtn:active {
   transform: translate(2px, 2px);
 }

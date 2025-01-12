@@ -1,52 +1,49 @@
-.template{
-    height: 100px;
-    width: 90%;
-    background-color: #f3d2c1;
-    border: 1px solid black;
-    border-radius: 1rem;
-    display: flex;
-    align-items: center;
-    font-size: 32px;
-    font-family: "Fira Sans", sans-serif;
-    padding: 10px;
-    margin: 10px 50px;
-   }
-  
-   .template button {
-    height: 60px;
-    width: 400px;
-    margin: 0 10px;
-    font-size: 1.5rem;
-    font-family: 'Marcellus', serif;
-    color: white;
-    border: none;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .template button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-  
-  .template button:active {
-    transform: translateY(1px);
-  }
+.template {
+  height: 100px;
+  width: 90%;
+  background-color: #f3d2c1;
+  border: 1px solid black;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  font-size: 32px;
+  font-family: "Fira Sans", sans-serif;
+  padding: 10px;
+  margin: 10px 50px;
+}
 
-   .template a{
-    color: white;
-   }
-   #honours {
-    background-color: #870000;
-    background-image: linear-gradient(315deg, #870000 0%, #190a05 74%);
-  }
-   #minors{
-    background-color: #944A06;
-   }
- 
+.template button {
+  height: 60px;
+  width: 400px;
+  margin: 0 10px;
+  font-size: 1.5rem;
+  font-family: "Marcellus", serif;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.template button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.template button:active {
+  transform: translateY(1px);
+}
+
+.template a {
+  color: white;
+}
+
+#mh-link {
+  background-color: #870000;
+  background-image: linear-gradient(315deg, #870000 0%, #190a05 74%);
+}

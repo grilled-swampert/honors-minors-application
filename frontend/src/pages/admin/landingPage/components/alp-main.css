@@ -18,17 +18,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
-  max-width: 1200px;
+  width: 80%;
   margin-top: 50px;
 }
 
 .left-panel {
-  height: 8rem;
-  min-height: 5rem;
   width: 100%;
-  max-width: 1200px;
-  margin-top: 1rem;
   padding: 2rem;
   border-radius: var(--border-radius);
   background-color: #f3d2c1;
@@ -39,12 +34,14 @@
 
 .right-panel {
   height: 25rem;
-  width: 70%;
+  width: 80%;
   border-radius: 1%;
 }
+
 .admin_term_formtitle{
   font-size: 1.3rem;
 }
+
 #admin-term-table {
   width: 100%;
   border-spacing: 0;

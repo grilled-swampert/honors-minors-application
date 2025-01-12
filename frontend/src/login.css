@@ -33,10 +33,6 @@
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
-.logo:hover {
-  transform: scale(1.05);
-}
-
 .trust {
   height: 75px;
   width: auto;
@@ -55,6 +51,16 @@
   border: 1px solid rgba(121, 85, 55, 0.1);
 }
 
+.login-box-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-size: 1.4rem;
+}
+
 .loginForm {
   display: flex;
   flex-direction: column;
@@ -70,11 +76,6 @@
 .loginForm .password-input {
   width: 90%;
   font: "Poppins", sans-serif;
-}
-
-.login-box:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 40px rgba(77, 48, 24, 0.2);
 }
 
 .login-box p {
