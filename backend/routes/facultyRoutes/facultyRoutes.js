@@ -9,6 +9,7 @@ const {
   getDropStudents,
   updateDropApprovalStatus,
   deleteStudents,
+  getDropApplicationPdf,
 } = require("../../controllers/faculty/facultyControllers");
 const studentFileController = require("../../controllers/faculty/studentFileController");
 const { admin } = require("../../firebase");
@@ -80,6 +81,9 @@ router.post("/create-user", async (req, res) => {
     return res.status(500).json({ message: "Error creating user", error: error.message });
   }
 });
+
+// Add a route to fetch the drop application PDF for a specific student
+router.get("/getDropApplicationPdf/:studentId", getDropApplicationPdf);
 
 
 module.exports = router;

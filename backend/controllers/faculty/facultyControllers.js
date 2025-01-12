@@ -6,7 +6,7 @@ const { ObjectId } = require('mongoose').Types;
 const Term = require("../../models/termModel/termModel");
 const Student = require("../../models/studentModel/studentModel");
 const nodemailer = require("nodemailer");
-
+const path = require("path");
 const asyncHandler = require("express-async-handler");
 
 // Create a nodemailer transporter
@@ -40,6 +40,30 @@ exports.getTerm = asyncHandler(async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+const path = require("path");
+
+exports.getDropApplicationPdf = asyncHandler(async (req, res) => {
+  const { studentId } = req.params;
+
+  try {
+    const student = await Student.findById(studentId);
+
+    if (!student || !student.dropFile) {
+      console.log(`Student not found or drop file missing. Student ID: ${studentId}`);
+      return res.status(404).json({ message: "Drop application file not found for the student" });
+    }
+
+    const filePath = path.resolve(__dirname, "../../uploads/faculty", student.dropFile);
+    console.log(`Fetching file for Student ID: ${studentId}, Resolved Path: ${filePath}`);
+
+    res.sendFile(filePath);
+  } catch (error) {
+    console.error("Error fetching drop application PDF:", error);
+    res.status(500).json({ message: "Failed to fetch PDF file" });
+  }
+});
+
 
 // GET all students across all branches within a term
 exports.getAllStudentsInTerm = asyncHandler(async (req, res) => {
