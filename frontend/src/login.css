@@ -187,7 +187,8 @@
   }
 
   .login-box {
-    width: 95%;
+    width: 100%;
+    max-width: 330px;
     padding: 1.5rem;
   }
 

@@ -34,7 +34,7 @@
 
 .right-panel {
   height: 25rem;
-  width: 80%;
+  width: 85%;
   border-radius: 1%;
 }
 
@@ -98,4 +98,10 @@ th,
 td {
   padding: 8px;
   text-align: center;
+}
+
+@media (max-width: 480px) {
+  .right-panel {
+    width: 95%;
+  }
 }
