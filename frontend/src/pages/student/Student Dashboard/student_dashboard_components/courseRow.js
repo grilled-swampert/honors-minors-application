@@ -77,7 +77,7 @@ export default function CourseRow({
       id={id}
     >
       <div className={styles.rowHeading}>
-        <h3 className={styles.courseHeading}>{title}</h3>
+        <h1 className={styles.courseHeading}>{title}</h1>
         <div className={`${styles.iconContainer} ${styles.iconSpacing}`}>
           <div className={styles.deadlineWrapper}>
             <span>Deadline</span>
@@ -90,15 +90,12 @@ export default function CourseRow({
           </div>
           <div className={`${styles.iconWrapper} ${styles.courseSelection}`}>
             <span>Course Selection</span>
-            <i className="fas fa-clock" id="course-selection-icon"></i>
-            <span id="course-selection-status">
+            {/* <i className="fas fa-clock" id="course-selection-icon"></i> */}
+            <strong id="course-selection-status">
               {student && student.status ? student.status : "No status"}
-            </span>
+            </strong>
           </div>
         </div>
-        <button className={styles.tabCollapse} onClick={toggleCollapse}>
-          <i className={`fa-solid fa-angle-${isCollapsed ? "down" : "up"}`}></i>
-        </button>
       </div>
       <div
         className={styles.collapsibleContent}

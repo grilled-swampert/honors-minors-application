@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import styles from './StudentDashboard.module.css';
 import { Link } from "react-router-dom";
 import Header from '../../header/header';
-import CourseSection from './student_dashboard_components/courseSection';
 import ScrollText from './student_dashboard_components/scrollText';
 import MainBody from './student_dashboard_components/mainBody';
 
@@ -46,9 +45,8 @@ function StudentDashboard() {
   }, [currentSemester]);
 
   return (
-    <div>
+    <div className={styles.StudentDashboard}>
       <Header />
-      <CourseSection />
       <hr />
       <ScrollText />
       <MainBody 
