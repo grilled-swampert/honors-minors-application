@@ -1,6 +1,6 @@
-.view-button, .edit-button, .delete-button {
+.edit-button{
   height: 50px;
-  width: 55px;
+  width: 50px;
   border: none;
   border-radius: 50%;
   margin: 0 5px;
@@ -108,9 +108,9 @@ tbody img {
     padding: 6px;
   }
 
-  .view-button, .edit-button, .delete-button {
-    height: 32px;
-    width: 32px;
+  .edit-button {
+    height: 50px;
+    width: 50px;
   }
 
   tbody img {
