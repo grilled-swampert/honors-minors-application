@@ -8,7 +8,6 @@ import { PrivateRoute } from './login';
 
 //Admin
 import AdminLandingPage from './pages/admin/landingPage/adminLandingPage';
-import AdminViewPage from './pages/admin/adminView/admin-view';
 import AddCoursesPage from './pages/admin/add_courses/AddCourses';
 import Allocation from './pages/admin/allocation/allocation';
 import Broadcast from './pages/admin/broadcast_msg/broadcast';
@@ -35,11 +34,6 @@ function App() {
         <Route path="/admin" element={
           // <PrivateRoute allowedRoles={['admin']}>
             <AdminLandingPage />
-          // </PrivateRoute>
-        } />
-        <Route path="/admin/:termId/view" element={
-          // <PrivateRoute allowedRoles={['admin']}>
-            <AdminViewPage />
           // </PrivateRoute>
         } />
         <Route path="/admin/:termId/edit/addCourses" element={

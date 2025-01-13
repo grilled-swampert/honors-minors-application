@@ -26,6 +26,7 @@
   border-collapse: separate;
   border-spacing: 0;
   table-layout: fixed;
+  margin-top: 1rem;
   font-family: "Poppins", sans-serif;
 }
 
@@ -37,6 +38,8 @@
 }
 
 #ad-table th {
+  height: 3rem;
+
   position: sticky;
   top: 0;
   font-size: 1rem;
@@ -49,6 +52,12 @@
 
 #ad-table td {
   font-size: 0.9rem;
+}
+
+.course-table-rows td {
+  background-color: white;
+  color: black;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .ad-tick-cross {
