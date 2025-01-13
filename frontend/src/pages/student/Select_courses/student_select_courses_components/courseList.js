@@ -25,9 +25,14 @@ export default function CourseList({ searchText, selectedCourses, handleCourseSe
     }
   }, [filteredCourses]);
 
-  const filteredList = allCourses.filter((course) =>
-    course.programName.toLowerCase().includes(searchText.toLowerCase())
-  );
+  // Filter logic to handle both text search and category filtering
+  const filteredList = allCourses.filter((course) => {
+    const lowerSearchText = searchText.toLowerCase();
+    return (
+      course.programName.toLowerCase().includes(lowerSearchText) ||
+      course.category.toLowerCase().includes(lowerSearchText) // Match course type (Honors/Minors)
+    );
+  });
 
   if (loading) return <p>Loading courses...</p>;
   if (error) return <p>Error loading courses: {error}</p>;
@@ -55,3 +60,4 @@ export default function CourseList({ searchText, selectedCourses, handleCourseSe
     </div>
   );
 }
+
