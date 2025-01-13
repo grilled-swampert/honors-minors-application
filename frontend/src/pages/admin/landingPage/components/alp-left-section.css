@@ -64,6 +64,14 @@
   background-color: #3a9e98;
 }
 
+@media (max-width: 768px) {
+  .new_term_form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
 @media (max-width: 480px) {
   .new_term_form {
     display: flex;

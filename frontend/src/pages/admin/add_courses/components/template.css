@@ -82,11 +82,7 @@
   padding: 0.7em 1.4em 0.7em 1.1em;
   color: white;
   background: #ad5389;
-  background: linear-gradient(
-    0deg,
-    rgb(52, 52, 52) 0%,
-    rgba(19, 56, 10, 1) 100%
-  );
+  background: #8bd3dd;
   border: none;
   letter-spacing: 3px;
   border-radius: 0.5rem;
@@ -101,11 +97,11 @@
 }
 
 .cssbuttons-io-button:hover {
-  box-shadow: 0 0.5em 1.5em -0.5em #14a73e98;
+  box-shadow: 0 0.5em 1.5em -0.5em #00000098;
 }
 
 .cssbuttons-io-button:active {
-  box-shadow: 0 0.3em 1em -0.5em #14a73e98;
+  box-shadow: 0 0.3em 1em -0.5em #00000098;
 }
 
 .semester-popup-modal {
@@ -121,7 +117,7 @@
 }
 
 .semester-popup-content {
-  background: rgb(216, 216, 209);
+  background: rgb(255, 255, 255);
   padding: 20px;
   border-radius: 8px;
   width: 80%;
@@ -204,4 +200,55 @@
 }
 .template-btn-container:hover .icon {
   transform: rotate(0deg);
+}
+
+@media (max-width: 768px) {
+  .admin-title-bar {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    gap: 1rem;
+    margin-top: 0px;
+  }
+  .admin-title-bar button {
+    padding: 0px 0px;
+  }
+  .admin-edit-page-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .admin-template-download {
+    width: 100%;
+    height: auto;
+  }
+  .cssbuttons-io-button svg {
+    margin-left: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-title-bar {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    gap: 1rem;
+    margin-top: 0px;
+    width: 90%;
+  }
+  .admin-title-bar button {
+    padding: 0px 0px;
+  }
+  .admin-edit-page-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .admin-template-download {
+    width: 100%;
+    height: auto;
+  }
+  .cssbuttons-io-button svg {
+    margin-left: 1rem;
+  }
 }

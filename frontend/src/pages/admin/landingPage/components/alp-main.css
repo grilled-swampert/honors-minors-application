@@ -73,6 +73,9 @@
 }
 
 #admin-term-table td {
+  background-color: var(--bg-primary);
+  color: black;
+  box-shadow: 0 4px 0px rgba(0, 0, 0, 0.2);
   border-bottom: 1px solid rgba(15, 252, 190, 0.2);
   width: 20%;
   height: 1rem;

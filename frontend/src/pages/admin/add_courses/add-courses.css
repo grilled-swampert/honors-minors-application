@@ -7,11 +7,43 @@
   gap: 3rem;
 }
 
-.add-right-container{
+.add-right-container {
   display: flex;
   flex-direction: column;
   table-layout: fixed;
   margin-left: 2rem;
 }
- 
- 
+
+@media (max-width: 768px) {
+  .topside-table {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .add-right-container {
+    margin-left: 0px;
+  }
+
+  .topside-table {
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .topside-table {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .add-right-container {
+    margin-left: 0px;
+  }
+  
+  .topside-table {
+    gap: 1rem;
+  }
+}

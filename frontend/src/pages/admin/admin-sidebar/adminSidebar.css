@@ -127,3 +127,37 @@
 .add-courses-sidebar button.add-courses-button.active:hover .button-text {
     color: #fff;
 }
+
+@media (max-width: 768px) {
+  .add-courses-sidebar {
+    height: auto;
+    width: 60%;
+    margin-top: 1rem;
+  }
+  .add-courses-button.active .button-text {
+    width: 250px;
+  }
+  .add-courses-sidebar button.add-courses-button.inactive .button-text {
+    width: 250px;
+  }
+  .add-courses-sidebar button:hover .circle {
+    width: 280px;
+  }
+}
+
+@media (max-width: 480px) {
+  .add-courses-sidebar {
+    height: auto;
+    width: 60%;
+    margin-top: 1rem;
+  }
+  .add-courses-button.active .button-text {
+    width: 200px;
+  }
+  .add-courses-sidebar button.add-courses-button.inactive .button-text {
+    width: 200px;
+  }
+  .add-courses-sidebar button:hover .circle {
+    width: 210px;
+  }
+}

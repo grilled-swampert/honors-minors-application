@@ -25,7 +25,7 @@ const TemplatePage = () => {
       <div className="adminedit-page-title">
         {termDetail ? `${termDetail[0].termYear}` : "Loading..."}
       </div>
-      <div>
+      <div className="admin-edit-page-buttons">
         <button
           className="admin-template-download"
           onClick={() =>

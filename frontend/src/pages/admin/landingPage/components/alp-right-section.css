@@ -9,16 +9,7 @@
   display: inline-flex;
   justify-content: center;
   align-items: center;
-}
-
-.edit-button {
   background-color: #8bd3dd;
-  border: none;
-  height: 5vh;
-  width: fit-content;
-  object-fit: contain;
-  margin: 0px 20px;
-  border-radius: 50%;
 }
 
 #edit-img {

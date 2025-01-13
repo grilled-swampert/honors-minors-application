@@ -31,7 +31,7 @@ const AddCoursesPage = () => {
     termNeeded && termNeeded.startDate && termNeeded.endDate;
 
   return (
-    <div className="main">
+    <div className="add-courses-main">
       <Header />
       <div className="topside-table">
         <AdminSideBar />
