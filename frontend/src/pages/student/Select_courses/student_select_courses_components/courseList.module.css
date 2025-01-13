@@ -121,4 +121,26 @@
       text-align: left;
       margin-bottom: 5px;
     }
+      .courseHeader {
+        font-weight: bold; /* Highlight the header */
+      }
+    
+      .courseRow {
+        font-weight: normal; /* Differentiate the rows */
+      }
+    
+      .somaiyaCourseName {
+        font-weight: 600; /* Slightly emphasize course names */
+      }
+    
+      .syllabusLink {
+        font-weight: 500;
+      }
+
+      .courseSelect {
+        width: 1rem; /* Increase checkbox size */
+        height: 1rem; /* Increase checkbox size */
+        transform: scale(1.5); /* Optionally scale it */
+        margin: 5px; 
+      }
   }
