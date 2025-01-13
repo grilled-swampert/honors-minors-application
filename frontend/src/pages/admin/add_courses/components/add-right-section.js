@@ -94,7 +94,7 @@ const AddRightSection = ({ term, setTerms }) => {
   };
 
   return (
-    <tr key={term._id}>
+    <tr key={term._id} className='course-table-rows'>
       <td className="table-start-date">
         {isEditing ? (
           <input

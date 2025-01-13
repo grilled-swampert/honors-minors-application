@@ -1,99 +1,129 @@
-.container{
-  display: flex;
-  gap: 1%;
-}
-a{
-  text-decoration: none;
-}
-.br-content{
-  width: 75%;
-}
-.br-top{
-  display: flex;
- align-items: center;
-  margin-top: 5%;
-}
-.br-top h3{
-  font-size: 1.4rem;
-  color: #001858;
-}
-.br-top input{
-  height: 4vh;
-  width: 75%;
-  padding: 8px;
-  font-size: 1.5rem;
-}
-.br-top button{
-  background-color: #8bd3dd;
-  border: none;
-  width: 8%;
-  height: 4vh;
-  border-radius: 1.5rem;
-  font-size: 1.2rem;
-}
-.enter-button:hover{
-  cursor: pointer;
-  background-color: #e75f5f;
-  transition: 0.5s;
+@import url("https://fonts.googleapis.com/css2?family=Marcellus&family=Niramit:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Marcellus&family=Niramit:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
 
+.bm-main {
+  background-color: #f5f5dc;
 }
-.br-bottom{
-  height: 60vh;
+
+.bm-enter-button {
+  background-color: #00bfa6;
+  padding: 14px 20px;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  font-size: 1rem;
+  border-radius: 10px;
+  border: 2px dashed #00bfa6;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+    rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+  transition: 0.4s;
+}
+
+.bm-enter-button span:last-child {
+  display: none;
+}
+
+.bm-enter-button:hover {
+  transition: 0.4s;
+  border: 2px dashed #00bfa6;
+  background-color: #fff;
+  color: #00bfa6;
+}
+
+.bm-enter-button:active {
+  background-color: #87dbd0;
+}
+
+.br-content {
+  width: 100%;
+}
+
+.br-top {
+  display: flex;
+  align-items: center;
+  gap: 1.5%;
+  margin-top: 1rem;
+  width: 90%;
+  justify-content: center;
+  margin-left: 5%;
+}
+
+.br-top input {
+  height: 3vh;
+  width: 100%;
+  padding: 8px;
+  font-size: 1rem;
+  border-radius: 10px;
+  border: 1.5px solid lightgrey;
+  outline: none;
+  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+  box-shadow: 0px 0px 20px -18px;
+  font-family: "Rubik", sans-serif;
+  padding-left: 1.5rem;
+}
+
+.br-top input:focus {
+  border: 3px solid #424242;
+}
+
+.br-bottom {
+  height: auto;
   width: 92%;
-  background-color: #f3d2c1;
-  border-radius: 16px;
-  margin: 4%;
+  background-color: #fff;
+  margin-left: 4%;
+  margin-top: 1%;
+  border-radius: 10px;
 }
-table{
+
+#message-table {
   width: 100%;
   border-collapse: collapse;
 }
-thead tr{
-  /* border-radius: 16px; */
+
+#message-table thead tr {
   height: 6vh;
   width: 15%;
-  font-size: 24px;
-  position:sticky;
+  font-size: 1rem;
+  position: sticky;
+  font-family: "Poppins", sans-serif;
 }
-th{
-  background-color: #bc414e;
+
+#message-table thead tr th {
+  background-color: #43b3ae;
   position: sticky;
   top: 0;
   color: white;
 }
-thead :nth-child(1){
-  width: 10%;
-}
-thead :nth-child(2){
-  width: 60%;
-}
-thead :nth-child(3){
-  width: 30%;
-}
-th, td{
-  /* border-radius: 16px; */
-  padding: 16px;
+
+#table-body td {
+  align-items: center;
+  justify-content: center;
+  height: 4vh;
+  font-size: 1rem;
+  font-family: "Poppins", sans-serif;
   text-align: center;
-  /* border: 1px solid #ddd; */
+  padding: 0.5rem;
 }
-tbody td{
-  height: 8vh;
-  font-size: 1.3rem;
-}
-tbody tr:nth-child(odd){
-  background-color: #172c66;
+
+#table-body tr:nth-child(odd) {
+  background-color: #b1c2f3;
   color: white;
-  
-  
-  }
-  tbody tr:nth-child(even) {
-    background-color: white;
-  }
-  /* From Uiverse.io by MuhammadHasann */ 
+}
+
+#table-body tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+.toggle-td {
+  display: flex;
+  margin-top: 0.3rem;
+}
+
 .toggle-cont {
   width: 100px;
-  height: 50px;
-  border-radius: 9999px;
+  height: 40px;
+  text-align: center;
 }
 
 .toggle-cont .toggle-input {
@@ -102,20 +132,20 @@ tbody tr:nth-child(odd){
 
 .toggle-cont .toggle-label {
   cursor: pointer;
-  position: relative;
-  display: inline-block;
   padding: 6px;
   width: 100%;
   height: 100%;
   background: #272727;
-  border-radius: 9999px;
+  border-radius: 3rem;
   box-sizing: content-box;
   box-shadow: 0px 0px 16px -8px #fefefe;
+  text-align: center;
+  justify-content: center;
 }
 
 .toggle-cont .toggle-label .cont-label-play {
   position: relative;
-  width: 50px;
+  width: 40px;
   aspect-ratio: 1 / 1;
   background: #5e5e5e;
   border-radius: 9999px;
@@ -146,29 +176,60 @@ tbody tr:nth-child(odd){
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
 }
 
-  .delete-btn {
-    background-color: #f44336;
-    color: white;
-    padding: 8px 10px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 14px;
-    margin: 4px 2px;
-    border: none;
-    cursor: pointer;
-    border-radius: 50%;
-    margin-left: 50px;
-    
-  }
-  table img{
-    height: 4vh;
-  }
-  .br-btn{
-    display: flex;
-    align-items:center;
-    justify-content: center;
-  }
-  #table-body td{
-    padding: 30px;
-  }
+.delete-btn {
+  background-color: #f44336;
+  color: white;
+  padding: 8px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+table img {
+  height: 3vh;
+}
+
+.br-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.enter-bd-button {
+  width: 13rem;
+  height: 3.5em;
+  border-radius: 8px;
+  border: 0.15em solid rgb(28, 76, 115);
+  color: #43b3ae;
+  background-color: #00000000;
+  transition: all 0.5s ease;
+}
+
+.enter-bd-button .text {
+  display: none;
+  font-size: 1rem;
+  font-family: "Poppins", sans-serif;
+  font-weight: bold;
+}
+
+.enter-bd-button:hover > .text {
+  display: block;
+}
+
+.enter-bd-button:hover > svg {
+  display: none;
+}
+
+.enter-bd-button:hover {
+  background-color: #43b3ae;
+  color: #fff;
+}
+
+.enter-bd-button svg {
+  width: 1.5em;
+  margin-top: 3px;
+}
