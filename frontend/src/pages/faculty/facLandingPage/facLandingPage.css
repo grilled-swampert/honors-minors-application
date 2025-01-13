@@ -1,26 +1,27 @@
 .main-fac-landing {
   margin: 0 auto;
   padding: 20px;
-  color: #3e2723; /* Dark brown for text */
+  color: #3e2723; 
+  font-family: "Poppins", sans-serif;
 }
 
 #intro-fac {
   font-size: 2.5rem;
   text-align: center;
-  margin-bottom: 40px;
-  color: #6d4c41; /* Medium brown for intro text */
-  margin-top: 1%;
+  color: #6d4c41; 
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .highlight-branch-fac {
-  color: #8d6e63; /* Lighter brown for highlighted branch */
+  color: #8d6e63; 
   font-weight: bold;
 }
 
 .content-fac {
-  background-color: #f5f5f5; /* Light gray background */
+  background-color: #f5f5f5; 
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Softer shadow */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); 
   width: 90%;
   position: relative;
   left: 5%;
@@ -29,7 +30,7 @@
 .table-fac-landing {
   width: 100%;
   border-radius: 1rem;  
-  color: #3e2723; /* Dark brown for table text */
+  color: #3e2723; 
 }
 
 .th-fac-landing,
@@ -37,21 +38,24 @@
   text-align: center;
   padding: 15px;
   font-size: 1.2rem;
-  border-bottom: 1px solid #a1887f; /* Lighter brown for borders */
+  border-bottom: 1px solid #a1887f; 
 }
 
 .thead-fac-landing .th-fac-landing {
-  background-color: #d7ccc8; /* Light beige for header background */
+  background-color: #d7ccc8; 
   font-weight: bold;
-  color: #3e2723; /* Dark brown for header text */
+  color: #3e2723; 
+  width: 20%;
+  height: 1rem;
+  font-family: "Poppins", sans-serif;
 }
 
 .tbody-fac-landing tr:nth-child(odd) {
-  background-color: #e7e7e7; /* Light gray for odd rows */
+  background-color: #e7e7e7; 
 }
 
 .tbody-fac-landing tr:nth-child(even) {
-  background-color: #ffffff; /* White for even rows */
+  background-color: #ffffff; 
 }
 
 .tbody-fac-landing .td-fac-landing {
@@ -60,8 +64,8 @@
 }
 
 .tbody-fac-landing button {
-  background-color: #a1887f; /* Medium brown for buttons */
-  border: 2px solid #6d4c41; /* Dark brown for button borders */
+  background-color: #a1887f; 
+  border: 2px solid #6d4c41; 
   padding: 10px;
   border-radius: 50%;
   cursor: pointer;
@@ -75,7 +79,7 @@
 }
 
 .tbody-fac-landing button:hover {
-  background-color: #8d6e63; /* Darker brown for hover effect */
+  background-color: #8d6e63;
 }
 
 /* Responsive design */
