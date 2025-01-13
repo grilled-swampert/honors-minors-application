@@ -1,69 +1,60 @@
+.view-sem-info {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 20%; /* Fixed width for the left side */
+  background-color: #fef6e4; /* Light blue for better visibility */
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+  gap: 10px;
+}
+
 .side-tab {
   padding: 10px;
-  border-radius: 20px 20px 20px 20px;
-  margin: 10px 50px 10px 0;
-  box-shadow: 1px 1px 5px 0 #888888;
+  border-radius: 10px;
+  margin: 5px 0;
+  text-align: center;
+  background-color: #f3d2c1; /* Updated color for each tab */
+  color: #05445e;
+  font-weight: bold;
   cursor: pointer;
-  transition: width 0.3s ease-out;
-  width: 220px;
-  overflow: hidden;
-  height: 100px;
-  }
-  
-  #total{
-  margin-top: 50px;
-  }
-  
-  .student-info-heading{
-  font-size: 24px;
-  }
-  
-  .side-tab h2 {
-  margin: 0;
-  white-space: nowrap;
-  }
-  
-  .side-tab .number {
-  margin: 5px 0 0;
-  opacity: 0;
-  transition: opacity 0.3s ease-out;
-  }
-  
-  .side-tab.expanded {
-  width: 240px;
-  }
-  
-  .side-tab.expanded .number {
-  opacity: 1;
-  }
-  
-  #total{
-    background-color: #d9d9d9;
-  }
-  
-  #approved{
-    background-color: #c4ff96;
-  }
-  
-  #rejected{
-    background-color: #ff0000;
-  }
-  
-  #not-submitted{
-    background-color: #ffe9b1;
+  transition: all 0.3s ease;
+}
+
+.side-tab:hover {
+  background-color: #05445e; /* Darker shade on hover */
+  color: #ffffff; /* Change text color on hover */
+  transform: scale(1.05); /* Slight enlargement for emphasis */
+}
+
+.side-tab h2 {
+  font-size: 16px;
+  margin: 5px 0;
+}
+
+.side-tab .number {
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+.side-tab.expanded {
+  background-color: #189ab4; /* Highlight active tab */
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .view-sem-info {
+    flex: 0 0 auto;
+    width: 100%; /* Full width on narrow screens */
+    padding: 10px;
+    margin-bottom: 10px;
   }
 
-  @media (max-width: 768px) {
-    .side-tab {
-      flex-direction: column;
-      align-items: center;
-    }
-  
-    .side-tab h2 {
-      font-size: 14px;
-    }
-  
-    .side-tab .number {
-      font-size: 12px;
-    }
+  .side-tab h2 {
+    font-size: 14px;
   }
+
+  .side-tab .number {
+    font-size: 12px;
+  }
+}

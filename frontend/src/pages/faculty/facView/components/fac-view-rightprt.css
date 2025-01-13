@@ -1,263 +1,67 @@
-.view-top {
-  background-color: #f3d2c1;
-  border-radius: 24px;
-  display: flex;
-  align-items: center;
-  margin: 2%;
-  justify-content: space-evenly;
-  flex-wrap: wrap;
-}
-
-.view-dropdown {
-  font-family: "Fira Sans", sans-serif;
-  height: 80px;
-  width: 30%;
-  margin: 20px;
-  font-size: 40px;
-  text-align: center;
-  border-radius: 16px;
-  background-color: white;
-  color: #001858;
-}
-
-.hero-section {
-  display: flex;
-  margin: 50px;
-}
-
-.view-sem-info {
-  width: 20%;
-  background-color: #f3d2c1;
-  border-radius: 30px;
-}
-
-.sem-number {
-  margin: 30px;
-  text-align: center;
-}
-
-.side-tab {
-  padding: 10px;
-  border-radius: 0 20px 20px 0;
-  margin: 10px 50px 10px 0;
-  box-shadow: 1px 1px 5px 0 #888888;
-  cursor: pointer;
-  transition: width 0.3s ease-out;
-  width: 170px;
-  overflow: hidden;
-  height: 100px;
-}
-
-#total {
-  margin-top: 50px;
-}
-
-.student-info-heading {
-  font-size: 24px;
-}
-
-.side-tab h2 {
-  margin: 0;
-  white-space: nowrap;
-}
-
-.side-tab .number {
-  margin: 5px 0 0;
-  opacity: 0;
-  transition: opacity 0.3s ease-out;
-}
-
-.side-tab.expanded {
-  width: 200px;
-}
-
-.side-tab.expanded .number {
-  opacity: 1;
-}
-
-#total {
-  background-color: #d9d9d9;
-}
-
-#approved {
-  background-color: #c4ff96;
-}
-
-#rejected {
-  background-color: #ff0000;
-}
-
-#not-submitted {
-  background-color: #ffe9b1;
-}
-
 .view-dashboard {
-  margin: 5px;
-  background-color: #f3d2c1;
-  border-radius: 30px;
-  width: 90%;
-  padding: 30px;
   display: flex;
-  position: relative;
-  left: 5%;
+  flex-direction: row; /* Keep row layout for wide screens */
+  justify-content: flex-start; /* Align items to the left */
+  padding: 20px;
+  background-color: #f3d2c1;
+  border-radius: 20px;
+  width: 90%;
+  margin: auto;
+  gap: 20px; /* Add spacing between left and right sections */
 }
 
 .rightside {
+  flex: 1; /* Right section takes remaining space */
   display: flex;
   flex-direction: column;
-  width: 100%;
-  margin: 20px;
 }
 
-.viewdownload {
-  margin-top: 30px;
-  position: relative;
-  display: inline-block;
-}
-
-.viewdownloadBtn {
-  font-size: 24px;
-  width: 200px;
-  height: 48px;
-  background: white;
-  border-radius: 10px;
-  border: 3px solid #001858;
-  cursor: pointer;
-  color: black;
-}
-
-.dropdown-menu {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  z-index: 1;
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-
-.dropdown-menu li {
-  position: relative;
-}
-
-.dropdown-menu li a {
-  color: black;
-  text-decoration: none;
-  display: block;
-  padding: 10px;
-}
-
-.dropdown-submenu {
-  position: relative;
-}
-
-.dropdown-menu.nested {
-  top: 0;
-  left: 100%;
-  margin-top: -1px;
-}
-
-.caret {
-  margin-left: 5px;
-}
-
-.dropdown-menu li:hover {
-  background-color: #f1f1f1;
-}
-
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.dropdown-menu {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  z-index: 1;
-  list-style-type: none;
-  padding: 0;
-}
-
-.dropdown-menu li {
-  padding: 10px;
-}
-
-.dropdown-submenu {
-  position: relative;
-}
-
-.dropdown-submenu .dropdown-menu {
-  top: 0;
-  left: 100%;
-  margin-top: -1px;
-}
-
-.dropdown-submenu:hover .dropdown-menu {
-  display: block;
-}
-
-.btn {
-  background-color: #f44336;
-  color: white;
-  padding: 10px;
-  border: none;
-  cursor: pointer;
-}
-
-.btn:hover,
-.btn:focus {
-  background-color: #ff704d;
-}
-
-.caret {
-  margin-left: 5px;
-  vertical-align: middle;
-}
-.closeBtn{
-  background-color: black;
-  width: 50%;
-}
-
-.overlay {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.overlay-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 20px;
-  width: 30%;
-}
-
-.closeBtn {
+.download-buttons {
+  display: flex;
+  flex-wrap: wrap; /* Allows buttons to wrap in smaller screens */
+  gap: 10px; /* Adds spacing between buttons */
+  justify-content: center; /* Center align buttons */
   margin-top: 20px;
 }
 
+.download-btn {
+  width: 200px; /* Set fixed width for consistency */
+  height: auto; /* Allow height to adjust based on content */
+  padding: 10px 15px; /* Proper padding for text */
+  text-align: center; /* Center align text */
+  border-radius: 8px;
+  background-color: #fef6e4;
+  border: 2px solid #05445e;
+  color: #05445e;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  word-wrap: break-word; /* Ensures long text wraps properly */
+}
+
+.download-btn:hover {
+  background-color: #05445e;
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
 @media (max-width: 768px) {
-  .view-top {
-    flex-direction: column;
-    align-items: center;
-  }
-
   .view-dashboard {
-    padding: 5px;
+    flex-direction: column; /* Stack sections vertically */
+    gap: 10px;
   }
 
-  .viewdownloadBtn {
-    font-size: 14px;
-    padding: 10px;
+  .rightside {
+    width: 100%; /* Full width for narrow screens */
+  }
+
+  .download-btn {
+    width: 90%; /* Full width for mobile view */
+    font-size: 14px; /* Adjust font size for smaller screens */
+  }
+
+  .download-buttons {
+    gap: 15px; /* Increase spacing on small screens */
   }
 }
