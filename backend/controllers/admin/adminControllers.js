@@ -11,11 +11,11 @@ const nodemailer = require("nodemailer");
 
 // Configure nodemailer
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: "gmail",
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
+    pass: process.env.EMAIL_PASS,
+  },
 });
 
 // Helper function to get all student emails from a term
@@ -23,13 +23,17 @@ const getStudentEmailsFromTerm = async (termId) => {
   const term = await Term.findById(termId);
   if (!term) return [];
 
-  const studentLists = Object.keys(term.toObject()).filter(key => key.endsWith('_SL'));
+  const studentLists = Object.keys(term.toObject()).filter((key) =>
+    key.endsWith("_SL")
+  );
   let studentEmails = [];
 
   for (const listKey of studentLists) {
     const studentIds = term[listKey];
     const students = await Student.find({ _id: { $in: studentIds } });
-    studentEmails = studentEmails.concat(students.map(student => student.email));
+    studentEmails = studentEmails.concat(
+      students.map((student) => student.email)
+    );
   }
 
   return studentEmails;
@@ -38,34 +42,32 @@ const getStudentEmailsFromTerm = async (termId) => {
 // Send broadcast email to all students
 const sendBroadcastEmail = async (message, termId) => {
   const studentEmails = await getStudentEmailsFromTerm(termId);
-  
+
   if (studentEmails.length === 0) {
-    console.log('No student emails found for term:', termId);
+    console.log("No student emails found for term:", termId);
     return;
   }
 
   const mailOptions = {
     from: process.env.EMAIL_USER,
     bcc: studentEmails, // Use BCC for privacy
-    subject: 'New Broadcast Message',
+    subject: "New Broadcast Message",
     html: `
       <h2>New Broadcast Message</h2>
       <p>${message}</p>
       <hr>
       <p>This is an automated message. Please do not reply.</p>
-    `
+    `,
   };
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log('Broadcast email sent successfully');
+    console.log("Broadcast email sent successfully");
   } catch (error) {
-    console.error('Error sending broadcast email:', error);
+    console.error("Error sending broadcast email:", error);
     throw error;
   }
 };
-
-
 
 // GET all terms
 exports.getAllTerms = asyncHandler(async (req, res) => {
@@ -136,7 +138,6 @@ exports.updateTerm = async (req, res) => {
   }
 };
 
-// ---------------------------------------------
 // DOWNLOAD syllabus
 exports.downloadSyllabus = async (req, res) => {
   try {
@@ -193,7 +194,6 @@ exports.getAllCourses = asyncHandler(async (req, res) => {
   }
 });
 
-// ----------------------------------------------------------------
 exports.toggleCourseActivation = async (req, res) => {
   try {
     const { termId } = req.params;
@@ -223,7 +223,9 @@ exports.toggleCourseActivation = async (req, res) => {
       return res.status(404).json({ message: "Course not found" });
     }
 
-    console.log(`Course found: ${courseId}, course finalCount: ${course.finalCount}`);
+    console.log(
+      `Course found: ${courseId}, course finalCount: ${course.finalCount}`
+    );
 
     // Deactivation (both permanent and temporary)
     if (status === "inactive" || temporaryStatus === "inactive") {
@@ -232,14 +234,18 @@ exports.toggleCourseActivation = async (req, res) => {
       // Collect promises for branch-related updates
       const branchPromises = branchStudentLists.map(async (branch) => {
         const students = term[branch]; // Accessing each branch's student list
-        console.log(`Processing students for branch: ${branch}, total students: ${students.length}`);
+        console.log(
+          `Processing students for branch: ${branch}, total students: ${students.length}`
+        );
 
         // Find all students where finalCourse matches courseId
         const studentsToUpdate = await Student.find({
           _id: { $in: students },
           finalCourse: courseId,
         });
-        console.log(`Students to update in branch ${branch}: ${studentsToUpdate.length}`);
+        console.log(
+          `Students to update in branch ${branch}: ${studentsToUpdate.length}`
+        );
 
         // Collect student update promises
         const studentPromises = studentsToUpdate.map(async (student) => {
@@ -295,10 +301,10 @@ exports.toggleCourseActivation = async (req, res) => {
     // Temporary Activation
     if (temporaryStatus === "active") {
       console.log("Course is being temporarily activated");
-    
+
       for (let branch of branchStudentLists) {
         console.log(`Processing branch: ${branch}`);
-        
+
         // Fetch students associated with the current branch
         const students = term[branch];
         if (!students || students.length === 0) {
@@ -306,52 +312,66 @@ exports.toggleCourseActivation = async (req, res) => {
           continue;
         }
         console.log(`Total students for branch ${branch}: ${students.length}`);
-    
+
         // Loop through each student using their student ID
         const studentsToUpdate = await Student.find({ _id: { $in: students } });
         if (!studentsToUpdate || studentsToUpdate.length === 0) {
           console.log(`No students found in database for branch: ${branch}`);
           continue;
         }
-    
+
         for (let student of studentsToUpdate) {
           console.log(`Processing student with ID: ${student._id}`);
-    
+
           // Ensure the finalCourse array exists and has at least one element
           if (student.finalCourse && student.finalCourse.length > 0) {
             const finalCourseId = student.finalCourse[0].toHexString();
-            console.log(`Student ${student._id} has a finalCourse: ${finalCourseId}`);
+            console.log(
+              `Student ${student._id} has a finalCourse: ${finalCourseId}`
+            );
             console.log(`Checking against courseId: ${courseId}`);
-    
-            const courseIndex = student.courses.findIndex((c) => c.toString() === courseId);
-            const finalCourseIndex = student.courses.findIndex((c) => c.toString() === finalCourseId);
-    
+
+            const courseIndex = student.courses.findIndex(
+              (c) => c.toString() === courseId
+            );
+            const finalCourseIndex = student.courses.findIndex(
+              (c) => c.toString() === finalCourseId
+            );
+
             console.log(`Course index in student courses: ${courseIndex}`);
-            console.log(`Final course index in student courses: ${finalCourseIndex}`);
-    
+            console.log(
+              `Final course index in student courses: ${finalCourseIndex}`
+            );
+
             if (courseIndex !== -1 && courseIndex < finalCourseIndex) {
               console.log(`Updating final course for student ${student._id}`);
-    
+
               const finalCourse = await Course.findById(finalCourseId);
               if (finalCourse) {
-                console.log(`Decreasing final count for previous course: ${finalCourseId}`);
+                console.log(
+                  `Decreasing final count for previous course: ${finalCourseId}`
+                );
                 console.log(`Previous final count: ${finalCourse.finalCount}`);
                 finalCourse.finalCount--;
                 console.log(`New final count: ${finalCourse.finalCount}`);
                 await finalCourse.save();
               } else {
-                console.log(`No course found for finalCourseId: ${finalCourseId}`);
+                console.log(
+                  `No course found for finalCourseId: ${finalCourseId}`
+                );
               }
-              
+
               console.log(`Increasing final count for new course: ${courseId}`);
               console.log(`Previous final count: ${course.finalCount}`);
               course.finalCount++;
               console.log(`New final count: ${course.finalCount}`);
-    
+
               student.finalCourse = [courseId];
               await student.save();
-    
-              console.log(`Final course updated for student ${student._id}: ${courseId}`);
+
+              console.log(
+                `Final course updated for student ${student._id}: ${courseId}`
+              );
             } else {
               console.log(`No updates made for student ${student._id}`);
             }
@@ -360,11 +380,11 @@ exports.toggleCourseActivation = async (req, res) => {
           }
         }
       }
-    
+
       console.log("Setting course status to active");
       course.temporaryStatus = "active";
       await course.save();
-    
+
       console.log("Course activated, final counts updated");
       return res.status(200).json({
         message:
@@ -379,7 +399,6 @@ exports.toggleCourseActivation = async (req, res) => {
   }
 };
 
-// Helper function to find the next active course
 async function getNextActiveCourse(courses, deactivatedCourseId) {
   for (let i = 0; i < courses.length; i++) {
     const currentCourse = await Course.findById(courses[i]);
@@ -411,7 +430,6 @@ exports.setMaxCount = async (req, res) => {
 
     console.log("Step 2: Term data fetched:", term);
 
-    // Find the course by courseId and mark it as inactive
     const courseMax = await Course.findById(courseId);
     if (!courseMax) {
       console.log(`Checkpoint 01: Course with ID ${courseId} not found`);
@@ -419,13 +437,11 @@ exports.setMaxCount = async (req, res) => {
     }
     console.log(`Checkpoint 01: Course found - ${courseId}`);
 
-    // Marking course status as inactive
     // if (courseMax.finalCount > maxCount)
     //   courseMax.finalCount = maxCount;
     // await courseMax.save();
-    console.log(`Checkpoint 02: Course preferences updated - ${courseId}`);
+    // console.log(`Checkpoint 02: Course preferences updated - ${courseId}`);
 
-    // Extract student lists for branches ending with "_SL"
     console.log(
       'Step 3: Extracting student lists for branches ending with "_SL"'
     );
@@ -436,7 +452,6 @@ exports.setMaxCount = async (req, res) => {
 
     let allStudents = [];
 
-    // Retrieve all students from each branch's student list
     for (const list of studentLists) {
       console.log(`Step 4: Fetching students from branch: ${list}`);
       const studentsAll = term[list];
@@ -454,32 +469,24 @@ exports.setMaxCount = async (req, res) => {
     );
 
     // Save the submittedAt time for all relevant students
-    for (const student of allStudents) {
-      student.submittedAt = new Date(); // Set to the current time
-      await student.save();
-      console.log(`Step 6: SubmittedAt saved for student ${student._id}`);
-    }
+    // for (const student of allStudents) {
+    //   student.submittedAt = new Date(); // Set to the current time
+    //   await student.save();
+    //   console.log(`Step 6: SubmittedAt saved for student ${student._id}`);
+    // }
 
     // Sort students by submittedAt in ascending order
     console.log("Step 7: Sorting students by submittedAt");
-    allStudents.sort((a, b) => a.submittedAt - b.submittedAt);
+    allStudents.sort((a, b) => a.submissionTime - b.submissionTime);
     console.log("Step 7: Students sorted:", allStudents.length);
 
-    // Get students up to maxCount and leave the rest
-    const selectedStudents = allStudents.slice(maxCount);
-    const excessStudents = allStudents.slice(0, maxCount);
+    if (maxCount > 0) {
+      selectedStudents = allStudents.slice(0, maxCount);
+      excessStudents = allStudents.slice(maxCount);
+    } else {
+      excessStudents = allStudents;
+    }
 
-    console.log(
-      "Step 8: Selected students within maxCount:",
-      selectedStudents.length
-    );
-    console.log(
-      "Step 8: Excess students exceeding maxCount:",
-      excessStudents.length
-    );
-
-    // Process excess students (remove course and update preferences)
-    // Process excess students (remove course and update preferences)
     for (const student of excessStudents) {
       console.log(`Step 9: Processing excess student ${student._id}`);
 
@@ -498,7 +505,6 @@ exports.setMaxCount = async (req, res) => {
         console.log(`Current finalCourse not found for student ${student._id}`);
       }
 
-      // Get the next active course
       const nextActiveCourse = await getNextActiveCourse(
         student.courses,
         courseId
@@ -506,7 +512,6 @@ exports.setMaxCount = async (req, res) => {
       student.finalCourse = nextActiveCourse ? nextActiveCourse._id : null;
 
       if (nextActiveCourse) {
-        // Increment finalCount for the new finalCourse
         nextActiveCourse.finalCount++;
         await nextActiveCourse.save();
         console.log(
@@ -516,14 +521,16 @@ exports.setMaxCount = async (req, res) => {
         console.log(`No active course found for student ${student._id}`);
       }
 
-      // Save the student updates
       await student.save();
       console.log(`Step 11: Student ${student._id} updated and saved`);
     }
 
-    // Update the final count for the course to maxCount
     const course = await Course.findById(courseId);
     course.finalCount = maxCount;
+    course.maxCount = maxCount;
+    course.status = "inactive";
+    course.temporaryStatus = "inactive";
+    course.permanent = true;
     await course.save();
     console.log("Step 12: Updated finalCount for course:", courseId);
 
@@ -537,11 +544,12 @@ exports.setMaxCount = async (req, res) => {
   }
 };
 
-// DOWNLOAD course allocation
 exports.getStudentsAllocatedToCourse = async (req, res) => {
   try {
     const { termId, courseId } = req.params;
-    console.log(`Fetching students for termId: ${termId}, courseId: ${courseId}`);
+    console.log(
+      `Fetching students for termId: ${termId}, courseId: ${courseId}`
+    );
 
     // Fetch the term by ID
     console.log(`[1] Fetching term with ID: ${termId}`);
@@ -549,17 +557,21 @@ exports.getStudentsAllocatedToCourse = async (req, res) => {
 
     const course = await Course.findById(courseId);
     const programName = course.programName;
-    
+
     if (!term) {
       console.log(`[2] Term not found for termId: ${termId}`);
       return res.status(404).json({ message: "Term not found" });
     }
-    console.log(`[2] Term found: ${term._id}, Term Object: ${JSON.stringify(term)}`);
+    console.log(
+      `[2] Term found: ${term._id}, Term Object: ${JSON.stringify(term)}`
+    );
 
     // Get student lists ending with "_SL"
     console.log(`[3] Extracting student lists with '_SL' keys`);
-    const studentLists = Object.keys(term.toObject()).filter((key) => key.endsWith('_SL'));
-    
+    const studentLists = Object.keys(term.toObject()).filter((key) =>
+      key.endsWith("_SL")
+    );
+
     if (studentLists.length === 0) {
       console.log(`[3.1] No student lists found in term: ${termId}`);
     } else {
@@ -580,25 +592,32 @@ exports.getStudentsAllocatedToCourse = async (req, res) => {
 
       console.log(`[4.1] Found ${studentIds.length} student IDs in ${listKey}`);
       const students = await Student.find({ _id: { $in: studentIds } });
-      
+
       if (students.length === 0) {
         console.log(`[4.2] No students found for IDs in ${listKey}`);
       } else {
-        console.log(`[4.2] Found ${students.length} students for list ${listKey}`);
+        console.log(
+          `[4.2] Found ${students.length} students for list ${listKey}`
+        );
       }
 
       console.log("courseId", courseId);
 
       // Filter students matching the courseId
       const matchingStudents = students.filter(
-        (student) => student.finalCourse && student.finalCourse.toString() === courseId
+        (student) =>
+          student.finalCourse && student.finalCourse.toString() === courseId
       );
-      console.log(`[5] ${matchingStudents.length} students match the course ID ${courseId} in ${listKey}`);
+      console.log(
+        `[5] ${matchingStudents.length} students match the course ID ${courseId} in ${listKey}`
+      );
 
       allocatedStudents = allocatedStudents.concat(matchingStudents);
     }
 
-    console.log(`[6] Total allocated students after all lists: ${allocatedStudents.length}`);
+    console.log(
+      `[6] Total allocated students after all lists: ${allocatedStudents.length}`
+    );
 
     // Prepare CSV data
     const csvData = allocatedStudents.map((student) => ({
@@ -609,22 +628,30 @@ exports.getStudentsAllocatedToCourse = async (req, res) => {
       contactNumber: student.contactNumber,
     }));
 
-    console.log(`[7] First few rows of CSV data (if any):`, JSON.stringify(csvData.slice(0, 3), null, 2));
+    console.log(
+      `[7] First few rows of CSV data (if any):`,
+      JSON.stringify(csvData.slice(0, 3), null, 2)
+    );
 
     if (csvData.length === 0) {
       console.log(`[7.1] No student data available to generate CSV.`);
-      return res.status(404).json({ message: "No students allocated to this course" });
+      return res
+        .status(404)
+        .json({ message: "No students allocated to this course" });
     }
 
     // Generate CSV with json2csv
     console.log(`[8] Generating CSV`);
     const fields = ["branch", "rollNumber", "name", "email", "contactNumber"];
-    const json2csvParser = new Parser({ fields, delimiter: ',', eol: '\r\n' });
+    const json2csvParser = new Parser({ fields, delimiter: ",", eol: "\r\n" });
     const csv = json2csvParser.parse(csvData);
 
-    console.log(`[8.1] First few lines of generated CSV:`, csv.split('\n').slice(0, 4).join('\n'));
+    console.log(
+      `[8.1] First few lines of generated CSV:`,
+      csv.split("\n").slice(0, 4).join("\n")
+    );
 
-    const csvWithBOM = '\ufeff' + csv; // Add BOM for Excel compatibility
+    const csvWithBOM = "\ufeff" + csv; // Add BOM for Excel compatibility
     const fileName = `students_allocated_to_course_${programName}.csv`;
     const filePath = path.join(__dirname, "..", "..", "downloads", fileName);
 
@@ -645,7 +672,9 @@ exports.getStudentsAllocatedToCourse = async (req, res) => {
     });
   } catch (error) {
     console.error(`[11] Error in getStudentsAllocatedToCourse:`, error);
-    return res.status(500).json({ message: "Server error", error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Server error", error: error.message });
   }
 };
 
@@ -657,26 +686,30 @@ exports.getAllocationInfo = async (req, res) => {
     // Fetch the term by ID
     console.log(`[2] Fetching term with ID: ${termId}`);
     const term = await Term.findById(termId);
-    
+
     if (!term) {
       console.log(`[3] Term not found for termId: ${termId}`);
       return res.status(404).json({ message: "Term not found" });
     }
-    console.log(`[3] Term found: ${term._id}, Courses in term: ${term.courses.join(', ')}`);
+    console.log(
+      `[3] Term found: ${term._id}, Courses in term: ${term.courses.join(", ")}`
+    );
 
     // Fetch courses related to the term
     console.log(`[4] Fetching courses for termId: ${termId}`);
     const courses = await Course.find({ _id: { $in: term.courses } });
-    
+
     if (courses.length === 0) {
       console.log(`[4.1] No courses found for termId: ${termId}`);
     } else {
-      console.log(`[4.1] Found ${courses.length} courses for termId: ${termId}`);
+      console.log(
+        `[4.1] Found ${courses.length} courses for termId: ${termId}`
+      );
     }
 
     // Prepare data for CSV
     console.log(`[5] Preparing data for CSV`);
-    const csvData = courses.map(course => ({
+    const csvData = courses.map((course) => ({
       offeringDepartment: course.offeringDepartment,
       programName: course.programName,
       category: course.category, // This should be minors/honors
@@ -685,19 +718,30 @@ exports.getAllocationInfo = async (req, res) => {
 
     console.log(`[5.1] CSV Data Prepared:`, JSON.stringify(csvData, null, 2));
 
-    const fields = ["offeringDepartment", "programName", "category", "finalCount"];
-    const json2csvParser = new Parser({ fields, header: true, delimiter: ',' });
+    const fields = [
+      "offeringDepartment",
+      "programName",
+      "category",
+      "finalCount",
+    ];
+    const json2csvParser = new Parser({ fields, header: true, delimiter: "," });
     console.log(`[6] Generating CSV from prepared data`);
 
     const csv = json2csvParser.parse(csvData);
-    console.log(`[6.1] CSV generated successfully, first few lines:`, csv.split('\n').slice(0, 4).join('\n'));
+    console.log(
+      `[6.1] CSV generated successfully, first few lines:`,
+      csv.split("\n").slice(0, 4).join("\n")
+    );
 
     // Add BOM for UTF-8 encoding compatibility
-    const csvWithBOM = '\ufeff' + csv;
+    const csvWithBOM = "\ufeff" + csv;
 
     // Set headers for CSV download
-    res.setHeader('Content-Disposition', `attachment; filename=allocation_info_${termId}.csv`);
-    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename=allocation_info_${termId}.csv`
+    );
+    res.setHeader("Content-Type", "text/csv");
     console.log(`[7] Sending CSV file for download`);
 
     // Send the CSV data
@@ -709,7 +753,6 @@ exports.getAllocationInfo = async (req, res) => {
   }
 };
 
-
 exports.createBroadcastMessage = async (req, res) => {
   const { text } = req.body;
   const message = new BroadcastMessage({ text });
@@ -719,8 +762,7 @@ exports.createBroadcastMessage = async (req, res) => {
 
 exports.getActiveBroadcastMessages = async (req, res) => {
   try {
-    const messages = await BroadcastMessage.find()
-      .sort("-createdAt");
+    const messages = await BroadcastMessage.find().sort("-createdAt");
     res.json(messages);
   } catch (error) {
     console.error("Error fetching broadcast messages:", error);
@@ -743,7 +785,6 @@ exports.deleteBroadcastMessage = async (req, res) => {
   }
 };
 
-// Updated toggleBroadcastMessage controller
 exports.toggleBroadcastMessage = async (req, res) => {
   const { id } = req.body;
   const { termId } = req.params;
@@ -757,7 +798,10 @@ exports.toggleBroadcastMessage = async (req, res) => {
     // If the message is being activated, deactivate all other messages
     if (!message.isActive) {
       // Deactivate all other messages
-      await BroadcastMessage.updateMany({ isActive: true }, { isActive: false });
+      await BroadcastMessage.updateMany(
+        { isActive: true },
+        { isActive: false }
+      );
     }
 
     // Toggle the message status
@@ -769,14 +813,14 @@ exports.toggleBroadcastMessage = async (req, res) => {
       try {
         await sendBroadcastEmail(message.text, termId);
       } catch (emailError) {
-        console.error('Error sending broadcast email:', emailError);
+        console.error("Error sending broadcast email:", emailError);
         // Continue with the response even if email fails
       }
     }
 
     res.status(200).json(message);
   } catch (error) {
-    console.error('Error in toggleBroadcastMessage:', error);
+    console.error("Error in toggleBroadcastMessage:", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };

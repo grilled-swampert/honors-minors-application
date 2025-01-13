@@ -50,6 +50,7 @@ const AllocationRow = ({
       <td>{course.secondPreference}</td>
       <td>{course.thirdPreference}</td>
       <td>{course.fourthPreference}</td>
+      <td>{course.firstPreference}</td>
       <td>
         <input
           type="number"

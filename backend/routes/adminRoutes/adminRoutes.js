@@ -41,13 +41,13 @@ router.delete("/:termId", deleteTerm);
 router.get("/:termId/edit/allocation", getAllCourses);
 
 // DEACTIVATE a course
-// router.patch("/:termId/edit/allocation", deactivateCourse);
+// router.patch("/:termId/edit/allocation/deactivate", deactivateCourse);
 
 // TOGGLE a course
 router.put("/:termId/edit/allocation", toggleCourseActivation);
 
 // SET max count
-router.patch("/:termId/edit/allocation", setMaxCount);
+router.patch("/:termId/edit/allocation/max-count", setMaxCount);
 
 // New route to get students allocated to a course
 router.get("/:termId/courses/:courseId/students", getStudentsAllocatedToCourse);

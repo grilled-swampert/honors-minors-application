@@ -20,7 +20,6 @@ const Allocation = () => {
   const API_BASE_URL =
     process.env.REACT_APP_API_BASE_URL || "http://localhost:9000";
 
-  // Fetch the courses when the component is mounted or termId changes
   useEffect(() => {
     dispatch(getCourses(termId));
   }, [dispatch, termId]);
@@ -29,7 +28,6 @@ const Allocation = () => {
     setLocalCourses(allCourses);
   }, [allCourses]);
 
-  // Handle input changes for maxCount and notRun
   const handleInputChange = (courseId, event) => {
     const { id, value } = event.target;
     setUpdatedCourses((prev) => ({
@@ -51,29 +49,34 @@ const Allocation = () => {
     );
   };
 
-  // Apply changes for all updated courses
   const applyChanges = async () => {
     try {
       console.log("Updated Courses:", updatedCourses);
-      const promises = Object.entries(updatedCourses).map(([courseId, data]) => {
-        console.log("Dispatching action for Course ID:", courseId, "Payload:", data);
-        if (data.maxCount !== undefined) {
-          return dispatch(setMaxCount(termId, courseId, data.maxCount));
+      const promises = Object.entries(updatedCourses).map(
+        ([courseId, data]) => {
+          console.log(
+            "Dispatching action for Course ID:",
+            courseId,
+            "Payload:",
+            data
+          );
+          if (data.maxCount !== undefined) {
+            return dispatch(setMaxCount(termId, courseId, data.maxCount));
+          }
+          return Promise.resolve();
         }
-        return Promise.resolve();
-      });
-  
+      );
+
       await Promise.all(promises);
       console.log("All changes applied successfully");
       // Refresh the courses after applying changes
       dispatch(getCourses(termId));
       setUpdatedCourses({});
-      window.location.reload(); // Optional: refresh to reflect updates
+      // window.location.reload(); // Optional: refresh to reflect updates
     } catch (error) {
       console.error("Error applying changes:", error);
     }
   };
-  
 
   const submitDeactivations = async () => {
     try {
@@ -148,8 +151,16 @@ const Allocation = () => {
   return (
     <div className="main">
       <Header />
-      <div className="al-main">
+      <div className="topside-table">
         <AdminSideBar />
+        <div className="admin-title-bar">
+          <div className="adminedit-page-title">Allocation</div>
+        </div>
+      </div>
+      <div className="allocation-container">
+        <div className="allocation-message">
+          Please open on a desktop device for better visibility.
+        </div>
         <div className="ad-content">
           <table id="myTable">
             <thead>
@@ -168,6 +179,9 @@ const Allocation = () => {
                 </th>
                 <th>
                   4<sup>th</sup> CHOICE
+                </th>
+                <th>
+                  5<sup>th</sup> CHOICE
                 </th>
                 <th>MAX COUNT</th>
                 <th>TEMPORARY STATUS</th>
@@ -193,10 +207,10 @@ const Allocation = () => {
 
       <div className="action-buttons-container">
         <button className="apply-btn" onClick={applyChanges}>
-          APPLY
+          APPLY MAX COUNT
         </button>
         <button className="submit-btn" onClick={submitDeactivations}>
-          SUBMIT DEACTIVATIONS
+          LOCK DEACTIVATIONS
         </button>
         <button className="download-all-btn" onClick={downloadAllData}>
           DOWNLOAD ALLOCATION INFORMATION

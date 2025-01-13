@@ -293,6 +293,7 @@ exports.submitCourses = async (req, res) => {
     // Set the first preference as the final course
     const firstPreference = courseMap.get(courseIds[0]);
     student.finalCourse = firstPreference._id;
+    student.submissionTime = Date.now();
     await student.save();
 
     // Debugging: Print courses[0] after setting the final course
