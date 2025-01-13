@@ -41,7 +41,7 @@ router.delete("/:termId", deleteTerm);
 router.get("/:termId/edit/allocation", getAllCourses);
 
 // DEACTIVATE a course
-// router.patch("/:termId/edit/allocation/deactivate", deactivateCourse);
+router.patch("/:termId/edit/allocation/deactivate", deactivateCourse);
 
 // TOGGLE a course
 router.put("/:termId/edit/allocation", toggleCourseActivation);

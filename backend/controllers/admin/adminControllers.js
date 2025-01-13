@@ -399,6 +399,116 @@ exports.toggleCourseActivation = async (req, res) => {
   }
 };
 
+exports.deactivateCourse = async (req, res) => {
+  try {
+    const { termId } = req.params;
+    const { courseId, status, temporaryStatus } = req.body;
+
+    // Find the term by termId
+    const term = await Term.findById(termId);
+    if (!term) {
+      return res.status(404).json({ message: "Term not found" });
+    }
+
+    console.log(`Course ID: ${courseId}`);
+    console.log(`Status: ${status}`);
+    console.log(`Temporary Status: ${temporaryStatus}`);
+    console.log(`Term: ${termId}`);
+
+    // Access all student lists ending with "_SL"
+    const branchStudentLists = Object.keys(term.toObject()).filter((key) =>
+      key.endsWith("_SL")
+    );
+
+    console.log(`Branch student lists: ${branchStudentLists.join(", ")}`);
+
+    // Find the course by courseId (required for all operations)
+    let course = await Course.findById(courseId);
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+
+    console.log(
+      `Course found: ${courseId}, course finalCount: ${course.finalCount}`
+    );
+
+    // Deactivation (both permanent and temporary)
+    if (status === "inactive" || temporaryStatus === "inactive") {
+      console.log(`Deactivating course ${courseId}`);
+
+      // Collect promises for branch-related updates
+      const branchPromises = branchStudentLists.map(async (branch) => {
+        const students = term[branch]; // Accessing each branch's student list
+        console.log(
+          `Processing students for branch: ${branch}, total students: ${students.length}`
+        );
+
+        // Find all students where finalCourse matches courseId
+        const studentsToUpdate = await Student.find({
+          _id: { $in: students },
+          finalCourse: courseId,
+        });
+        console.log(
+          `Students to update in branch ${branch}: ${studentsToUpdate.length}`
+        );
+
+        // Collect student update promises
+        const studentPromises = studentsToUpdate.map(async (student) => {
+          // Decrement the final count for the current course
+          course.finalCount = course.finalCount ? course.finalCount - 1 : 0;
+
+          const nextActiveCourse = await getNextActiveCourse(
+            student.courses,
+            courseId
+          );
+          console.log(
+            `Next active course for student ${student._id}:`,
+            nextActiveCourse
+          );
+          if (nextActiveCourse) {
+            // Increment the final count for the next active course
+            nextActiveCourse.finalCount = nextActiveCourse.finalCount
+              ? nextActiveCourse.finalCount + 1
+              : 1;
+            await nextActiveCourse.save();
+            console.log(
+              `Final count updated for next active course ${nextActiveCourse._id}`
+            );
+
+            // Update the student's finalCourse to the next active course
+            student.finalCourse = [nextActiveCourse._id];
+          }
+
+          console.log(`Final course updated for student ${student._id}`);
+
+          // Save the updated student record
+          return student.save();
+        });
+
+        // Execute all student updates concurrently
+        return Promise.all(studentPromises);
+      });
+
+      // Wait for all branch-related updates to complete
+      await Promise.all(branchPromises);
+
+      // Only save the course after processing all students
+      course.status = status || course.status;
+      course.temporaryStatus = temporaryStatus || course.temporaryStatus;
+      course.permanent = true;
+      await course.save();
+
+      return res.status(200).json({
+        message:
+          "Course deactivated (permanent) and final counts updated",
+      });
+    }
+  } catch (error) {
+    console.error(`Error in toggleCourseActivation: ${error.message}`);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 async function getNextActiveCourse(courses, deactivatedCourseId) {
   for (let i = 0; i < courses.length; i++) {
     const currentCourse = await Course.findById(courses[i]);

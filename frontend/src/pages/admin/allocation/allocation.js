@@ -80,25 +80,28 @@ const Allocation = () => {
 
   const submitDeactivations = async () => {
     try {
+      // Filter courses where checkbox is ticked (temporaryStatus is not 'active')
       const deactivationPromises = localCourses
-        .filter((course) => course.isSelectedForDeactivation)
+        .filter((course) => course.temporaryStatus !== "active")
         .map((course) =>
-          axios.put(`${API_BASE_URL}/admin/${termId}/edit/allocation`, {
+          axios.patch(`http://localhost:9000/admin/${termId}/edit/allocation/deactivate`, {
             courseId: course._id,
             status: "inactive",
-            permanent: true,
+            temporaryStatus: "inactive",
           })
         );
-
-      console.log(deactivationPromises);
-
+  
+      console.log("Deactivation promises for courses:", deactivationPromises);
+  
       await Promise.all(deactivationPromises);
       console.log("All deactivations submitted successfully");
-      window.location.reload(); // Force window reload
+  
+      // Refresh the data after successful deactivations
+      dispatch(getCourses(termId));
     } catch (error) {
       console.error("Error submitting deactivations:", error);
     }
-  };
+  };  
 
   // Download a single course's student list
   const downloadRowData = async (courseId) => {
