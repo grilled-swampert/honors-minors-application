@@ -1,8 +1,8 @@
-const multer = require('multer');
-const csv = require('csv-parser');
-const fs = require('fs');
+const multer = require("multer");
+const csv = require("csv-parser");
+const fs = require("fs");
 const { auth } = require("../../firebase");
-const { ObjectId } = require('mongoose').Types;
+const { ObjectId } = require("mongoose").Types;
 const Term = require("../../models/termModel/termModel");
 const Student = require("../../models/studentModel/studentModel");
 const nodemailer = require("nodemailer");
@@ -13,11 +13,11 @@ const Course = require("../../models/courseModel/courseModel");
 // Create a nodemailer transporter
 const transporter = nodemailer.createTransport({
   // Configure your email service here
-  service: 'gmail',
+  service: "gmail",
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
+    pass: process.env.EMAIL_PASS,
+  },
 });
 
 // GET all terms
@@ -43,26 +43,47 @@ exports.getTerm = asyncHandler(async (req, res) => {
 });
 
 exports.getDropApplicationPdf = asyncHandler(async (req, res) => {
+  console.log("Fetching drop application PDF...");
+
   const { studentId } = req.params;
+  console.log("Student ID:", studentId);
 
   try {
+    // Fetch the student from the database
     const student = await Student.findById(studentId);
+    console.log("Student found:", student);
 
+    // Check if student and dropFile exist
     if (!student || !student.dropFile) {
-      console.log(`Student not found or drop file missing. Student ID: ${studentId}`);
-      return res.status(404).json({ message: "Drop application file not found for the student" });
+      console.log(
+        `Student not found or drop file missing. Student ID: ${studentId}`
+      );
+      return res
+        .status(404)
+        .json({ message: "Drop application file not found for the student" });
     }
 
-    const filePath = path.resolve(__dirname, "../../uploads/faculty", student.dropFile);
-    console.log(`Fetching file for Student ID: ${studentId}, Resolved Path: ${filePath}`);
+    // Resolve the file path
+    const projectRoot = path.resolve(__dirname, "../../../");
+    const filePath = path.join(
+      projectRoot,
+      "backend/controllers/student/",
+      student.dropFile
+    );
 
+    console.log("Resolved File Path:", filePath);
+
+    if (!fs.existsSync(filePath)) {
+      console.error("File not FKNG found:", filePath);
+      return res.status(404).json({ message: "Drop application file not found." });
+    }
+    // Send the file to the client
     res.sendFile(filePath);
   } catch (error) {
     console.error("Error fetching drop application PDF:", error);
     res.status(500).json({ message: "Failed to fetch PDF file" });
   }
 });
-
 
 // GET all students across all branches within a term
 exports.getAllStudentsInTerm = asyncHandler(async (req, res) => {
@@ -180,47 +201,56 @@ exports.getDropStudents = asyncHandler(async (req, res) => {
 // PUT to update dropApproval status for a single student
 exports.updateDropApprovalStatus = asyncHandler(async (req, res) => {
   const { studentId, isApproved, rejectionReason } = req.body;
-  console.log('Received request:', { studentId, isApproved, rejectionReason });
+  console.log("Received request:", { studentId, isApproved, rejectionReason });
 
   try {
-    console.log('Searching for student with ID:', studentId);
+    console.log("Searching for student with ID:", studentId);
     const student = await Student.findById(studentId);
-    console.log('Found student:', student);
+    console.log("Found student:", student);
 
     if (!student) {
-      console.log('Student not found');
+      console.log("Student not found");
       return res.status(404).json({ message: "Student not found" });
     }
 
     // Update student's course drop status
-    student.dropApproval = isApproved ? 'approved' : 'rejected';
-    console.log('Updating student drop approval status to:', student.dropApproval);
+    student.dropApproval = isApproved ? "approved" : "rejected";
+    console.log(
+      "Updating student drop approval status to:",
+      student.dropApproval
+    );
     await student.save();
-    console.log('Updated student:', student);
+    console.log("Updated student:", student);
 
     // Prepare email content
     const emailOptions = {
       from: process.env.EMAIL_USER,
       to: student.email,
-      subject: isApproved ? "Course Drop Request Approved" : "Course Drop Request Rejected",
-      text: isApproved 
+      subject: isApproved
+        ? "Course Drop Request Approved"
+        : "Course Drop Request Rejected",
+      text: isApproved
         ? "Your course drop request has been approved."
-        : `Your course drop request has been rejected. Reason: ${rejectionReason}`
+        : `Your course drop request has been rejected. Reason: ${rejectionReason}`,
     };
 
-    console.log('Email options:', emailOptions);
+    console.log("Email options:", emailOptions);
 
     // Send email using Nodemailer
     await transporter.sendMail(emailOptions);
 
-    res.status(200).json({ 
+    res.status(200).json({
       message: "Course drop request processed successfully and email sent",
-      emailOptions: emailOptions
+      emailOptions: emailOptions,
     });
   } catch (error) {
     console.error("Error processing course drop request:", error);
     console.error("Error stack:", error.stack);
-    res.status(500).json({ error: "Internal Server Error", details: error.message, stack: error.stack });
+    res.status(500).json({
+      error: "Internal Server Error",
+      details: error.message,
+      stack: error.stack,
+    });
   }
 });
 
@@ -252,18 +282,24 @@ exports.deleteStudents = async (req, res) => {
       const term = await Term.findById(studentTerm);
 
       if (!term) {
-        return res.status(404).json({ message: `Term with ID ${termId} not found` });
+        return res
+          .status(404)
+          .json({ message: `Term with ID ${termId} not found` });
       }
 
       const branch = student.branch;
       const branchListField = `${branch}_SL`;
 
       if (!term[branchListField]) {
-        return res.status(404).json({ message: `Branch list ${branchListField} not found in term ${termId}` });
+        return res.status(404).json({
+          message: `Branch list ${branchListField} not found in term ${termId}`,
+        });
       }
 
       // Remove the student ID from the branch list
-      term[branchListField] = term[branchListField].filter(id => id.toString() !== studentObjectId.toString());
+      term[branchListField] = term[branchListField].filter(
+        (id) => id.toString() !== studentObjectId.toString()
+      );
 
       await term.save();
     }
@@ -274,6 +310,8 @@ exports.deleteStudents = async (req, res) => {
     return res.status(200).json({ message: "Student successfully deleted" });
   } catch (error) {
     console.error("Error deleting student:", error);
-    return res.status(500).json({ message: "An error occurred while deleting the student" });
+    return res
+      .status(500)
+      .json({ message: "An error occurred while deleting the student" });
   }
 };

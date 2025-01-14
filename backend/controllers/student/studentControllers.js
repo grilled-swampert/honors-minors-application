@@ -3,8 +3,11 @@ const Student = require("../../models/studentModel/studentModel");
 const Course = require("../../models/courseModel/courseModel");
 const BroadcastMessage = require("../../models/broadcastModel/broadcastMessageModel");
 const nodemailer = require('nodemailer');
+const mongoose = require('mongoose');
+const { GridFsStorage } = require("multer-gridfs-storage");
 const multer = require('multer');
 const path = require('path');
+const { ObjectId } = require("mongodb");
 const asyncHandler = require("express-async-handler");
 const fs = require('fs');
 
@@ -588,6 +591,7 @@ exports.updateDropDetails = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 exports.getActiveBroadcastMessages = async (req, res) => {
   try {

@@ -64,13 +64,22 @@ function FacDrop() {
   };
 
   const handleShowPreview = (studentId) => {
+    console.log("Student ID:", studentId);
+  
     axios
-      .get(`${API_BASE_URL}/faculty/${branch}/${termId}/edit/facDrop`, { responseType: "blob" })
+      .get(`http://localhost:9000/faculty/${branch}/${termId}/edit/facDrop/${studentId}`, {
+        responseType: "blob", // Ensure binary response for the PDF file
+      })
       .then((response) => {
-        const pdfUrl = URL.createObjectURL(response.data);
+        console.log("PDF response received");
+        console.log(response.data);
+  
+        const pdfUrl = URL.createObjectURL(response.data); // Create URL from blob
+        console.log("Generated PDF URL:", pdfUrl);
+  
         setOverlayState({
           isVisible: true,
-          pdfUrl: pdfUrl,
+          pdfUrl: pdfUrl, // Pass the URL to overlay state
         });
       })
       .catch((error) => {
@@ -78,7 +87,7 @@ function FacDrop() {
         alert("Failed to fetch the drop application file. Please try again.");
       });
   };
-   
+  
 
   return (
     <div className="add-students-main">
@@ -129,3 +138,4 @@ function FacDrop() {
 }
 
 export default FacDrop;
+

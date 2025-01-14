@@ -23,10 +23,12 @@ export default function MainBody({
     formData.append("dropFile", dropFile);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/student/${studentId}/dashboard`, {
-        method: "PUT",
+      const response = await fetch(`http://localhost:9000/student/${studentId}/dashboard`, {
+        method: "PATCH",
         body: formData,
       });
+
+      console.log(response);
 
       if (!response.ok) {
         const data = await response.json();

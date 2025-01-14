@@ -17,7 +17,7 @@ router.get("/:studentId/dashboard", getTermFromStudent);
 router.get("/:studentId/courses", getFilteredCoursesForStudent);
 
 router.patch("/:studentId/courses", submitCourses);
-router.put('/:studentId/dashboard', uploadDropFile , updateDropDetails);
+router.patch('/:studentId/dashboard', uploadDropFile , updateDropDetails);
 router.get("/broadcast-messages", getActiveBroadcastMessages);
 
 module.exports = router;

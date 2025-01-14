@@ -83,7 +83,7 @@ router.post("/create-user", async (req, res) => {
 });
 
 // Add a route to fetch the drop application PDF for a specific student
-router.get("/:branch/:termId/edit/facDrop/", getDropApplicationPdf);
+router.get("/:branch/:termId/edit/facDrop/:studentId", getDropApplicationPdf);
 
 
 module.exports = router;
