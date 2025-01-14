@@ -81,9 +81,14 @@ function FacDrop() {
    
 
   return (
-    <div className="drop-main">
+    <div className="add-students-main">
       <Header />
-      <FacNavbar />
+      <div className="fac-topside-table">
+        <FacNavbar />
+        <div className="faculty-title-bar">
+          <div className="faculty-edit-page-title">Allocation</div>
+        </div>
+      </div>
       <div className="drop-content">
         <table className="drop-table">
           <thead>
@@ -91,7 +96,8 @@ function FacDrop() {
               <th>ROLL NO</th>
               <th>NAME OF STUDENT</th>
               <th>EMAIL</th>
-              <th>HONOURS/MINORS</th>
+              <th>BRANCH</th>
+              <th>DIVISION</th>
               <th>PROGRAM</th>
               <th>VIEW APPLICATION</th>
               <th>DROP APPROVAL</th>

@@ -79,8 +79,8 @@ function FacAddTop() {
   };
 
   return (
-    <div className='upload-container'>
-      <form onSubmit={handleSubmit} >
+    <div className='faculty-student-bar'>
+      <form className='upload-container' onSubmit={handleSubmit} >
         <label className='file-input-label'>
           Upload Student CSV File:
           <input 

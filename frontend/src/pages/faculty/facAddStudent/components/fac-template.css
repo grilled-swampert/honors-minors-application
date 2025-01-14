@@ -1,58 +1,119 @@
-.add-student-left {
+@import url("https://fonts.googleapis.com/css2?family=Marcellus&family=Niramit:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+.faculty-title-bar {
   display: flex;
   align-items: center;
-gap: 1%;
-  width: 90%; /* Adjusted for better responsiveness */
-  margin: 20px auto; /* Center the container and add vertical spacing */
+  justify-content: space-between;
   padding: 2rem;
-  background-color: #fff3e6;
-  border-radius: 1.5rem;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
+  width: 95%;
+  height: 6rem;
+  margin-top: 1.5rem;
+  border-radius: 1rem;
+  background-color: bisque;
 }
 
-
-.add-student-left:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+.faculty-title-bar > div {
+  display: flex;
+  align-items: center;
+  text-align: center;
 }
 
-.icons {
-  font-size: 2rem;
-  color: #001858;
-  font-family: 'Marcellus', serif;
-  margin-right: 1rem;
-  transition: color 0.3s ease;
-}
-
-.add-temp-btn {
-  background-color: #8bd3dd;
-  color: #094067;
-  width: 150px; /* Fixed width for consistency */
-  height: 50px;
-  font-size: 1.25rem;
-  font-family: 'Marcellus', serif;
-  border: none;
-  border-radius: 2rem;
+.faculty-title-bar button {
+  padding: 5px 10px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.temp-img {
-  width: 50px; /* Fixed width */
-  height: 100%; 
-  border-radius: 50%; /* Optional: circular image */
-  margin-right: 1rem;
+.faculty-edit-page-title {
+  font-family: "Poppins", sans-serif;
+  font-size: 2rem;
+  font-weight: bolder;
 }
 
-/* Responsive adjustments */
+.faculty-template-download {
+  height: 6rem;
+  width: 25rem;
+  border: none;
+  border-radius: 1rem;
+  background-color: bisque;
+  cursor: pointer;
+  align-items: center;
+}
+
+.faculty-template-download span:hover {
+  background-color: #f7f7f7;
+  color: black;
+  box-shadow: 0 0.5em 1.5em -0.5em #00000098;
+}
+
+.faculty-template-download span {
+  z-index: 1;
+  display: inline-block;
+  background-color: black;
+  height: 3em;
+  width: 11.5em;
+  border-radius: 0.5rem;
+  color: #fff;
+  line-height: 55px;
+  font-size: 18px;
+  letter-spacing: 3px;
+  transition: all 0.5s;
+}
+
+.faculty-template-download .container {
+  z-index: -1;
+  width: 0;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  transform: translateY(-3rem);
+}
+
+.faculty-template-download .container img {
+  padding: 0 10px;
+  margin-top: 0;
+}
+
 @media (max-width: 768px) {
-  .add-student-left {
+  .faculty-title-bar {
+    display: flex;
     flex-direction: column;
+    height: auto;
+    gap: 1rem;
+    margin-top: 0px;
   }
+  .faculty-title-bar button {
+    padding: 0px 0px;
+  }
+  .faculty-edit-page-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .faculty-template-download {
+    width: 100%;
+    height: auto;
+  }
+}
 
-  .add-temp-btn {
-    font-size: 0.9rem;
+@media (max-width: 480px) {
+  .faculty-title-bar {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    gap: 1rem;
+    margin-top: 0px;
+    width: 90%;
+  }
+  .faculty-title-bar button {
+    padding: 0px 0px;
+  }
+  .admin-edit-page-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .faculty-template-download {
+    width: 100%;
+    height: auto;
   }
 }

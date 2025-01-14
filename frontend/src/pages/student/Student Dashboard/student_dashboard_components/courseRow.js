@@ -26,21 +26,8 @@ export default function CourseRow({
     })}`;
   };
 
-  const toggleCollapse = () => {
-    setIsCollapsed(!isCollapsed);
-  };
-
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setSelectedFile(file);
-      console.log("File selected:", file.name);
-    }
-  };
-
   const dispatch = useDispatch();
 
-  // Adding a fallback for useSelector
   const { term, student, finalCourse, courses } = useSelector(
     (state) => state.terms || {}
   );

@@ -8,6 +8,7 @@ const Student = require("../../models/studentModel/studentModel");
 const nodemailer = require("nodemailer");
 const path = require("path");
 const asyncHandler = require("express-async-handler");
+const Course = require("../../models/courseModel/courseModel");
 
 // Create a nodemailer transporter
 const transporter = nodemailer.createTransport({
@@ -158,6 +159,16 @@ exports.getDropStudents = asyncHandler(async (req, res) => {
       _id: { $in: studentIds },
       dropApproval: "pending", // Filter for students with pending dropApproval
     });
+
+    console.log("Fetched drop students:", students);
+
+    for (let student of students) {
+      const course = await Course.findById(student.finalCourse[0]);
+      if (course) {
+        student.finalCourseName = course.programName;
+        student.save();
+      }
+    }
 
     res.status(200).json(students);
   } catch (error) {

@@ -1,24 +1,43 @@
-import React, { useState } from 'react';
-import './facNavbar.css'; 
-import { Link, useParams } from 'react-router-dom';
+import React, { useState } from "react";
+import "./facNavbar.css";
+import { Link, useLocation, useParams } from "react-router-dom";
 
-const FacNavbar = ()=>{
-    const { branch, termId } = useParams();
-    const [isSidebarOpen, setSidebarOpen] = useState(false);
-    const toggleSidebar = () => {
-        setSidebarOpen(!isSidebarOpen);
-      };
-    return(
-        <div className="adminSidebar">
-        <div id="sidebar" style={{ width: isSidebarOpen ? "250px" : "0" }}>
-        <Link to={`/faculty/${branch}/${termId}/edit/facAddStudent`}><button className="nav-btn">Add Student</button></Link>
-        <Link to={`/faculty/${branch}/${termId}/edit/facDrop`}><button className="nav-btn">Drop Student</button></Link> 
-         </div>
+const FacNavbar = () => {
+  const { termId, branch } = useParams();
+  const location = useLocation();
 
-      <div id="side-nav">
-        <span onClick={toggleSidebar}>&#9776;</span>
-      </div>
-      </div>
-    );
-}
+  const isActive = (path) => location.pathname === path;
+  return (
+    <div className="add-students-sidebar">
+        <Link to={`/faculty/${branch}/${termId}/edit/facAddStudent`}>
+          <button
+            className={`add-students-button ${
+              isActive(`/faculty/${branch}/${termId}/edit/facAddStudent`)
+                ? "active"
+                : "inactive"
+            }`}
+          >
+            <span className="circle" aria-hidden="true">
+              <span className="icon arrow"></span>
+            </span>
+            <span className="button-text">Add Students</span>
+          </button>
+        </Link>
+        <Link to={`/faculty/${branch}/${termId}/edit/facDrop`}>
+          <button
+            className={`add-students-button ${
+              isActive(`/faculty/${branch}/${termId}/edit/facDrop`)
+                ? "active"
+                : "inactive"
+            }`}
+          >
+            <span className="circle" aria-hidden="true">
+              <span className="icon arrow"></span>
+            </span>
+            <span className="button-text">Drop Students</span>
+          </button>
+        </Link>
+    </div>
+  );
+};
 export default FacNavbar;

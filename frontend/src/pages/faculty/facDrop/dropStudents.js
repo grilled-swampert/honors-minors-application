@@ -7,8 +7,9 @@ export default function DropStudents({ student, handleApprove, handleReject, han
       <td data-label="Roll No">{student.rollNumber}</td>
       <td data-label="Name">{student.name}</td>
       <td data-label="Email">{student.email}</td>
-      <td data-label="Honours/Minors">{student.honours || "N/A"}</td>
-      <td data-label="Program">{student.finalCourse}</td>
+      <td data-label="Branch">{student.branch}</td>
+      <td data-label="Division">{student.division}</td>
+      <td data-label="Program">{student.finalCourseName}</td>
       <td data-label="Drop Application">
         {student.dropFile ? (
           <button

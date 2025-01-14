@@ -19,6 +19,7 @@
 .drop-table td {
   border: 1px solid #ddd;
   padding: 12px 8px;
+  font-size: 1rem;
   text-align: left;
   word-wrap: break-word; /* Ensures content wraps within the cell */
   overflow: hidden; /* Ensures no overflow */
@@ -32,8 +33,11 @@
 }
 
 .drop-table td {
-  font-size: 14px;
   vertical-align: middle;
+  background-color: rgb(192, 255, 191);
+  color: black;
+  font-size: 0.8rem;
+  text-align: center;
 }
 
 .drop-table th:nth-child(6),
@@ -91,11 +95,13 @@
 }
 
 .approve-button {
+  font-weight: 500;
   background-color: #4caf50;
   color: white;
 }
 
 .reject-button {
+  font-weight: 500;
   background-color: #f44336;
   color: white;
 }
