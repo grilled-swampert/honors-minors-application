@@ -15,6 +15,7 @@ function FacAddStudent() {
   const [file, setFile] = useState(null);
   const [uploadStatus, setUploadStatus] = useState("");
   const [emailStatus, setEmailStatus] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const API_BASE_URL =
     process.env.REACT_APP_API_BASE_URL || "http://localhost:9000";
@@ -42,6 +43,7 @@ function FacAddStudent() {
     formData.append("file", file);
 
     try {
+      setLoading(true);
       setUploadStatus("Uploading and processing file...");
       const response = await axios.post(
         `${API_BASE_URL}/faculty/${branch}/${termId}/addStudents`,
@@ -61,6 +63,8 @@ function FacAddStudent() {
       console.error("Error uploading file:", error);
       setUploadStatus("Error uploading file. Please try again.");
       setEmailStatus("Error sending emails. Please check the server logs.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -73,6 +77,20 @@ function FacAddStudent() {
         <FacNavbar />
         <FacTemplate />
       </div>
+      {loading && (
+        <div className="loader-spinner">
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+        </div>
+      )}
       <div>
         <div className="add-students-container">
           <FacAddTop />

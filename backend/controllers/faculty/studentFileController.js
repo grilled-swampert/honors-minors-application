@@ -78,13 +78,11 @@ const sendEmailWithRetry = async (emailOptions, maxRetries = 3) => {
     } catch (error) {
       console.error(`[EMAIL] Error sending email (Attempt ${attempt}):`, error);
       
-      // If it's the last attempt, throw the error
       if (attempt === maxRetries) {
         console.error('[EMAIL] Max retries reached. Email sending failed.');
         throw error;
       }
       
-      // Wait before retrying (exponential backoff)
       await new Promise(resolve => setTimeout(resolve, attempt * 2000));
     }
   }
@@ -265,7 +263,6 @@ exports.addStudents = asyncHandler(async (req, res) => {
 
     const { studentIds, filePath } = await importStudents(file, termId, branch);
 
-    // Initialize arrays for each branch if not already present
     const branchMappings = {
       "EXCP": "EXCP_SL",
       "IT": "IT_SL",
@@ -286,7 +283,6 @@ exports.addStudents = asyncHandler(async (req, res) => {
       term[branchSlKey] = [];
     }
 
-    // Push student IDs and assign file paths for the branch
     term[branchSlKey].push(...studentIds);
     term[`${branchUpperCase}_students`] = filePath;
 

@@ -2,13 +2,13 @@
 import axios from "axios";
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:9000";
 
-// const urlAdmin = `${API_BASE_URL}/admin`;
-// const urlFaculty = `${API_BASE_URL}/faculty`;
-// const urlStudent = `${API_BASE_URL}/student`;
+const urlAdmin = `${API_BASE_URL}/admin`;
+const urlFaculty = `${API_BASE_URL}/faculty`;
+const urlStudent = `${API_BASE_URL}/student`;
 
-const urlAdmin = 'http://localhost:9000/admin';
-const urlFaculty = 'http://localhost:9000/faculty';
-const urlStudent = 'http://localhost:9000/student';
+// const urlAdmin = 'http://localhost:9000/admin';
+// const urlFaculty = 'http://localhost:9000/faculty';
+// const urlStudent = 'http://localhost:9000/student';
 
 // Term API Requests
 export const fetchTerms = () => axios.get(urlAdmin);

@@ -27,43 +27,34 @@ function FacAddTop() {
     const formData = new FormData();
     formData.append('studentsList', studentsList);
 
-    const xhr = new XMLHttpRequest();
+    try {
+      setIsUploading(true);
+      const response = await fetch(`${API_BASE_URL}/faculty/${branch}/${termId}/edit/facAddStudent`, {
+        method: 'PATCH',
+        body: formData,
+      });
 
-    xhr.upload.onprogress = (event) => {
-      if (event.lengthComputable) {
-        const percentComplete = Math.round((event.loaded / event.total) * 100);
-        setUploadProgress(percentComplete);
-      }
-    };
-
-    xhr.onload = () => {
-      if (xhr.status === 200) {
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Term updated successfully', result);
         setError(null);
         setStudentsList(null);
         setUploadProgress(0);
-        setIsUploading(false);
-        console.log('Semester updated successfully', JSON.parse(xhr.response));
-
         window.location.reload();
 
         if (fileInputRef.current) {
           fileInputRef.current.value = '';
         }
       } else {
-        const response = JSON.parse(xhr.response);
-        setError(response.error || 'Something went wrong!');
-        setIsUploading(false);
+        const errorData = await response.json();
+        setError(errorData.error || 'Something went wrong!');
       }
-    };
-
-    xhr.onerror = () => {
+    } catch (error) {
+      console.error('Error submitting form:', error);
       setError('Failed to submit the form');
+    } finally {
       setIsUploading(false);
-    };
-
-    xhr.open('PATCH', `${API_BASE_URL}/faculty/${branch}/${termId}/edit/facAddStudent`, true);
-    xhr.send(formData);
-    setIsUploading(true);
+    }
   };
 
   const handleFileUpload = (event) => {
@@ -95,14 +86,6 @@ function FacAddTop() {
         <button type="submit" disabled={isUploading} className='submit-button'>
           {isUploading ? 'Uploading...' : 'Submit'}
         </button>
-
-        {isUploading && (
-          <div className="fac-progress-bar">
-            <div className="fac-progress" style={{ width: `${uploadProgress}%` }}>
-              {uploadProgress}%
-            </div>
-          </div>
-        )}
 
         {error && <p className="fac-error-message">{error}</p>}
       </form>

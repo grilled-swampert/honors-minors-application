@@ -9,7 +9,7 @@ import {
   sendPasswordResetEmail,
   signOut,
 } from "firebase/auth";
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { Navigate, useLocation, useParams } from "react-router-dom";
 import kjscelogo from "../src/pages/photos-logos/KJSCE-logo.png";
 import trustImg from "../src/pages/photos-logos/Trust.svg";
@@ -70,6 +70,10 @@ const Login = () => {
             const userData = docSnap.data();
 
             if (userData.role) {
+              if (userData.firstLogin) {
+                await handlePasswordReset();
+                return;
+              }
               redirectUser(userData.role, userData.branch, userData.studentId);
             } else {
               setError("User role not defined");
@@ -125,9 +129,27 @@ const Login = () => {
     }
 
     try {
+      // Send the password reset email
       await sendPasswordResetEmail(auth, email);
       setResetEmailSent(true);
       setError(null);
+
+      // Fetch user data to check the role
+      const userDocRef = doc(db, "users", auth.currentUser.uid);
+      const docSnap = await getDoc(userDocRef);
+
+      if (docSnap.exists()) {
+        const userData = docSnap.data();
+
+        // Check if the user is a student
+        if (userData.role === "student") {
+          // Update `firstLogin` to false for students
+          await updateDoc(userDocRef, { firstLogin: false });
+          console.log("First login updated to false for student");
+        }
+      } else {
+        console.error("User document not found in Firestore");
+      }
     } catch (error) {
       console.error("Password reset error:", error);
       setError("Error sending password reset email. Please try again.");
@@ -136,18 +158,18 @@ const Login = () => {
 
   if (loading) {
     return (
-        <div className="loader-spinner">
-          <div />   
-          <div />    
-          <div />    
-          <div />    
-          <div />    
-          <div />    
-          <div />    
-          <div />    
-          <div />    
-          <div />    
-        </div>
+      <div className="loader-spinner">
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+      </div>
     );
   }
 
@@ -246,6 +268,7 @@ async function addUserToDatabase(
       role: role,
       branch: branch,
       studentId: studentId,
+      firstLogin: role === "student",
     });
     await signOut(auth);
   } catch (error) {

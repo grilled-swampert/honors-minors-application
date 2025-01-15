@@ -115,10 +115,27 @@ exports.createTerm = asyncHandler(async (req, res) => {
 exports.deleteTerm = async (req, res) => {
   const { termId } = req.params;
   try {
-    const term = await Term.findByIdAndDelete(termId);
+    const term = await Term.findById(termId);
     if (!term) {
       return res.status(404).json({ message: "Term not found" });
     }
+    const courseIds = term.courses;
+    await Course.deleteMany({ _id: { $in: courseIds } });
+
+    const broadcastMessage = term.broadcastMessage;
+    await BroadcastMessage.findByIdAndDelete(broadcastMessage);
+
+    const studentLists = Object.keys(term.toObject()).filter((key) =>
+      key.endsWith("_SL")
+    );
+
+    for (const list of studentLists) {
+      const students = term[list];
+      await Student.deleteMany({ _id: { $in: students } });
+    }
+
+    await term.remove();
+    
     res.status(200).json({ message: "Term deleted successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });

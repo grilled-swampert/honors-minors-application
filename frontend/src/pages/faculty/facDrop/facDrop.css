@@ -17,6 +17,7 @@
 
 .drop-table th,
 .drop-table td {
+  font-family: "Poppins", sans-serif;
   border: 1px solid #ddd;
   padding: 12px 8px;
   font-size: 1rem;

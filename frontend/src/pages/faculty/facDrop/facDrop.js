@@ -40,7 +40,7 @@ function FacDrop() {
     try {
       setLoading(true);
       await axios.put(
-        `http://localhost:9000/faculty/${branch}/${termId}/edit/facDrop/`,
+        `${API_BASE_URL}/faculty/${branch}/${termId}/edit/facDrop/`,
         {
           studentId,
           isApproved: true,
@@ -71,7 +71,7 @@ function FacDrop() {
     try {
       setLoading(true);
       await axios.patch(
-        `http://localhost:9000/faculty/${branch}/${termId}/edit/facDrop/`,
+        `${API_BASE_URL}/faculty/${branch}/${termId}/edit/facDrop/`,
         {
           studentId,
           isApproved: false,

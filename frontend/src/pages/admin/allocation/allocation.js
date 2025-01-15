@@ -88,7 +88,7 @@ const Allocation = () => {
         .filter((course) => course.temporaryStatus !== "active")
         .map((course) =>
           axios.patch(
-            `http://localhost:9000/admin/${termId}/edit/allocation/deactivate`,
+            `${API_BASE_URL}/admin/${termId}/edit/allocation/deactivate`,
             {
               courseId: course._id,
               status: "inactive",

@@ -13,6 +13,8 @@ export default function CourseAdded({
   const containerRef = useRef(null);
   const [loading, setLoading] = useState(false);
 
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:9000";
+
   useEffect(() => {
     if (containerRef.current) {
       Sortable.create(containerRef.current, {
@@ -40,8 +42,7 @@ export default function CourseAdded({
     }
 
     try {
-      setLoading(true);
-      const response = await fetch(`/student/${studentId}/courses`, {
+      const response = await fetch(`${API_BASE_URL}/student/${studentId}/courses`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -64,9 +65,7 @@ export default function CourseAdded({
     } catch (error) {
       console.error("Error updating courses:", error);
       alert(`Failed to submit courses: ${error.message}`);
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
   return (

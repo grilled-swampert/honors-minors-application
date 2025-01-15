@@ -27,7 +27,7 @@ export default function MainBody({
     try {
       setLoading(true);
       const response = await fetch(
-        `http://localhost:9000/student/${studentId}/dashboard`,
+        `${API_BASE_URL}/student/${studentId}/dashboard`,
         {
           method: "PATCH",
           body: formData,
