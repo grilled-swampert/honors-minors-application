@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
 
 :root {
   --primary-color: #8bd3dd;
@@ -20,7 +20,7 @@
   align-items: center;
   justify-content: center;
   padding: 20px;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .date-selection {
@@ -41,14 +41,17 @@
   gap: 20px;
 }
 
-.startDate, .endDate {
+.startDate,
+.endDate {
   display: flex;
   flex-direction: column;
   width: 100%;
   gap: 10px;
 }
 
-.start-date, .end-date, .syllabus-label {
+.start-date,
+.end-date,
+.syllabus-label {
   font-size: 1.1rem;
   font-weight: 500;
   color: var(--text-color);
@@ -97,7 +100,6 @@
   color: #000000;
 }
 
-
 #add-btn {
   background-color: var(--primary-color);
   border: none;
@@ -114,7 +116,8 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.error, .success {
+.error,
+.success {
   margin-top: 20px;
   font-size: 0.9rem;
   color: white;
@@ -143,16 +146,20 @@
     flex-direction: column;
   }
 
-  .startDate, .endDate {
+  .startDate,
+  .endDate {
     flex-direction: column;
     align-items: flex-start;
   }
 
-  .start-date, .end-date {
+  .start-date,
+  .end-date {
     margin-bottom: 5px;
   }
 
-  .date, #upload-btn, #add-btn {
+  .date,
+  #upload-btn,
+  #add-btn {
     width: 100%;
   }
 }
@@ -162,11 +169,14 @@
     padding: 10px;
   }
 
-  .start-date, .end-date {
+  .start-date,
+  .end-date {
     font-size: 1rem;
   }
 
-  .date, #upload-btn, #add-btn {
+  .date,
+  #upload-btn,
+  #add-btn {
     height: 40px;
     font-size: 0.9rem;
   }
@@ -192,7 +202,7 @@
 #upload-btn {
   display: flex;
   flex-direction: column;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   gap: 1rem;
   width: 100%;
 }
@@ -251,4 +261,74 @@
   display: block;
   margin-top: 4px;
   color: #666;
+}
+
+.loader {
+  width: 400px;
+  height: 32px;
+  background-color: #000000;
+  position: relative;
+  overflow: hidden;
+  border: 3px solid white;
+}
+
+.progress-bar {
+  width: 0%;
+  height: 100%;
+  background-color: #ffffff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation: progress-animation 3s ease-in-out forwards infinite;
+}
+
+.progress-bar::after {
+  content: attr(data-percentage);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-weight: bold;
+  transform: translate(-50%, -50%);
+  font-size: 1rem;
+  color: black;
+}
+
+@keyframes progress-animation {
+  0% {
+    width: 0%;
+  }
+  25% {
+    width: 25%;
+  }
+  50% {
+    width: 50%;
+  }
+  75% {
+    width: 75%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes percentage-animation {
+  0% {
+    content: "0%";
+  }
+  25% {
+    content: "25%";
+  }
+  50% {
+    content: "50%";
+  }
+  75% {
+    content: "75%";
+  }
+  100% {
+    content: "100%";
+  }
+}
+
+.progress-bar::after {
+  animation: percentage-animation 3s ease-in-out forwards infinite;
 }

@@ -81,15 +81,13 @@
 }
 
 .delete-svgIcon {
-  width: 16px; /* Reduce the size of the icon */
-  height: 16px;
   fill: white;
   transition: transform 0.3s ease;
 }
 
 
 .deleteBtn:hover .delete-svgIcon {
-  transform: rotate(10deg); /* Slight rotation effect for interactivity */
+  transform: rotate(10deg); 
 }
 
 @media (max-width: 768px) {

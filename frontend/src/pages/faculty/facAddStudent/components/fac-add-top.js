@@ -10,8 +10,7 @@ function FacAddTop() {
   const [isUploading, setIsUploading] = useState(false);
 
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:9000';
-  
-  // Add a ref for the file input
+
   const fileInputRef = useRef(null);
 
   const handleSubmit = async (e) => {
@@ -19,7 +18,6 @@ function FacAddTop() {
 
     if (!studentsList) {
       setError('Please upload a file');
-      // Ensure the file input is focused when no file is selected
       if (fileInputRef.current) {
         fileInputRef.current.click();
       }
@@ -45,11 +43,9 @@ function FacAddTop() {
         setUploadProgress(0);
         setIsUploading(false);
         console.log('Semester updated successfully', JSON.parse(xhr.response));
-        
-        // Force refresh the page to get updated data
+
         window.location.reload();
-        
-        // Reset file input
+
         if (fileInputRef.current) {
           fileInputRef.current.value = '';
         }
@@ -80,16 +76,14 @@ function FacAddTop() {
 
   return (
     <div className='faculty-student-bar'>
-      <form className='upload-container' onSubmit={handleSubmit} >
+      <form className='upload-container' onSubmit={handleSubmit}>
         <label className='file-input-label'>
           Upload Student CSV File:
           <input 
             type="file" 
             ref={fileInputRef}
             onChange={handleFileUpload} 
-            // Add accept attribute to limit to CSV files
             accept=".csv"
-            // Ensure input is visible and clickable
             style={{ 
               opacity: 1, 
               position: 'relative', 
@@ -103,14 +97,14 @@ function FacAddTop() {
         </button>
 
         {isUploading && (
-          <div className="progress-bar">
-            <div className="progress" style={{ width: `${uploadProgress}%` }}>
+          <div className="fac-progress-bar">
+            <div className="fac-progress" style={{ width: `${uploadProgress}%` }}>
               {uploadProgress}%
             </div>
           </div>
         )}
 
-        {error && <p className="error-message">{error}</p>}
+        {error && <p className="fac-error-message">{error}</p>}
       </form>
     </div>
   );

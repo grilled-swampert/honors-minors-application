@@ -10,7 +10,9 @@ const AddLeftSection = () => {
   const [endDate, setEndDate] = useState("");
   const [endTime, setEndTime] = useState("");
   const [syllabusFile, setSyllabusFile] = useState(null);
-  const [uploadProgress, setUploadProgress] = useState(0); // Track upload progress
+  const [uploadProgress, setUploadProgress] = useState(0); 
+  const [loading, setLoading] = useState(false); 
+  const [currentTask, setCurrentTask] = useState(""); 
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
@@ -29,6 +31,9 @@ const AddLeftSection = () => {
     formData.append("endDate", endDateTime.toISOString());
 
     try {
+      setLoading(true);
+      setCurrentTask("Uploading file...");
+
       const xhr = new XMLHttpRequest();
 
       xhr.upload.onprogress = (event) => {
@@ -38,33 +43,49 @@ const AddLeftSection = () => {
       };
 
       xhr.onload = () => {
+        setUploadProgress(50);
         if (xhr.status === 200) {
-          setError(null);
-          setSuccess("File uploaded successfully!");
-          setUploadProgress(0);
-          setSyllabusFile(null);
-          setStartDate("");
-          setStartTime("");
-          setEndDate("");
-          setEndTime("");
+          setCurrentTask("Processing data...");
+          setTimeout(() => {
+            setError(null);
+            setSuccess("File uploaded and processed successfully!");
+            setLoading(false);
+            resetForm();
+          }, 2000); 
+        setUploadProgress(100);
+        window.location.reload();
         } else {
           setError("File upload failed. Please try again.");
           setSuccess(null);
+          setLoading(false);
         }
       };
 
       xhr.onerror = () => {
         setError("An error occurred during file upload.");
         setSuccess(null);
+        setLoading(false);
       };
 
       xhr.open("PATCH", `${API_BASE_URL}/admin/${termId}/edit/addCourses`);
       xhr.send(formData);
+
     } catch (err) {
       setError("Failed to submit the form");
       setUploadProgress(0);
+      setLoading(false);
       console.error("Error during form submission:", err);
     }
+  };
+
+  const resetForm = () => {
+    setSyllabusFile(null);
+    setStartDate("");
+    setStartTime("");
+    setEndDate("");
+    setEndTime("");
+    setUploadProgress(0);
+    setCurrentTask("");
   };
 
   const handleFileChange = (e) => {
@@ -134,9 +155,9 @@ const AddLeftSection = () => {
             <div id="upload-btn">
               <label className="syllabus-label">Syllabus File:</label>
               <div className="upload-file-data">
-                <label for="file-upload" class="upload-label">
-                  <img src={filelogo} alt="File" class="upload-icon" />
-                  <span class="upload-text">Choose File</span>
+                <label htmlFor="file-upload" className="upload-label">
+                  <img src={filelogo} alt="File" className="upload-icon" />
+                  <span className="upload-text">Choose File</span>
                 </label>
 
                 <input
@@ -158,11 +179,15 @@ const AddLeftSection = () => {
             </button>
           </div>
 
-          {uploadProgress > 0 && (
-            <div className="progress-bar">
-              <div className="progress" style={{ width: `${uploadProgress}%` }}>
+          {loading && (
+            <div className="loader">
+              <div
+                className="progress-bar"
+                style={{ width: `${uploadProgress}%` }}
+              >
                 {uploadProgress}%
               </div>
+              <div className="current-task">{currentTask}</div>
             </div>
           )}
 

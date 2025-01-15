@@ -5,7 +5,11 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCourses } from "../../../../api/index";
 
-export default function CourseList({ searchText, selectedCourses, handleCourseSelection }) {
+export default function CourseList({
+  searchText,
+  selectedCourses,
+  handleCourseSelection,
+}) {
   const { studentId } = useParams();
   const dispatch = useDispatch();
   const { filteredCourses, loading, error } = useSelector(
@@ -34,9 +38,25 @@ export default function CourseList({ searchText, selectedCourses, handleCourseSe
     );
   });
 
-  if (loading) return <p>Loading courses...</p>;
+  if (loading) {
+    return (
+      <div className="loader-spinner">
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+        <div />
+      </div>
+    );
+  }
   if (error) return <p>Error loading courses: {error}</p>;
-  if (!filteredList || filteredList.length === 0) return <p>No courses found</p>;
+  if (!filteredList || filteredList.length === 0)
+    return <p>No courses found</p>;
 
   return (
     <div className={styles.courseList}>
@@ -60,4 +80,3 @@ export default function CourseList({ searchText, selectedCourses, handleCourseSe
     </div>
   );
 }
-

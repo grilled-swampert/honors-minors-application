@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 const Broadcast = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const { termId } = useParams();
   const API_BASE_URL =
@@ -20,6 +21,7 @@ const Broadcast = () => {
 
   const fetchMessages = async () => {
     try {
+      setLoading(true);
       console.log("Fetching messages...");
       const response = await axios.get(
         `${API_BASE_URL}/admin/${termId}/edit/broadcast`
@@ -32,12 +34,15 @@ const Broadcast = () => {
         "Error fetching messages:",
         error.response ? error.response.data : error.message
       );
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleAddMessage = async () => {
     if (newMessage.trim()) {
       try {
+        setLoading(true);
         const response = await axios.post(
           `${API_BASE_URL}/admin/${termId}/edit/broadcast`,
           { text: newMessage }
@@ -47,12 +52,15 @@ const Broadcast = () => {
         fetchMessages();
       } catch (error) {
         console.error("Error adding message:", error);
+      } finally {
+        setLoading(false);
       }
     }
   };
 
   const handleDeleteMessage = async (id) => {
     try {
+      setLoading(true);
       await axios.delete(
         `${API_BASE_URL}/admin/${termId}/edit/broadcast/${id}`
       );
@@ -60,11 +68,14 @@ const Broadcast = () => {
       fetchMessages();
     } catch (error) {
       console.error("Error deleting message:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleToggleMessage = async (id) => {
     try {
+      setLoading(true);
       const response = await axios.patch(
         `${API_BASE_URL}/admin/${termId}/edit/broadcast`,
         { id }
@@ -73,6 +84,8 @@ const Broadcast = () => {
       fetchMessages(); // Refetch messages after toggling
     } catch (error) {
       console.error("Error toggling message:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -98,6 +111,21 @@ const Broadcast = () => {
                 Enter
               </button>
             </div>
+
+            {loading && (
+              <div className="loader-spinner">
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+              </div>
+            )}
 
             <div className="br-bottom">
               <table id="message-table">
@@ -136,7 +164,7 @@ const Broadcast = () => {
                       </td>
                       <td>
                         <button
-                          className="delete-btn"
+                          className="broad-delete-btn"
                           onClick={() => handleDeleteMessage(message._id)}
                         >
                           <img src={deleteicon} alt="delete" />

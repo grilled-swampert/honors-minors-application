@@ -1,8 +1,8 @@
 .view-sem-info {
   display: flex;
   flex-direction: column;
-  flex: 0 0 20%; /* Fixed width for the left side */
-  background-color: #fef6e4; /* Light blue for better visibility */
+  flex: 0 0 20%; 
+  background-color: #fef6e4; 
   border-radius: 10px;
   padding: 10px;
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
@@ -14,7 +14,7 @@
   border-radius: 10px;
   margin: 5px 0;
   text-align: center;
-  background-color: #f3d2c1; /* Updated color for each tab */
+  background-color: #f3d2c1; 
   color: #05445e;
   font-weight: bold;
   cursor: pointer;
@@ -22,9 +22,9 @@
 }
 
 .side-tab:hover {
-  background-color: #05445e; /* Darker shade on hover */
-  color: #ffffff; /* Change text color on hover */
-  transform: scale(1.05); /* Slight enlargement for emphasis */
+  background-color: #05445e; 
+  color: #ffffff;
+  transform: scale(1.05); 
 }
 
 .side-tab h2 {
@@ -38,14 +38,13 @@
 }
 
 .side-tab.expanded {
-  background-color: #189ab4; /* Highlight active tab */
+  background-color: #189ab4; 
   color: white;
 }
 
 @media (max-width: 768px) {
   .view-sem-info {
     flex: 0 0 auto;
-    width: 100%; /* Full width on narrow screens */
     padding: 10px;
     margin-bottom: 10px;
   }

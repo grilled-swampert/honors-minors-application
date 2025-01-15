@@ -45,8 +45,26 @@
   text-align: center;
 }
 
-/* Responsive Table */
+.drop-fac-message {
+  display: none;
+}
+
+@media (max-width: 1200px) {
+  .drop-table {
+    display: none;
+  }
+  .drop-fac-message {
+    display: block; 
+    text-align: center;
+    font-size: 1.5rem;
+    color: red; 
+    padding: 2rem;
+  }
+}
 @media (max-width: 768px) {
+  .drop-table {
+    display: none;
+  }
   .drop-table thead {
     display: none;
   }

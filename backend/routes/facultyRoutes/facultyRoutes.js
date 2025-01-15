@@ -35,8 +35,7 @@ router.delete("/:branch/:termId/facView", deleteStudents);
 
 router.get("/:branch/:termId/edit/facDrop", getDropStudents);
 router.put("/:branch/:termId/edit/facDrop", updateDropApprovalStatus);
-
-// Make sure this initialization happens only once in your application
+router.patch("/:branch/:termId/edit/facDrop", updateDropApprovalStatus);
 if (!admin.apps.length) {
   admin.initializeApp();
 }

@@ -1,13 +1,13 @@
 .add-bottom {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Flexible grid columns */
-  gap: 1rem; /* Spacing between grid items */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+  gap: 1rem; 
   padding: 1rem;
   background-color: #f3d2c1;
   border-radius: 1rem;
   margin: 1rem auto;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  max-width: 90%; /* Adjust for better responsiveness */
+  max-width: 90%;
 }
 
 .add-box {
@@ -51,7 +51,7 @@
 
 @media (max-width: 768px) {
   .add-bottom {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjust grid for smaller screens */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
   }
 
   .csv-name, .add-box p {

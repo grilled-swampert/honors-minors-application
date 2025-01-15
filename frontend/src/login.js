@@ -135,7 +135,20 @@ const Login = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+        <div className="loader-spinner">
+          <div />   
+          <div />    
+          <div />    
+          <div />    
+          <div />    
+          <div />    
+          <div />    
+          <div />    
+          <div />    
+          <div />    
+        </div>
+    );
   }
 
   return (

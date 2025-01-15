@@ -1,34 +1,34 @@
 .view-dashboard {
   display: flex;
-  flex-direction: row; /* Keep row layout for wide screens */
-  justify-content: flex-start; /* Align items to the left */
+  flex-direction: row; 
+  justify-content: flex-start;
   padding: 20px;
   background-color: #f3d2c1;
   border-radius: 20px;
   width: 90%;
   margin: auto;
-  gap: 20px; /* Add spacing between left and right sections */
+  gap: 20px; 
 }
 
 .rightside {
-  flex: 1; /* Right section takes remaining space */
+  flex: 1; 
   display: flex;
   flex-direction: column;
 }
 
 .download-buttons {
   display: flex;
-  flex-wrap: wrap; /* Allows buttons to wrap in smaller screens */
-  gap: 10px; /* Adds spacing between buttons */
-  justify-content: center; /* Center align buttons */
+  flex-wrap: wrap; 
+  gap: 10px; 
+  justify-content: center; 
   margin-top: 20px;
 }
 
 .download-btn {
-  width: 200px; /* Set fixed width for consistency */
-  height: auto; /* Allow height to adjust based on content */
-  padding: 10px 15px; /* Proper padding for text */
-  text-align: center; /* Center align text */
+  width: 200px; 
+  height: auto; 
+  padding: 10px 15px; 
+  text-align: center;
   border-radius: 8px;
   background-color: #fef6e4;
   border: 2px solid #05445e;
@@ -37,7 +37,7 @@
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
-  word-wrap: break-word; /* Ensures long text wraps properly */
+  word-wrap: break-word; 
 }
 
 .download-btn:hover {
@@ -48,20 +48,21 @@
 
 @media (max-width: 768px) {
   .view-dashboard {
-    flex-direction: column; /* Stack sections vertically */
+    flex-direction: column; 
+    margin: 0;
     gap: 10px;
   }
 
   .rightside {
-    width: 100%; /* Full width for narrow screens */
+    width: 100%; 
   }
 
   .download-btn {
-    width: 90%; /* Full width for mobile view */
-    font-size: 14px; /* Adjust font size for smaller screens */
+    width: 90%; 
+    font-size: 14px; 
   }
 
   .download-buttons {
-    gap: 15px; /* Increase spacing on small screens */
+    gap: 15px; 
   }
 }

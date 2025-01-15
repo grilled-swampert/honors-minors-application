@@ -81,8 +81,7 @@
   font-weight: 500;
   font-size: 16px;
   padding: 0.7em 1.4em 0.7em 1.1em;
-  color: white;
-  background: #ad5389;
+  color: rgb(0, 0, 0);
   background: #8bd3dd;
   border: none;
   letter-spacing: 3px;
@@ -91,6 +90,7 @@
   width: 15rem;
   font-family: "Poppins", sans-serif;
   gap: 1rem;
+  transition: all 0.5s;
 }
 
 .cssbuttons-io-button svg {
@@ -98,6 +98,8 @@
 }
 
 .cssbuttons-io-button:hover {
+  background-color: #45696e;
+  color: white;
   box-shadow: 0 0.5em 1.5em -0.5em #00000098;
 }
 

@@ -8,7 +8,7 @@ import AddLeftSection from "./add-left-section";
 const TemplatePage = () => {
   const { termId } = useParams();
   const dispatch = useDispatch();
-  const termDetail = useSelector((state) => state.terms);
+  const termDetail = useSelector((state) => state.terms[0]);
 
   const [terms, setTerms] = useState([]);
 
@@ -23,7 +23,7 @@ const TemplatePage = () => {
   return (
     <div className="admin-title-bar">
       <div className="adminedit-page-title">
-        {termDetail ? `${termDetail[0].termYear}` : "Loading..."}
+        {termDetail ? `${termDetail.termYear}` : "Loading..."}
       </div>
       <div className="admin-edit-page-buttons">
         <button

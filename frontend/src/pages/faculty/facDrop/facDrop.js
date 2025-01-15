@@ -14,16 +14,23 @@ function FacDrop() {
     pdfUrl: null,
   });
   const { branch, termId } = useParams();
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:9000";
+  const [loading, setLoading] = useState(false);
+  const API_BASE_URL =
+    process.env.REACT_APP_API_BASE_URL || "http://localhost:9000";
 
   useEffect(() => {
     const fetchDropStudents = async () => {
       try {
         console.log("Fetching drop students for:", { branch, termId });
-        const response = await axios.get(`${API_BASE_URL}/faculty/${branch}/${termId}/edit/facDrop`);
+        const response = await axios.get(
+          `${API_BASE_URL}/faculty/${branch}/${termId}/edit/facDrop`
+        );
         setDropStudents(response.data);
       } catch (error) {
-        console.error("Error fetching drop students:", error.response?.data || error.message);
+        console.error(
+          "Error fetching drop students:",
+          error.response?.data || error.message
+        );
       }
     };
     fetchDropStudents();
@@ -31,16 +38,29 @@ function FacDrop() {
 
   const handleApprove = async (studentId) => {
     try {
-      await axios.put(`${API_BASE_URL}/faculty/${branch}/${termId}/edit/facDrop/approve`, {
-        studentId,
-      });
+      setLoading(true);
+      await axios.put(
+        `http://localhost:9000/faculty/${branch}/${termId}/edit/facDrop/`,
+        {
+          studentId,
+          isApproved: true,
+        }
+      );
       setDropStudents((prev) =>
         prev.map((student) =>
-          student._id === studentId ? { ...student, dropApproval: "approved" } : student
+          student._id === studentId
+            ? { ...student, dropApproval: "approved" }
+            : student
         )
       );
+      window.location.reload();
     } catch (error) {
-      console.error("Error approving drop request:", error.response?.data || error.message);
+      console.error(
+        "Error approving drop request:",
+        error.response?.data || error.message
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -49,45 +69,63 @@ function FacDrop() {
     if (!rejectionReason) return;
 
     try {
-      await axios.put(`/faculty/${branch}/${termId}/edit/facDrop/reject`, {
-        studentId,
-        rejectionReason,
-      });
+      setLoading(true);
+      await axios.patch(
+        `http://localhost:9000/faculty/${branch}/${termId}/edit/facDrop/`,
+        {
+          studentId,
+          isApproved: false,
+          rejectionReason,
+        }
+      );
       setDropStudents((prev) =>
         prev.map((student) =>
-          student._id === studentId ? { ...student, dropApproval: "rejected" } : student
+          student._id === studentId
+            ? { ...student, dropApproval: "rejected" }
+            : student
         )
       );
+      window.location.reload();
     } catch (error) {
-      console.error("Error rejecting drop request:", error.response?.data || error.message);
+      console.error(
+        "Error rejecting drop request:",
+        error.response?.data || error.message
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleShowPreview = (studentId) => {
     console.log("Student ID:", studentId);
-  
+
     axios
-      .get(`http://localhost:9000/faculty/${branch}/${termId}/edit/facDrop/${studentId}`, {
-        responseType: "blob", // Ensure binary response for the PDF file
-      })
+      .get(
+        `http://localhost:9000/faculty/${branch}/${termId}/edit/facDrop/${studentId}`,
+        {
+          responseType: "blob", // Ensure binary response for the PDF file
+        }
+      )
       .then((response) => {
         console.log("PDF response received");
         console.log(response.data);
-  
+
         const pdfUrl = URL.createObjectURL(response.data); // Create URL from blob
         console.log("Generated PDF URL:", pdfUrl);
-  
+
         setOverlayState({
           isVisible: true,
           pdfUrl: pdfUrl, // Pass the URL to overlay state
         });
       })
       .catch((error) => {
-        console.error("Error fetching PDF:", error.response?.data || error.message);
+        console.error(
+          "Error fetching PDF:",
+          error.response?.data || error.message
+        );
         alert("Failed to fetch the drop application file. Please try again.");
       });
   };
-  
 
   return (
     <div className="add-students-main">
@@ -95,10 +133,27 @@ function FacDrop() {
       <div className="fac-topside-table">
         <FacNavbar />
         <div className="faculty-title-bar">
-          <div className="faculty-edit-page-title">Allocation</div>
+          <div className="faculty-edit-page-title">Drop Students</div>
         </div>
       </div>
+      {loading && (
+        <div className="loader-spinner">
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+        </div>
+      )}
       <div className="drop-content">
+        <div className="drop-fac-message">
+          Please open on a desktop device for better visibility.
+        </div>
         <table className="drop-table">
           <thead>
             <tr>
@@ -128,7 +183,9 @@ function FacDrop() {
         {overlayState.isVisible && (
           <PDFPreviewOverlay
             show={overlayState.isVisible}
-            handleClose={() => setOverlayState({ isVisible: false, pdfUrl: null })}
+            handleClose={() =>
+              setOverlayState({ isVisible: false, pdfUrl: null })
+            }
             pdfUrl={overlayState.pdfUrl}
           />
         )}
@@ -138,4 +195,3 @@ function FacDrop() {
 }
 
 export default FacDrop;
-

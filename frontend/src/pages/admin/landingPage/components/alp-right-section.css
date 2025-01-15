@@ -13,8 +13,9 @@
 }
 
 #edit-img {
-  height: 3vh;
-  object-fit: contain;
+  width: 30px;
+  display: flex;
+  justify-content: center;
 }
 
 tbody tr:nth-child(odd) {
@@ -68,12 +69,6 @@ tbody tr:nth-child(even) {
 .term-delete-button:hover .delete-bin-top {
   transition-duration: 0.5s;
   transform: rotate(160deg);
-}
-
-tbody img {
-  height: 10px;
-  width: auto;
-  object-fit: contain;
 }
 
 @media (max-width: 768px) {

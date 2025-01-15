@@ -12,8 +12,10 @@ export default function MainBody({
   const { studentId } = useParams();
   const [dropReason, setDropReason] = useState("");
   const [dropFile, setDropFile] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:9000";
+  const API_BASE_URL =
+    process.env.REACT_APP_API_BASE_URL || "http://localhost:9000";
 
   const handleDropApplication = async (e) => {
     e.preventDefault();
@@ -23,10 +25,14 @@ export default function MainBody({
     formData.append("dropFile", dropFile);
 
     try {
-      const response = await fetch(`http://localhost:9000/student/${studentId}/dashboard`, {
-        method: "PATCH",
-        body: formData,
-      });
+      setLoading(true);
+      const response = await fetch(
+        `http://localhost:9000/student/${studentId}/dashboard`,
+        {
+          method: "PATCH",
+          body: formData,
+        }
+      );
 
       console.log(response);
 
@@ -34,13 +40,15 @@ export default function MainBody({
         const data = await response.json();
         console.error("Error dropping course:", data.error);
       } else {
-        console.log("Course dropped successfully!");
+        console.alert("Course drop application submitted successfully!");
         setDropReason("");
         setDropFile(null);
         toggleDropOverlay();
       }
     } catch (err) {
       console.error("Error dropping course:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -56,6 +64,20 @@ export default function MainBody({
 
   return (
     <div>
+      {loading && (
+        <div className="loader-spinner">
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+        </div>
+      )}
       <div className={styles.mainBody}>
         <CourseRow
           title="Honors/Minors Courses"

@@ -16,6 +16,7 @@ const Allocation = () => {
   const allCourses = useSelector((state) => state.terms);
   const [updatedCourses, setUpdatedCourses] = useState({});
   const [localCourses, setLocalCourses] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const API_BASE_URL =
     process.env.REACT_APP_API_BASE_URL || "http://localhost:9000";
@@ -51,6 +52,7 @@ const Allocation = () => {
 
   const applyChanges = async () => {
     try {
+      setLoading(true);
       console.log("Updated Courses:", updatedCourses);
       const promises = Object.entries(updatedCourses).map(
         ([courseId, data]) => {
@@ -69,43 +71,49 @@ const Allocation = () => {
 
       await Promise.all(promises);
       console.log("All changes applied successfully");
-      // Refresh the courses after applying changes
       dispatch(getCourses(termId));
       setUpdatedCourses({});
-      // window.location.reload(); // Optional: refresh to reflect updates
+      window.location.reload();
     } catch (error) {
       console.error("Error applying changes:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const submitDeactivations = async () => {
     try {
-      // Filter courses where checkbox is ticked (temporaryStatus is not 'active')
+      setLoading(true);
       const deactivationPromises = localCourses
         .filter((course) => course.temporaryStatus !== "active")
         .map((course) =>
-          axios.patch(`http://localhost:9000/admin/${termId}/edit/allocation/deactivate`, {
-            courseId: course._id,
-            status: "inactive",
-            temporaryStatus: "inactive",
-          })
+          axios.patch(
+            `http://localhost:9000/admin/${termId}/edit/allocation/deactivate`,
+            {
+              courseId: course._id,
+              status: "inactive",
+              temporaryStatus: "inactive",
+            }
+          )
         );
-  
+
       console.log("Deactivation promises for courses:", deactivationPromises);
-  
+
       await Promise.all(deactivationPromises);
       console.log("All deactivations submitted successfully");
-  
+
       // Refresh the data after successful deactivations
       dispatch(getCourses(termId));
     } catch (error) {
       console.error("Error submitting deactivations:", error);
+    } finally {
+      setLoading(false);
     }
-  };  
+  };
 
-  // Download a single course's student list
   const downloadRowData = async (courseId) => {
     try {
+      setLoading(true);
       console.log("Downloading data for course:", courseId);
       const response = await axios.get(
         `${API_BASE_URL}/admin/${termId}/courses/${courseId}/students`,
@@ -122,10 +130,11 @@ const Allocation = () => {
       document.body.removeChild(link);
     } catch (error) {
       console.error("Error downloading CSV:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Download all courses' allocation information
   const downloadAllData = async () => {
     try {
       const response = await axios.get(
@@ -148,6 +157,8 @@ const Allocation = () => {
     } catch (error) {
       console.error("Error downloading CSV:", error);
       // Handle error (e.g., show an error message to the user)
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -193,6 +204,20 @@ const Allocation = () => {
               </tr>
             </thead>
             <tbody>
+              {loading && (
+                <div className="loader-spinner">
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                </div>
+              )}
               {localCourses.map((course) => (
                 <AllocationRow
                   key={course._id}
