@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "./courseAdded.module.css";
 import Sortable from "sortablejs";
@@ -11,6 +11,7 @@ export default function CourseAdded({
   const { studentId } = useParams();
   const navigate = useNavigate();
   const containerRef = useRef(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -39,6 +40,7 @@ export default function CourseAdded({
     }
 
     try {
+      setLoading(true);
       const response = await fetch(`/student/${studentId}/courses`, {
         method: "PATCH",
         headers: {
@@ -47,7 +49,7 @@ export default function CourseAdded({
         body: JSON.stringify({
           courses: selectedCourses.map((course, index) => ({
             id: course._id || course.id,
-            preference: index + 1
+            preference: index + 1,
           })),
         }),
       });
@@ -62,11 +64,27 @@ export default function CourseAdded({
     } catch (error) {
       console.error("Error updating courses:", error);
       alert(`Failed to submit courses: ${error.message}`);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className={styles.coursesAddedContainer}>
+      {loading && (
+        <div className="loader-spinner">
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+        </div>
+      )}
       <div className={styles.coursesAddedTable} ref={containerRef}>
         {selectedCourses.map((course, index) => (
           <div
@@ -88,10 +106,7 @@ export default function CourseAdded({
         ))}
       </div>
       <div className={styles.buttons}>
-        <button 
-          className={styles.submitBtn} 
-          onClick={handleSubmit}
-        >
+        <button className={styles.submitBtn} onClick={handleSubmit}>
           Submit
         </button>
       </div>

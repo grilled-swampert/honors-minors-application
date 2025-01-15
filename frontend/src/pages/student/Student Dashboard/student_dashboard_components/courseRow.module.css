@@ -53,12 +53,12 @@
 
 .deadlineWrapper {
   color: red;
-  font-size: 2rem;
+  font-size: 1rem;
 }
 
 .deadlineWrapper strong{
   color: red;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
 }
 
 .tabCollapse {
@@ -117,7 +117,7 @@
 
 .courseSelectionStatus,
 .certificationStatus {
-  font-size: 2rem;
+  font-size: 1.2rem;
 }
 
 .selectedCourseName {
@@ -150,7 +150,7 @@
 
 .iconWrapper span,
 .semesterWrapper span {
-  font-size: 2rem;
+  font-size: 1rem;
 }
 
 .iconWrapper strong {

@@ -3,8 +3,8 @@
 .courseList {
   position: relative;
   display: flex;
+  height: 70%;
   flex-direction: column;
-  height: calc(100vh - 300px);
   background-color: #f3d2c1;
   border-radius: 20px;
   overflow: hidden;
@@ -125,6 +125,10 @@ a {
   .courseRow {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .courseHeader {
+    display: none;
   }
 
   .somaiyaCourseName,

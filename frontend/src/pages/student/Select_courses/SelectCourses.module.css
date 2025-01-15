@@ -1,13 +1,3 @@
-body {
-  background-color: #fef6e4;
-  font-family: "Poppins", sans-serif;  color: #001858;
-  font-size: 125%;
-}
-
-button {
-  font-family: "Poppins", sans-serif;
-  font-size: 24px;
-}
 
 .navbar {
   height: 120px;
@@ -38,14 +28,19 @@ button {
 }
 
 .heroSection {
-  margin: 20px;
+  margin-left: 5%;
+  gap: 1rem;
   display: flex;
+  width: 90%;
+  justify-content: center;
+  font-family: "Poppins", sans-serif;
   height: calc(100vh - 180px); /* Adjusted to account for navbar and margins */
 }
 
 .coursesSelectorList, .coursesAdded {
   display: flex;
   flex-direction: column;
+
 }
 
 .addBtn, .submitBtn, .downloadBtn {
