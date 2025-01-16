@@ -52,30 +52,23 @@ const importCourses = async (file, termId) => {
     const results = [];
     const filePath = file.path;
 
-    console.log('File path:', filePath);
-
     try {
         await fs.promises.readFile(filePath, { encoding: 'utf8' });
     } catch (error) {
         throw new Error('File not found or inaccessible');
     }
 
-    console.log('Reading file:', filePath);
-
     return new Promise((resolve, reject) => {
         fs.access(filePath, fs.constants.F_OK, (err) => {
             if (err) {
                 return reject(new Error('File not found or inaccessible'));
             }
-            console.log('Reading file inside:', filePath);
             fs.createReadStream(filePath)
                 .on('error', (err) => reject(new Error('Error reading CSV file')))
                 .pipe(csv())
                 .on('data', (data) => results.push(sanitizeData(data))) // Sanitize each row
                 .on('end', async () => {
                     try {
-
-                        console.log('Results:', results);
                         const courseIds = [];
                         for (const row of results) {
                             const newCourse = new Course({
@@ -98,8 +91,6 @@ const importCourses = async (file, termId) => {
                                 term: termId,
                                 status: 'active',
                             });
-
-                            console.log('New course:', newCourse);
 
                             await newCourse.save();
                             courseIds.push(newCourse._id);
@@ -124,13 +115,9 @@ exports.createSemesterAndProcessCSV = asyncHandler(async (req, res) => {
     const file = req.file;
 
     try {
-        // Use termId directly as a string for the findById method
         let term = await Term.findById(termId);
 
-        console.log('Term:', term);
-
         if (term) {
-            // Update existing term
             Object.keys(req.body).forEach((key) => {
                 term[key] = req.body[key];
             });
@@ -155,16 +142,11 @@ exports.createSemesterAndProcessCSV = asyncHandler(async (req, res) => {
 
             const savedTerm = await term.save();
 
-            console.log('Saved term:', savedTerm);
-            console.log('Req File:', req.file);
-
             if (req.file) {
                 const courseIds = await importCourses(req.file, termId);
                 savedTerm.courses = courseIds;
                 await savedTerm.save();
             }
-
-            console.log('Saved term with courses:', savedTerm);
 
             res.status(201).json(savedTerm);
         }

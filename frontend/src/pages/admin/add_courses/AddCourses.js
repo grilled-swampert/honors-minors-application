@@ -22,10 +22,7 @@ const AddCoursesPage = () => {
     }
   }, [dispatch, termId]);
 
-  console.log("Terms from store:", allTerms);
-
   const termNeeded = allTerms.find((allTerms) => allTerms._id === termId);
-  console.log("Term needed:", termNeeded);
 
   const hasValidDates =
     termNeeded && termNeeded.startDate && termNeeded.endDate;

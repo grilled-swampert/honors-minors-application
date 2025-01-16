@@ -14,7 +14,6 @@ export default function CourseRow({
   onDrop,
 }) {
   const { studentId } = useParams();
-  console.log("Student ID:", studentId);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -31,9 +30,6 @@ export default function CourseRow({
   const { term, student, finalCourse, courses } = useSelector(
     (state) => state.terms || {}
   );
-
-  console.log("Term Data:", term);
-  console.log("Student Data:", student);
 
   useEffect(() => {
     // Dispatch the action to fetch both term and student details

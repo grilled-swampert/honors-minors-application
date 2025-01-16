@@ -14,9 +14,7 @@ import * as api from "../api/index.js";
 // Term Actions
 export const getTerms = () => async (dispatch) => {
   try {
-    console.log("Sending request to fetch terms");
     const { data } = await api.fetchTerms();
-    console.log("Received data:", data);
     dispatch({ type: FETCH_TERMS, payload: data });
   } catch (error) {
     console.error("Error fetching terms:", error.message);
@@ -48,7 +46,7 @@ export const createTerm = (term) => async (dispatch) => {
     const { data } = await api.createTerm(term);
     dispatch({ type: CREATE_TERM, payload: data });
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
   }
 };
 
@@ -57,7 +55,7 @@ export const updateTerm = (id, term) => async (dispatch) => {
     const { data } = await api.updateTerm(id, term);
     dispatch({ type: UPDATE_TERM, payload: data });
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
   }
 }
 
@@ -66,7 +64,7 @@ export const deleteTerm = (id) => async (dispatch) => {
     await api.deleteTerm(id);
     dispatch({ type: DELETE_TERM, payload: id });
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
   }
 };
 
@@ -76,17 +74,13 @@ export const getTermDetails = (studentId) => async (dispatch) => {
     const { data } = await api.getTermDetails(studentId);
     dispatch({ type: FETCH_STUD_TERM, payload: data });
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
   }
 };
 
 export const getStudents = (branch, termId) => async (dispatch) => {
-  console.log("Fetching students for branch:", branch); // Debug log for termId
-  console.log("Fetching students for Term ID:", termId); // Debug log for termId
-
   try {
     const { data } = await api.fetchStudents(branch, termId);
-    console.log("Fetched Data:", data); // Debug log for fetched data
     dispatch({ type: FETCH_STUDENTS, payload: data });
   } catch (error) {
     console.error("Error fetching students:", error.message); // Debug log for errors
@@ -94,12 +88,8 @@ export const getStudents = (branch, termId) => async (dispatch) => {
 };
 
 export const getDropStudents = (branch, termId) => async (dispatch) => {
-  console.log("Fetching students for branch:", branch); // Debug log for termId
-  console.log("Fetching students for Term ID:", termId); // Debug log for termId
-
   try {
     const { data } = await api.getDropStudents(branch, termId);
-    console.log("Fetched Data:", data); // Debug log for fetched data
     dispatch({ type: "FETCH_DROP_STUDENTS", payload: data });
   } catch (error) {
     console.error("Error fetching students:", error.message); // Debug log for errors
@@ -117,27 +107,9 @@ export const putDropApplication = (branch, termId, studentId) => async (dispatch
 
 export const getCourses = (termId) => async (dispatch) => {
   try {
-    console.log("From getCourses, termId: ", termId);
-
-    // Log before the API call
-    console.log("Fetching courses data...");
-
-    // Fetch data from API
     const { data } = await api.getAllCourses(termId);
-
-    // Log after fetching data
-    console.log("Fetched Data:", data);
-
-    // Log before dispatching action
-    console.log("Dispatching FETCH_ALL_COURSES with payload:", data);
-
-    // Dispatch the action to the reducer
     dispatch({ type: FETCH_ALL_COURSES, payload: data });
-
-    // Log after dispatch (this confirms dispatch call was made)
-    console.log("Dispatch completed.");
   } catch (error) {
-    // Log the error if the API call fails
     console.error("Error fetching courses:", error.message);
   }
 };
@@ -153,9 +125,7 @@ export const submitCourses = (studentId, courses) => async (dispatch) => {
 
 export const setMaxCount = (termId, courseId, maxCount) => async (dispatch) => {
   try {
-    console.log("Attempting to set max count for course ID:", courseId);
     const { data } = await api.setMaxCount(termId, courseId, maxCount);
-    console.log("API response:", data);
     dispatch({ type: "SET_MAX_COUNT_SUCCESS", payload: data });
   } catch (error) {
     dispatch({ type: "SET_MAX_COUNT_FAILURE", payload: error.message });
@@ -173,18 +143,9 @@ export const applyForDrop = (studentId) => async (dispatch) => {
 
 export const deleteStudents = (studentId, branch, termId) => async (dispatch) => {
   try {
-    console.log("Attempting to delete student with ID:", studentId);
-    console.log("For term ID:", termId);
-
-    // Check if API call works and log the response
     const response = await api.deleteStudents(studentId, branch, termId);
-    console.log("API response:", response);
-
-    // Dispatch success action if no errors
     dispatch({ type: "DELETE_STUDENTS_SUCCESS", payload: studentId });
-    console.log("Delete action dispatched successfully");
   } catch (error) {
-    // Log the error to see exactly what's wrong
     console.error("Error in deleteStudents action:", error.message);
     dispatch({ type: "DELETE_STUDENTS_FAILURE", payload: error.message });
   }

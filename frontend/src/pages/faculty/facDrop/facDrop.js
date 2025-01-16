@@ -21,7 +21,6 @@ function FacDrop() {
   useEffect(() => {
     const fetchDropStudents = async () => {
       try {
-        console.log("Fetching drop students for:", { branch, termId });
         const response = await axios.get(
           `${API_BASE_URL}/faculty/${branch}/${termId}/edit/facDrop`
         );
@@ -97,8 +96,6 @@ function FacDrop() {
   };
 
   const handleShowPreview = (studentId) => {
-    console.log("Student ID:", studentId);
-
     axios
       .get(
         `http://localhost:9000/faculty/${branch}/${termId}/edit/facDrop/${studentId}`,
@@ -107,11 +104,8 @@ function FacDrop() {
         }
       )
       .then((response) => {
-        console.log("PDF response received");
-        console.log(response.data);
 
         const pdfUrl = URL.createObjectURL(response.data); // Create URL from blob
-        console.log("Generated PDF URL:", pdfUrl);
 
         setOverlayState({
           isVisible: true,

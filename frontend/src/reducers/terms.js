@@ -32,7 +32,6 @@ export default (terms = [], action) => {
             return action.payload;
 
         case FETCH_ALL_COURSES:
-            console.log("Reducer received FETCH_ALL_COURSES with payload:", action.payload);
             return action.payload;
 
         case SET_MAX_COUNT:

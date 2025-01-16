@@ -22,13 +22,10 @@ const AlpMain = () => {
 
   const dispatch = useDispatch();
   const terms = useSelector((state) => state.terms);
-  console.log(terms);
 
   useEffect(() => {
     dispatch(getTerms());
   }, [dispatch]);
-
-  console.log(terms);
 
   return (
     <div className="alp-main">

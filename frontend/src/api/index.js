@@ -2,13 +2,13 @@
 import axios from "axios";
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:9000";
 
-const urlAdmin = `${API_BASE_URL}/admin`;
-const urlFaculty = `${API_BASE_URL}/faculty`;
-const urlStudent = `${API_BASE_URL}/student`;
+// const urlAdmin = `${API_BASE_URL}/admin`;
+// const urlFaculty = `${API_BASE_URL}/faculty`;
+// const urlStudent = `${API_BASE_URL}/student`;
 
-// const urlAdmin = 'http://localhost:9000/admin';
-// const urlFaculty = 'http://localhost:9000/faculty';
-// const urlStudent = 'http://localhost:9000/student';
+const urlAdmin = 'http://localhost:9000/admin';
+const urlFaculty = 'http://localhost:9000/faculty';
+const urlStudent = 'http://localhost:9000/student';
 
 // Term API Requests
 export const fetchTerms = () => axios.get(urlAdmin);
@@ -23,16 +23,9 @@ export const deactivateCourse = (termId, courseId) =>
   axios.patch(`${urlAdmin}/${termId}/edit/allocation`, courseId);
 
 export const setMaxCount = (termId, courseId, maxCount) => {
-  console.log("Debug: setMaxCount called with:");
-  console.log("Term ID:", termId);
-  console.log("Course ID:", courseId);
-  console.log("Max Count:", maxCount);
-  console.log("API URL:", `${urlAdmin}/${termId}/edit/allocation/max-count`);
-
   return axios
     .patch(`${urlAdmin}/${termId}/edit/allocation/max-count`, { courseId, maxCount })
     .then((response) => {
-      console.log("API Response:", response.data); 
       return response;
     })
     .catch((error) => {
@@ -41,17 +34,11 @@ export const setMaxCount = (termId, courseId, maxCount) => {
     });
 };
 
-// Course API Requests
-// actions/terms.js
 export const fetchCourses = (studentId) => async (dispatch) => {
   dispatch({ type: "FETCH_COURSES_REQUEST" });
 
   try {
     const response = await axios.get(`/student/${studentId}/courses`);
-
-    // Debugging: Log the response data
-    console.log("API Response:", response.data);
-
     dispatch({ type: "FETCH_COURSES_SUCCESS", payload: response.data.courses });
   } catch (error) {
     console.error("Error fetching courses:", error.message);

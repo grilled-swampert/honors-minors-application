@@ -60,9 +60,7 @@ const AddRightSection = ({ term, setTerms }) => {
         console.error('Error:', data.error);
       } else {
         const updatedTerm = await response.json();
-        console.log('Term updated successfully:', updatedTerm);
   
-        // Update the state to reflect the changes
         setTerms((prevTerms) =>
           prevTerms.map((t) => (t._id === term._id ? updatedTerm : t))
         );

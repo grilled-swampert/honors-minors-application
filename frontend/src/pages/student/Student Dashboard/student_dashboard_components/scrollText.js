@@ -9,9 +9,7 @@ export default function ScrollText() {
     useEffect(() => {
         const fetchMessages = async () => {
             try {
-              console.log('Fetching broadcast messages...');
               const response = await axios.get(`${API_BASE_URL}/student/broadcast-messages`);
-              console.log('Fetched messages:', response.data);
               setMessages(response.data); 
             } catch (error) {
               console.error('Error fetching broadcast messages:', error);

@@ -36,7 +36,6 @@ function FacAddTop() {
 
       if (response.ok) {
         const result = await response.json();
-        console.log('Term updated successfully', result);
         setError(null);
         setStudentsList(null);
         setUploadProgress(0);
@@ -61,7 +60,6 @@ function FacAddTop() {
     const file = event.target.files[0];
     if (file) {
       setStudentsList(file);
-      console.log('File selected:', file);
     }
   };
 

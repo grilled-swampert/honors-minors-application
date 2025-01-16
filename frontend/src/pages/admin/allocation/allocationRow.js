@@ -20,12 +20,8 @@ const AllocationRow = ({
   const API_BASE_URL =
     process.env.REACT_APP_API_BASE_URL || "http://localhost:9000";
 
-  // Function to handle both temporary and permanent deactivation
   const handleStatusChange = async (courseId, isChecked) => {
     const newStatus = isChecked ? "inactive" : "active";
-
-    console.log(`Course ID: ${courseId}`);
-    console.log(`Status: ${newStatus}`);
 
     try {
       setLoading(true);
@@ -38,7 +34,6 @@ const AllocationRow = ({
         }
       );
 
-      console.log("Status update response:", response.data);
       setTemporaryStatus(newStatus);
       handleDeactivationSelection(courseId, isChecked);
       window.location.reload();

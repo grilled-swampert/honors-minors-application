@@ -40,7 +40,6 @@ const Login = () => {
 
   const redirectUser = useCallback(
     (role, branch, studentId) => {
-      console.log("Redirecting user:", role, branch, studentId);
       switch (role) {
         case "admin":
           navigate("/admin");
@@ -145,7 +144,6 @@ const Login = () => {
         if (userData.role === "student") {
           // Update `firstLogin` to false for students
           await updateDoc(userDocRef, { firstLogin: false });
-          console.log("First login updated to false for student");
         }
       } else {
         console.error("User document not found in Firestore");
@@ -250,13 +248,6 @@ async function addUserToDatabase(
   studentId = null
 ) {
   try {
-    console.log({
-      email,
-      role,
-      branch,
-      studentId,
-    });
-
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       email,
@@ -345,3 +336,10 @@ const PrivateRoute = ({ children, allowedRoles }) => {
 
 export { Login, addUserToDatabase, PrivateRoute };
 export default Login;
+
+// addUserToDatabase('umang@somaiya.edu', 'password', 'admin');
+// addUserToDatabase('hodetrx@somaiya.edu', 'etrx01', 'faculty', 'etrx');
+// addUserToDatabase('hodcomp@somaiya.edu', 'comp02', 'faculty', 'comp');
+// addUserToDatabase('hodmech@somaiya.edu', 'mech03', 'faculty', 'mech');
+// addUserToDatabase('hodextc@somaiya.edu', 'extc04', 'faculty', 'extx');
+// addUserToDatabase('hodit.engg@somaiya.edu', 'it0005', 'faculty', 'it');

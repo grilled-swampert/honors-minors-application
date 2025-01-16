@@ -17,7 +17,6 @@ const AlpRightSection = ({ term }) => {
         }
 
         window.location.reload();
-        console.log("Term deleted successfully");
       } catch (err) {
         console.error(err);
       }

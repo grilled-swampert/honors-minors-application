@@ -19,11 +19,7 @@ const AlpLeftSection = () => {
       body: JSON.stringify(term),
     });
 
-    console.log("Response:", response);
-
     const data = await response.json();
-
-    console.log("Data:", data);
 
     if (!data.ok) {
       setError(data.error);
@@ -32,7 +28,6 @@ const AlpLeftSection = () => {
     if (data.ok) {
       setError(null);
       setTermYear("");
-      console.log("Term created", data);
     }
     window.location.reload();
   };

@@ -10,13 +10,10 @@ const FacLandingPage = () => {
   const { branch } = useParams();
   const dispatch = useDispatch();
   const rows = useSelector((state) => state.terms);
-  console.log(rows);
 
   useEffect(() => {
     dispatch(getTerms());
   }, [dispatch]);
-
-  console.log(rows);
 
   return (
     <div className="main-fac-landing">

@@ -47,9 +47,6 @@ exports.getAllStudentsInTerm = asyncHandler(async (req, res) => {
   const { termId } = req.params;
 
   try {
-    console.log("Term ID:", termId);
-
-    // Find the term and populate its semesters with the studentsList
     const term = await Term.findById(termId).populate({
       path: "semesters",
       populate: {
@@ -62,7 +59,6 @@ exports.getAllStudentsInTerm = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Term not found" });
     }
 
-    // Collect all students across all semesters in the term
     const allStudents = term.semesters.reduce((students, semester) => {
       return students.concat(semester.studentsList);
     }, []);
@@ -79,13 +75,9 @@ exports.getStudentsInSemester = asyncHandler(async (req, res) => {
   const { termId, semesterId } = req.params;
 
   try {
-    console.log("Term ID:", termId);
-    console.log("Semester ID:", semesterId);
-
-    // Find the term and the specific semester within it
     const term = await Term.findById(termId).populate({
       path: "semesters",
-      match: { _id: semesterId }, // Match the specific semester ID
+      match: { _id: semesterId }, 
       populate: {
         path: "studentsList",
         model: "Student",
@@ -98,7 +90,6 @@ exports.getStudentsInSemester = asyncHandler(async (req, res) => {
         .json({ message: "Semester not found in the specified term" });
     }
 
-    // Return the students in the specified semester
     const students = term.semesters[0].studentsList;
     res.status(200).json(students);
   } catch (error) {
@@ -107,59 +98,31 @@ exports.getStudentsInSemester = asyncHandler(async (req, res) => {
   }
 });
 
-// GET Course details for a student in the specific branch
 exports.getFilteredCoursesForStudent = async (req, res) => {
   try {
     const { studentId } = req.params;
-
-    // Debugging: Log the studentId received
-    console.log("Received studentId:", studentId);
-
-    // Step 1: Find the student by ID
     const student = await Student.findById(studentId).populate("terms");
 
-    // Debugging: Log the student found
-    console.log("Found student:", student);
-
     if (!student) {
-      console.log("Student not found");
       return res.status(404).json({ message: "Student not found" });
     }
-
-    // Step 2: Extract the term and branch
-    const term = student.terms; // Assuming 'terms' is an array or a single term object
+    const term = student.terms; 
     const branch = student.branch;
 
-    // Debugging: Log the extracted term and branch
-    console.log("Extracted term:", term);
-    console.log("Extracted branch:", branch);
-
-    // Step 3: Find the term using termId and populate the courses
     const termWithCourses = await Term.findById(term);
 
-    // Debugging: Log the termWithCourses found
-    console.log("Term with populated courses:", termWithCourses);
-
     if (!termWithCourses) {
-      console.log("Term not found");
       return res.status(404).json({ message: "Term not found" });
     }
 
-    // Step 4: Retrieve each course document by ID and filter by branch
     const filteredCourses = [];
     for (const courseId of termWithCourses.courses) {
-      const course = await Course.findById(courseId); // Assuming `Course` is the model for courses
-      console.log("Course:", course);
+      const course = await Course.findById(courseId); 
 
       if (course && course[branch] === "YES") {
         filteredCourses.push(course);
       }
     }
-
-    // Debugging: Log the filtered courses
-    console.log("Filtered courses:", filteredCourses);
-
-    // Step 5: Return the filtered courses
     res.json({ courses: filteredCourses });
   } catch (error) {
     console.error("Error in getFilteredCoursesForStudent:", error);
@@ -170,46 +133,27 @@ exports.getFilteredCoursesForStudent = async (req, res) => {
 exports.getTermFromStudent = asyncHandler(async (req, res) => {
   try {
     const studentId = req.params.studentId;
-    
-    // Find the student by ID
     const student = await Student.findById(studentId);
-    console.log("Student:", student);
 
     if (!student) {
       return res.status(404).json({ message: "Student not found" });
     }
 
-    // Retrieve the term ID from the student object
     const termId = student.terms;
-
-    // Find the term by the term ID
     const term = await Term.findById(termId);
-    console.log("Term:", term);
 
     if (!term) {
       return res.status(404).json({ message: "Term not found" });
     }
 
-    // Retrieve finalCourse and courses from the student
     const finalCourseId = student.finalCourse;
     const courseIds = student.courses;
-
-    console.log("Final Course ID:", finalCourseId);
-    console.log("Course IDs:", courseIds);
-    
-    // Find final course
     const finalCourse = finalCourseId ? await Course.findById(finalCourseId) : null;
     
-    // Find courses by their IDs
     const courses = await Course.find({ _id: { $in: courseIds } });
     
-    // Sort courses according to the order in courseIds
     const sortedCourses = courseIds.map(courseId => courses.find(course => course._id.equals(courseId)));
-    
-    console.log("Final Course:", finalCourse);
-    console.log("Courses:", sortedCourses);
 
-    // Return student, term, finalCourse (if it exists), and courses (if they exist)
     res.json({
       term,
       student,
@@ -240,46 +184,23 @@ exports.getStudentDetails = asyncHandler(async (req, res) => {
 exports.submitCourses = async (req, res) => {
   try {
     const studentId = req.params.studentId;
-    const { courses } = req.body; // Array of {id, preference} objects
+    const { courses } = req.body; 
 
-    // Ensure the courses are an array
     if (!Array.isArray(courses)) {
       return res.status(400).json({ message: "Courses must be an array" });
     }
 
-    // Debugging: Print courses[0] after receiving from req.body
-    console.log("Step 1 - Received courses[0]:", courses[0]);
-
-    // Sort courses by preference
     courses.sort((a, b) => a.preference - b.preference);
 
-    // Debugging: Print courses[0] after sorting
-    console.log("Step 2 - Sorted courses[0]:", courses[0]);
-
-    // Extract course IDs in order of preference
     const courseIds = courses.map(course => course.id);
-
-    // Debugging: Print courses[0] after extracting course IDs
-    console.log("Step 3 - Extracted course IDs for courses[0]:", courses[0]);
-
-    // Validate the courses: Find them in the database and populate the relevant fields
     const validCourses = await Course.find({ _id: { $in: courseIds } });
 
-    // Debugging: Print courses[0] after fetching valid courses from DB
-    console.log("Step 4 - Validated courses[0]:", courses[0]);
-
-    // Check if all courses are valid
     if (validCourses.length !== courseIds.length) {
       return res.status(404).json({ message: "One or more courses not found" });
     }
 
-    // Create a map of course id to course object for easy lookup
     const courseMap = new Map(validCourses.map(course => [course._id.toString(), course]));
 
-    // Debugging: Print courses[0] after creating courseMap
-    console.log("Step 5 - Mapped course IDs for courses[0]:", courses[0]);
-
-    // Update the student's course selection in the order of preference
     const student = await Student.findByIdAndUpdate(
       studentId,
       {
@@ -290,19 +211,11 @@ exports.submitCourses = async (req, res) => {
       { new: true }
     );
 
-    // Debugging: Print courses[0] after updating student courses
-    console.log("Step 6 - Updated student courses[0]:", courses[0]);
-
-    // Set the first preference as the final course
     const firstPreference = courseMap.get(courseIds[0]);
     student.finalCourse = firstPreference._id;
     student.submissionTime = Date.now();
     await student.save();
 
-    // Debugging: Print courses[0] after setting the final course
-    console.log("Step 7 - Set final course for student from courses[0]:", courses[0]);
-
-    // Prepare email content with courses in the correct order
     const courseList = courseIds.map((id, index) => {
       const course = courseMap.get(id);
       return `${index + 1}. ${course.programName} (${course.programCode})`;
@@ -326,11 +239,8 @@ Best regards,
 Course Registration Team`,
     };
 
-    // Send confirmation email
     await transporter.sendMail(emailOptions);
-    console.log("Step 8 - Confirmation email sent to:", student.email);
 
-    // Update preference counts for each course
     const preferenceKeys = [
       "firstPreference",
       "secondPreference",
@@ -351,32 +261,20 @@ Course Registration Team`,
           { new: true }
         );
       }
-
-      // Debugging: Print courses[0] after updating course preferences
-      console.log(`Step 9 - Updated preference count for course ${i + 1}, courses[0]:`, courses[0]);
     }
 
-    // Update final count for first preference
     await Course.findByIdAndUpdate(
       firstPreference._id,
       { $inc: { finalCount: 1 } },
       { new: true }
     );
 
-    // Debugging: Print courses[0] after updating final count
-    console.log("Step 10 - Updated final count for first preference, courses[0]:", courses[0]);
-
-    // Return response with updated student data
     return res.status(200).json({
       message: "Course preferences submitted and confirmation email sent",
       student
     });
   } catch (error) {
     console.error("Error submitting courses:", error);
-
-    // Debugging: Print courses[0] in case of error
-    console.log("Step 11 - Error occurred, courses[0]:", courses[0]);
-
     res.status(500).json({ message: error.message });
   }
 };
@@ -404,7 +302,6 @@ const sendBroadcastEmail = async (message, termId) => {
   const studentEmails = await getStudentEmailsFromTerm(termId);
   
   if (studentEmails.length === 0) {
-    console.log('No student emails found for term:', termId);
     return;
   }
 
@@ -422,7 +319,6 @@ const sendBroadcastEmail = async (message, termId) => {
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log('Broadcast email sent successfully');
   } catch (error) {
     console.error('Error sending broadcast email:', error);
     throw error;
@@ -440,17 +336,14 @@ exports.toggleBroadcastMessage = async (req, res) => {
       return res.status(404).json({ message: "Broadcast message not found" });
     }
 
-    // Toggle the message status
     message.isActive = !message.isActive;
     await message.save();
 
-    // If message is being activated, send email to all students
     if (message.isActive) {
       try {
         await sendBroadcastEmail(message.text, termId);
       } catch (emailError) {
         console.error('Error sending broadcast email:', emailError);
-        // Continue with the response even if email fails
       }
     }
 
@@ -461,16 +354,11 @@ exports.toggleBroadcastMessage = async (req, res) => {
   }
 };
 
-// Update student details in a semester in a term
 exports.updateStudentDetails = asyncHandler(async (req, res) => {
   const { termId, studentId } = req.params;
   const updateData = req.body; // This will contain the fields to be updated
 
   try {
-    console.log("Term ID:", termId);
-    console.log("Student ID:", studentId);
-
-    // Find the term and populate its semesters with the studentsList
     const term = await Term.findById(termId).populate({
       path: "semesters",
       populate: {
@@ -504,9 +392,6 @@ exports.updateStudentDetails = asyncHandler(async (req, res) => {
     // Update the student details
     Object.assign(foundStudent, updateData);
     await foundStudent.save();
-
-    console.log("Updated Student:", foundStudent);
-
     res.status(200).json(foundStudent);
   } catch (error) {
     console.error("Error updating student details:", error);
@@ -514,23 +399,17 @@ exports.updateStudentDetails = asyncHandler(async (req, res) => {
   }
 });
 
-// Set up storage for file uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const uploadDir = path.join(__dirname, "uploads/student");
 
-    // Check if the directory exists, if not create it
     if (!fs.existsSync(uploadDir)) {
-      console.log("Directory doesn't exist, creating now...");
       fs.mkdirSync(uploadDir, { recursive: true });
     }
-
-    console.log("Setting upload destination:", uploadDir);
     cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
     const uniqueName = Date.now() + "-" + file.originalname;
-    console.log("Generating unique filename:", uniqueName);
     cb(null, uniqueName);
   },
 });
@@ -541,48 +420,28 @@ exports.uploadDropFile = upload.single("dropFile");
 
 // Controller function
 exports.updateDropDetails = async (req, res) => {
-  console.log("Received request to update drop details");
-
   const { studentId } = req.params;
   const { dropReason } = req.body;
   const file = req.file;
-  console.log("Extracted parameters");
-  console.log("Student ID:", studentId);
-  console.log("Drop Reason:", dropReason);
 
   let dropFileUrl;
 
-  // Check if file is uploaded
-  console.log("Checking if file is uploaded...");
   if (req.file) {
     dropFileUrl = "/uploads/student/" + req.file.filename; // Store the relative path
-    console.log("File uploaded:", dropFileUrl);
-  } else {
-    console.log("No file uploaded");
   }
 
   try {
-    // Find student by ID
-    console.log("Finding student by ID...");
     const student = await Student.findById(studentId);
     if (!student) {
-      console.log("Student not found");
       return res.status(404).json({ error: "Student not found" });
     }
-    console.log("Student found:", student);
 
-    // Update student's drop reason and file URL
-    console.log("Updating student's drop reason and file URL");
     student.dropReason = dropReason;
     if (dropFileUrl) {
       student.dropFile = dropFileUrl;
     }
     student.dropApproval = "pending";
-
-    console.log("Saving updated student data...");
     await student.save();
-    console.log("Student data updated successfully");
-
     res
       .status(200)
       .json({ message: "Student drop details updated successfully", student });

@@ -34,13 +34,11 @@ export default function MainBody({
         }
       );
 
-      console.log(response);
-
       if (!response.ok) {
         const data = await response.json();
         console.error("Error dropping course:", data.error);
       } else {
-        console.alert("Course drop application submitted successfully!");
+        console.warn("Course drop application submitted successfully!");
         setDropReason("");
         setDropFile(null);
         toggleDropOverlay();

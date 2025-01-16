@@ -72,15 +72,11 @@ courseSchema.pre('save', function (next) {
 });
 
 courseSchema.statics.countPreferencesForAllCourses = async function (termId) {
-   console.log(`Start counting preferences for all courses in term: ${termId}`);
-
-   // Fetch the term based on the termId
    const term = await Term.findById(termId);
    if (!term) {
       console.error(`Term not found for termId: ${termId}`);
       return;
    }
-   console.log(`Term found: ${termId}`);
 
    // Extract all student lists that end with "_SL"
    const studentLists = [
@@ -96,30 +92,20 @@ courseSchema.statics.countPreferencesForAllCourses = async function (termId) {
       term.CSBS_SL || [],
       term.EXTC_SL || [],
    ];
-   console.log(`Student lists extracted from term. Lists count: ${studentLists.length}`);
 
-   // A map to hold course preference counts
    const courseCounts = {};
 
    // Loop through each student list
    for (const [listIndex, studentList] of studentLists.entries()) {
-      console.log(`Processing student list #${listIndex + 1} with ${studentList.length} students`);
-
       for (const studentId of studentList) {
-         console.log(`Fetching student document for studentId: ${studentId}`);
-         
-         // Fetch the student's document based on their ID
          const student = await Student.findById(studentId);
          if (!student) {
             console.warn(`Student not found for studentId: ${studentId}`);
             continue;
          }
-         console.log(`Student found: ${studentId}`);
 
-         // Loop through each course in the student's preferences
          student.courses.forEach((courseId, index) => {
             if (!courseCounts[courseId]) {
-               // Initialize counts for the course if not already present
                courseCounts[courseId] = {
                   firstPreference: 0,
                   secondPreference: 0,
@@ -132,27 +118,19 @@ courseSchema.statics.countPreferencesForAllCourses = async function (termId) {
             // Update the relevant preference count based on the index
             if (index === 0) {
                courseCounts[courseId].firstPreference++;
-               console.log(`First preference matched for course: ${courseId}`);
             } else if (index === 1) {
                courseCounts[courseId].secondPreference++;
-               console.log(`Second preference matched for course: ${courseId}`);
             } else if (index === 2) {
                courseCounts[courseId].thirdPreference++;
-               console.log(`Third preference matched for course: ${courseId}`);
             } else if (index === 3) {
                courseCounts[courseId].fourthPreference++;
-               console.log(`Fourth preference matched for course: ${courseId}`);
             } else if (index === 4) {
                courseCounts[courseId].fifthPreference++;
-               console.log(`Fifth preference matched for course: ${courseId}`);
             }
          });
       }
    }
 
-   console.log('Updating course documents with the new counts...');
-
-   // Update each course document with the new counts
    for (const [courseId, counts] of Object.entries(courseCounts)) {
       await this.findByIdAndUpdate(courseId, {
          firstPreference: counts.firstPreference,
@@ -161,12 +139,8 @@ courseSchema.statics.countPreferencesForAllCourses = async function (termId) {
          fourthPreference: counts.fourthPreference,
          fifthPreference: counts.fifthPreference,
       });
-      console.log(`Updated counts for courseId: ${courseId}`);
    }
 
-   console.log('Update complete for all courses in the term.');
-   
-   // Return the course counts for reporting purposes
    return courseCounts;
 };
 

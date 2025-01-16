@@ -22,12 +22,9 @@ const Broadcast = () => {
   const fetchMessages = async () => {
     try {
       setLoading(true);
-      console.log("Fetching messages...");
       const response = await axios.get(
         `${API_BASE_URL}/admin/${termId}/edit/broadcast`
       );
-      console.log("Response:", response);
-      console.log("Fetched messages:", response.data);
       setMessages(response.data);
     } catch (error) {
       console.error(
@@ -47,7 +44,6 @@ const Broadcast = () => {
           `${API_BASE_URL}/admin/${termId}/edit/broadcast`,
           { text: newMessage }
         );
-        console.log("Message added:", response.data);
         setNewMessage("");
         fetchMessages();
       } catch (error) {
@@ -64,7 +60,6 @@ const Broadcast = () => {
       await axios.delete(
         `${API_BASE_URL}/admin/${termId}/edit/broadcast/${id}`
       );
-      console.log("Message deleted:", id);
       fetchMessages();
     } catch (error) {
       console.error("Error deleting message:", error);
@@ -80,8 +75,7 @@ const Broadcast = () => {
         `${API_BASE_URL}/admin/${termId}/edit/broadcast`,
         { id }
       );
-      console.log("Message toggled:", response.data);
-      fetchMessages(); // Refetch messages after toggling
+      fetchMessages(); 
     } catch (error) {
       console.error("Error toggling message:", error);
     } finally {

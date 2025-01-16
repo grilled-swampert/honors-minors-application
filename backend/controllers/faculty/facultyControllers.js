@@ -43,27 +43,16 @@ exports.getTerm = asyncHandler(async (req, res) => {
 });
 
 exports.getDropApplicationPdf = asyncHandler(async (req, res) => {
-  console.log("Fetching drop application PDF...");
-
   const { studentId } = req.params;
-  console.log("Student ID:", studentId);
-
   try {
-    // Fetch the student from the database
     const student = await Student.findById(studentId);
-    console.log("Student found:", student);
 
-    // Check if student and dropFile exist
     if (!student || !student.dropFile) {
-      console.log(
-        `Student not found or drop file missing. Student ID: ${studentId}`
-      );
       return res
         .status(404)
         .json({ message: "Drop application file not found for the student" });
     }
 
-    // Resolve the file path
     const projectRoot = path.resolve(__dirname, "../../../");
     const filePath = path.join(
       projectRoot,
@@ -71,13 +60,10 @@ exports.getDropApplicationPdf = asyncHandler(async (req, res) => {
       student.dropFile
     );
 
-    console.log("Resolved File Path:", filePath);
-
     if (!fs.existsSync(filePath)) {
-      console.error("File not FKNG found:", filePath);
+      console.error("File not found:", filePath);
       return res.status(404).json({ message: "Drop application file not found." });
     }
-    // Send the file to the client
     res.sendFile(filePath);
   } catch (error) {
     console.error("Error fetching drop application PDF:", error);
@@ -85,15 +71,10 @@ exports.getDropApplicationPdf = asyncHandler(async (req, res) => {
   }
 });
 
-// GET all students across all branches within a term
 exports.getAllStudentsInTerm = asyncHandler(async (req, res) => {
   const { branch, termId } = req.params;
 
   try {
-    console.log("Term ID:", termId);
-    console.log("Branch:", branch);
-
-    // Find the term
     const term = await Term.findById(termId);
 
     if (!term) {
@@ -102,11 +83,9 @@ exports.getAllStudentsInTerm = asyncHandler(async (req, res) => {
 
     let studentIds;
     if (branch) {
-      // If branch is specified, get the student list for that branch
       const branchKey = `${branch.toUpperCase()}_SL`;
       studentIds = term[branchKey] || [];
     } else {
-      // If no branch is specified, collect all students from all branches
       const branchKeys = [
         "EXCP_SL",
         "COMP_SL",
@@ -125,7 +104,6 @@ exports.getAllStudentsInTerm = asyncHandler(async (req, res) => {
       }, []);
     }
 
-    // Fetch the actual student documents
     const students = await Student.find({ _id: { $in: studentIds } });
 
     res.status(200).json(students);
@@ -140,9 +118,6 @@ exports.getDropStudents = asyncHandler(async (req, res) => {
   const { branch, termId } = req.params;
 
   try {
-    console.log("Term ID:", termId);
-    console.log("Branch:", branch);
-
     // Find the term
     const term = await Term.findById(termId);
 
@@ -181,8 +156,6 @@ exports.getDropStudents = asyncHandler(async (req, res) => {
       dropApproval: "pending", // Filter for students with pending dropApproval
     });
 
-    console.log("Fetched drop students:", students);
-
     for (let student of students) {
       const course = await Course.findById(student.finalCourse[0]);
       if (course) {
@@ -201,28 +174,18 @@ exports.getDropStudents = asyncHandler(async (req, res) => {
 // PUT to update dropApproval status for a single student
 exports.updateDropApprovalStatus = asyncHandler(async (req, res) => {
   const { studentId, isApproved, rejectionReason } = req.body;
-  console.log("Received request:", { studentId, isApproved, rejectionReason });
 
   try {
-    console.log("Searching for student with ID:", studentId);
     const student = await Student.findById(studentId);
-    console.log("Found student:", student);
 
     if (!student) {
-      console.log("Student not found");
       return res.status(404).json({ message: "Student not found" });
     }
 
     // Update student's course drop status
     student.dropApproval = isApproved ? "approved" : "rejected";
-    console.log(
-      "Updating student drop approval status to:",
-      student.dropApproval
-    );
     await student.save();
-    console.log("Updated student:", student);
 
-    // Prepare email content
     const emailOptions = {
       from: process.env.EMAIL_USER,
       to: student.email,
@@ -233,10 +196,6 @@ exports.updateDropApprovalStatus = asyncHandler(async (req, res) => {
         ? "Your course drop request has been approved."
         : `Your course drop request has been rejected. Reason: ${rejectionReason}`,
     };
-
-    console.log("Email options:", emailOptions);
-
-    // Send email using Nodemailer
     await transporter.sendMail(emailOptions);
 
     res.status(200).json({
@@ -256,20 +215,13 @@ exports.updateDropApprovalStatus = asyncHandler(async (req, res) => {
 
 exports.deleteStudents = async (req, res) => {
   try {
-    console.log("Received request to delete student:", req.body);
     const { studentId, termId } = req.body;
 
-    // Ensure the studentId is a valid ObjectId before proceeding
     if (!ObjectId.isValid(studentId)) {
       return res.status(400).json({ message: "Invalid student ID format" });
     }
 
-    console.log("Deleting student with ID:", studentId);
-
-    // Convert the studentId to ObjectId
     const studentObjectId = new ObjectId(studentId);
-
-    // Find the student by ObjectId
     const student = await Student.findById(studentObjectId);
 
     if (!student) {

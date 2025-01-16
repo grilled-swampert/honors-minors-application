@@ -11,7 +11,6 @@ const Header = () => {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      console.log("User signed out successfully");
       navigate("/");
     } catch (error) {
       console.error("Error signing out:", error);

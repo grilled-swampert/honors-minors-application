@@ -16,12 +16,10 @@ function SelectCourses() {
 
     if (checkbox.checked) {
       if (selectedCourses.length < 6) {
-        console.log(selectedCourses);
         setSelectedCourses((prevCourses) => {
           if (!prevCourses.some((c) => c.id === courseId)) {
             return [...prevCourses, { ...course, id: courseId }];
           }
-          console.log(prevCourses);
           return prevCourses;
         });
       } else {
