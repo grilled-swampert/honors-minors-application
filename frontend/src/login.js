@@ -9,7 +9,13 @@ import {
   sendPasswordResetEmail,
   signOut,
 } from "firebase/auth";
-import { getFirestore, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { Navigate, useLocation, useParams } from "react-router-dom";
 import kjscelogo from "../src/pages/photos-logos/KJSCE-logo.png";
 import trustImg from "../src/pages/photos-logos/Trust.svg";
