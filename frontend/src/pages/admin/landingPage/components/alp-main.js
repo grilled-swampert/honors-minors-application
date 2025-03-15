@@ -7,19 +7,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getTerms } from '../../../../actions/terms';
 
 const AlpMain = () => {
-  const [term, setTerm] = useState('');
-  const [sem, setSem] = useState('');
-  const [rows, setRows] = useState([
-    { term: '2023-24', sem: 'EVEN' },
-    { term: '2023-25', sem: 'ODD' },
-  ]);
-
-  const handleCreate = () => {
-    setRows([...rows, { term, sem }]);
-    setTerm('');
-    setSem('');
-  };
-
   const dispatch = useDispatch();
   const terms = useSelector((state) => state.terms);
 
